@@ -10,8 +10,8 @@
 	<name>Ladok integration</name>
 
 	<modules>
-		<module>ladok3-event-distribution</module>
-		<module>ladok3event-logdb-adapter</module>
+		<module>ladok-event-distribution</module>
+		<module>ladokevent-logdb-adapter</module>
 	</modules>
 
 	<properties>
