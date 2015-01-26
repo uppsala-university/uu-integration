@@ -2,15 +2,15 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>se.uu.its.integration.logdb</groupId>
+		<groupId>se.uu.its.ladok</groupId>
 		<artifactId>ladok3-event</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>ladok-event-logdb-adapter</artifactId>
+	<artifactId>ladok3event-logdb-adapter</artifactId>
 	<version>${parent.version}</version>
 	<packaging>bundle</packaging>
-	<name>Ladok 3 Event LogDB Adapter</name>
+	<name>Ladok Event LogDB Adapter</name>
 
 	<build>
 		<plugins>
