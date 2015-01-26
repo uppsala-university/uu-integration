@@ -7,7 +7,7 @@
 	<artifactId>ladok3-event</artifactId>
 	<packaging>pom</packaging>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>Ladok 3 Feeds</name>
+	<name>Ladok integration</name>
 
 	<modules>
 		<module>ladok3-event-distribution</module>
