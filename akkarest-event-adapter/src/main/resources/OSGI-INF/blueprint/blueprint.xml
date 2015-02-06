@@ -16,13 +16,13 @@
   </cm:property-placeholder>
 
   <cxf:rsServer id="rsServer" address="${CXFserver}${service}"
-    serviceClass="se.uu.its.integration.identity.rest.IdentityService"
+    serviceClass="se.uu.its.integration.service.identity.rest"
     loggingFeatureEnabled="true"
     loggingSizeLimit="20"/>
 
   <camelContext xmlns="http://camel.apache.org/schema/blueprint">
 
-    <route id="IdentityEventRoute">
+    <route id="IdentityServiceRoute">
 
       <!-- Listen for calls from REST-binded CXF-service. -->
       <from uri="cxfrs:bean:rsServer?bindingStyle=SimpleConsumer" />
