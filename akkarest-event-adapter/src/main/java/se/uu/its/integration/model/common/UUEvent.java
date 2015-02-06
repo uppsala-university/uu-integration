@@ -37,7 +37,7 @@ public abstract class UUEvent implements Serializable {
 	
 	public String toString() {
 
-		String result = "EEEERRRROOOORRRR!";
+		String result = "Error!";
 		
 		try {
 			JAXBContext jaxbContext = JAXBContext.newInstance(this.getClass());
