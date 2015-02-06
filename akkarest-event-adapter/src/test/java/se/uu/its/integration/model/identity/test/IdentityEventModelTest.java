@@ -43,6 +43,7 @@ public class IdentityEventModelTest {
 		Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
 		jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 		jaxbMarshaller.marshal(personEvent, System.out);
+		System.out.println();
 		
 		OutputStream personEventXmlStream = new ByteArrayOutputStream();
 		jaxbMarshaller.marshal(personEvent, personEventXmlStream);
@@ -62,7 +63,8 @@ public class IdentityEventModelTest {
 		JAXBContext jaxbContext = JAXBContext.newInstance(IdentityChangedEvent.class);
 		Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
 		jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-		jaxbMarshaller.marshal(identityEvent, System.out);	
+		jaxbMarshaller.marshal(identityEvent, System.out);
+		System.out.println();
 		
 		OutputStream identityEventXmlStream = new ByteArrayOutputStream();
 		jaxbMarshaller.marshal(identityEvent, identityEventXmlStream);
@@ -93,6 +95,7 @@ public class IdentityEventModelTest {
 		Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
 		jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 		jaxbMarshaller.marshal(identityEvent, System.out);
+		System.out.println();
 		
 		OutputStream identityEventXmlStream = new ByteArrayOutputStream();
 		jaxbMarshaller.marshal(identityEvent, identityEventXmlStream);
@@ -100,21 +103,8 @@ public class IdentityEventModelTest {
 		Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
 		IdentityEvent identityEventFromXml = (IdentityEvent) jaxbUnmarshaller.unmarshal(new StringReader(identityEventXml));
 		
-		System.out.println("Parsed info:");
-		System.out.println(" IdentityEvent:Type: " + identityEventFromXml.getType());
-		
-		SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	    fmt.setCalendar(identityEventFromXml.getIssuedTime());
-	    String issuedTime = fmt.format(identityEventFromXml.getIssuedTime().getTime());
-		
-		System.out.println(" IdentityEvent:IssuedTime: " + issuedTime);
-		System.out.println(" Identity:identifier: " + identityEventFromXml.getIdentity().getIdentifier());
-		
-//		jaxbMarshaller.marshal(personEvent, System.out);		
-
 		assertTrue("Unmarchalled value of producer is not the same as marchalled object property value.", identityEventFromXml.getProducer().equalsIgnoreCase(SYSTEM_MESSAGE_PRODUCER));
-		
-		
+
 		// curl -X POST -H "Content-Type: application/xml" -d @identity-event.xml http://localhost:8989/esb/rest/identity/event/
 	}
 
