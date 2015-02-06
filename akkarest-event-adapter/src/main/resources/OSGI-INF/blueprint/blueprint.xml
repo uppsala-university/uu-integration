@@ -8,7 +8,7 @@
   xsi:schemaLocation="http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd"
   default-activation="eager">
 
-  <cm:property-placeholder persistent-id="org.apache.servicemix.examples.cxf.receive">
+  <cm:property-placeholder persistent-id="se.uu.its.integration.service.cxf.receive">
     <cm:default-properties>
       <cm:property name="CXFserver" value="http://localhost:8989/"/>
       <cm:property name="service" value="esb/rest" />
