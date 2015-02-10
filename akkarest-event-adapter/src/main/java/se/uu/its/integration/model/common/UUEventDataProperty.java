@@ -6,6 +6,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+@XmlRootElement(name = "EventDataProperty", namespace = "http://www.uu.se/schemas/integration/2015/Events")
 public class UUEventDataProperty implements Serializable {
 	
 	/**

@@ -1,0 +1,28 @@
+package se.uu.its.integration.model.events;
+
+import javax.xml.bind.annotation.XmlRootElement;
+
+import se.uu.its.integration.model.identity.Affiliation;
+
+@XmlRootElement(name = "AffiliationEvent", namespace = "http://www.uu.se/schemas/integration/2015/Events")
+public class AffiliationChangedEvent extends AffiliationEvent {
+
+	/**
+	 * Needed for JAXB.
+	 */	
+	private AffiliationChangedEvent() {
+	}
+	
+	public AffiliationChangedEvent(String producer, String identity) {
+		super(producer, identity);
+	}
+	
+	public AffiliationChangedEvent(String producer, Affiliation identity) {
+		super(producer, identity);
+	}
+
+	public AffiliationChangedEvent(String producer, Affiliation affiliation, AffiliationEventData affiliationEventData) {
+		super(producer, affiliation, affiliationEventData);
+	}	
+}
+

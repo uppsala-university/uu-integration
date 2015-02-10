@@ -13,18 +13,18 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-import se.uu.its.integration.model.identity.IdentityChangedEvent;
+import se.uu.its.integration.model.events.AffiliationChangedEvent;
 
 @XmlTransient
 public abstract class UUEvent implements Serializable {
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 6670201491567203786L;
 
 	@XmlAttribute(name = "type")
-	String type;	
+	String type;
+	
+	@XmlAttribute(name = "id")
+	String id;
 	
 	@XmlElement(name = "IssuedTime")
 	protected Calendar time;	

@@ -26,11 +26,29 @@
 
       <!-- Listen for calls from REST-binded CXF-service. -->
       <from uri="cxfrs:bean:rsServer?bindingStyle=SimpleConsumer" />
-      
+
+	  <!-- TODO: Borde nog använda sig av <unmarchal><jaxb> istället. -->
       <convertBodyTo type="java.lang.String"/>
+      
+      <!-- TODO: Add integration event id. -->
+      <!-- 
+      <to uri="xslt:se/uu/its/integration/model/transform/addIntegrationEventIdToEvent.xsl"/>
+      -->
+      
+      <!-- TODO: Filter already received messages. 
+                 Must first implement event database. -->
+      <!--
+      <filter>
+      	<method ref="logDb" method="isNotDuplicatEvent"/>
+      	<to uri="activemq:queue:identity-event-distribution" />
+      </filter>
+      -->
 
       <!-- For now, just place on distribution queue. -->
+      <!-- TODO: Move to filter... -->
       <to uri="activemq:queue:identity-event-distribution" />
+      
+      <!-- TODO: Log to event database. -->
 
     </route>
     
