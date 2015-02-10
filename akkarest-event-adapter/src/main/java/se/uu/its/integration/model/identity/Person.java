@@ -16,7 +16,7 @@ public class Person extends UUIntegrationObject {
 
 	private static final long serialVersionUID = -2352347322813468432L;
 
-	@XmlAttribute(name = "identifier", namespace = "http://www.uu.se/schemas/integration/2015/Identity")
+	@XmlAttribute(name = "identifier")
 	private String identifier;
 	
 	@XmlElement(name = "PersonNumber", namespace = "http://www.uu.se/schemas/integration/2015/Identity")

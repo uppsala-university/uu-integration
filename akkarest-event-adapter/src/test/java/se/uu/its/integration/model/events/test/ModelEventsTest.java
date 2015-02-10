@@ -17,6 +17,8 @@ import se.uu.its.integration.model.common.UUEventDataProperty;
 import se.uu.its.integration.model.events.AffiliationChangedEvent;
 import se.uu.its.integration.model.events.AffiliationEvent;
 import se.uu.its.integration.model.events.AffiliationEventData;
+import se.uu.its.integration.model.events.OrganizationDepartmentMappingChangedEvent;
+import se.uu.its.integration.model.events.OrganizationDepartmentMappingEvent;
 import se.uu.its.integration.model.events.PersonChangedEvent;
 import se.uu.its.integration.model.events.PersonEvent;
 import se.uu.its.integration.model.events.PersonEventData;
@@ -25,12 +27,13 @@ import se.uu.its.integration.model.events.RoleEvent;
 import se.uu.its.integration.model.identity.Affiliation;
 import se.uu.its.integration.model.identity.Employee;
 import se.uu.its.integration.model.identity.Organization;
+import se.uu.its.integration.model.identity.OrganizationDepartmentMapping;
 import se.uu.its.integration.model.identity.Person;
 import se.uu.its.integration.model.identity.Role;
 import se.uu.its.integration.model.identity.Student;
 
 
-public class IdentityEventModelTest {
+public class ModelEventsTest {
 
 	private static final String SYSTEM_MESSAGE_PRODUCER = "AKKA";
 	
@@ -142,6 +145,23 @@ public class IdentityEventModelTest {
 		// POST: http://localhost:8989/esb/rest/affiliation/event/		
 		// POST: http://localhost:8989/esb/rest/orgdepmapping/event/	
 		// POST: http://localhost:8989/esb/rest/role/event/	
+		
+	}
+	
+	@Test
+	public void testOrganizationDepartmentMappingChangedEvent() throws JAXBException {
+		
+		OrganizationDepartmentMappingChangedEvent event = new OrganizationDepartmentMappingChangedEvent(
+				SYSTEM_MESSAGE_PRODUCER,
+				new OrganizationDepartmentMapping("X11", "CodeX"));
+		
+		String xml = getMarchalledObjectXml(OrganizationDepartmentMappingChangedEvent.class, event);
+		System.out.println(xml);
+		System.out.println();		
+		
+		OrganizationDepartmentMappingEvent objectFromXml = (OrganizationDepartmentMappingEvent) getUnmarchalledObject(OrganizationDepartmentMappingChangedEvent.class, xml); 
+
+		assertTrue("Unmarchalled value of producer is not the same as marchalled object property value.", objectFromXml.getProducer().equalsIgnoreCase(SYSTEM_MESSAGE_PRODUCER));
 		
 		
 	}

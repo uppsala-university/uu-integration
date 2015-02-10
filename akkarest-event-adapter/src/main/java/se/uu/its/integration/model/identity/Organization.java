@@ -10,7 +10,7 @@ public class Organization extends UUIntegrationObject {
 
 	private static final long serialVersionUID = -9167789779962890441L;
 
-	@XmlAttribute(name = "identifier", namespace = "http://www.uu.se/schemas/integration/2015/Identity")
+	@XmlAttribute(name = "identifier")
 	private String identifier;
 	
 	public Organization(String identifier) {

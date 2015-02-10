@@ -15,7 +15,7 @@ public class OrganizationDepartmentMapping extends UUIntegrationObject {
 	@XmlElement
 	private String ladokDepartmentCode;
 	
-	private OrganizationDepartmentMapping() {
+	public OrganizationDepartmentMapping() {
 	}
 	
 	public OrganizationDepartmentMapping(Organization organization, String ladokDepartmentCode) {
