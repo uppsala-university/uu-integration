@@ -17,8 +17,8 @@ public class RoleEvent extends UUEvent {
 	protected RoleEvent() {
 	}
 	
-	protected RoleEvent(String producer, Role role) {
-		super(producer);
+	protected RoleEvent(String producer, String producerReferenceId, Role role) {
+		super(producer, producerReferenceId);
 		this.role = role;
 	}
 }

@@ -16,12 +16,12 @@ public class AffiliationCreatedEvent extends AffiliationEvent {
 	private AffiliationCreatedEvent() {
 	}	
 	
-	public AffiliationCreatedEvent(String producer, String affiliationIdentifier) {
-		super(producer, affiliationIdentifier);
+	public AffiliationCreatedEvent(String producer, String producerReferenceId, String affiliationIdentifier) {
+		super(producer, producerReferenceId, affiliationIdentifier);
 	}
 	
-	public AffiliationCreatedEvent(String producer, Affiliation affiliation) {
-		super(producer, affiliation);
+	public AffiliationCreatedEvent(String producer, String producerReferenceId, Affiliation affiliation) {
+		super(producer, producerReferenceId, affiliation);
 	}
 
 }

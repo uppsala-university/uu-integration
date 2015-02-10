@@ -15,9 +15,10 @@ public class OrganizationDepartmentMappingEvent extends UUEvent {
 	protected OrganizationDepartmentMappingEvent() {
 	}
 	
-	protected OrganizationDepartmentMappingEvent(String producer,
+	protected OrganizationDepartmentMappingEvent(String producer, 
+			String producerReferenceId,
 			OrganizationDepartmentMapping orgDepMapping) {
-		super(producer);
+		super(producer, producerReferenceId);
 		this.orgDepMapping = orgDepMapping;
 	}
 	

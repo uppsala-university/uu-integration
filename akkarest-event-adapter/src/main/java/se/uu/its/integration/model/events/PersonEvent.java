@@ -20,13 +20,13 @@ public class PersonEvent extends UUEvent {
 	protected PersonEvent() {
 	}
 	
-	protected PersonEvent(String producer, Person person) {
-		super(producer);
+	protected PersonEvent(String producer, String producerReferenceId, Person person) {
+		super(producer, producerReferenceId);
 		this.person = person;
 	}
 	
-	protected PersonEvent(String producer, Person person, PersonEventData personEventData) {
-		super(producer);
+	protected PersonEvent(String producer, String producerReferenceId, Person person, PersonEventData personEventData) {
+		super(producer, producerReferenceId);
 		this.person = person;
 		this.personEventData = personEventData;
 	}	

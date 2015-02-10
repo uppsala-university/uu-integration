@@ -15,6 +15,8 @@ import org.junit.Test;
 
 import se.uu.its.integration.model.common.UUEventDataProperty;
 import se.uu.its.integration.model.events.AffiliationChangedEvent;
+import se.uu.its.integration.model.events.AffiliationCreatedEvent;
+import se.uu.its.integration.model.events.AffiliationDeletedEvent;
 import se.uu.its.integration.model.events.AffiliationEvent;
 import se.uu.its.integration.model.events.AffiliationEventData;
 import se.uu.its.integration.model.events.OrganizationDepartmentMappingChangedEvent;
@@ -23,6 +25,7 @@ import se.uu.its.integration.model.events.PersonChangedEvent;
 import se.uu.its.integration.model.events.PersonEvent;
 import se.uu.its.integration.model.events.PersonEventData;
 import se.uu.its.integration.model.events.RoleCreatedEvent;
+import se.uu.its.integration.model.events.RoleDeletedEvent;
 import se.uu.its.integration.model.events.RoleEvent;
 import se.uu.its.integration.model.identity.Affiliation;
 import se.uu.its.integration.model.identity.Employee;
@@ -49,6 +52,7 @@ public class ModelEventsTest {
 		
 		PersonChangedEvent event = new PersonChangedEvent(
 				SYSTEM_MESSAGE_PRODUCER, 
+				"Ev104",
 				person, 
 				personEventData);
 
@@ -63,10 +67,45 @@ public class ModelEventsTest {
 	}
 	
 	@Test
+	public void testAffiliationCreatedEvent() throws JAXBException {
+		
+		AffiliationCreatedEvent event = new AffiliationCreatedEvent(
+				SYSTEM_MESSAGE_PRODUCER,
+				"Ev902",
+				new Affiliation("testtest"));		
+
+		String xml = getMarchalledObjectXml(AffiliationChangedEvent.class, event);
+		System.out.println(xml);
+		System.out.println();		
+		
+		AffiliationEvent objectFromXml = (AffiliationEvent) getUnmarchalledObject(AffiliationEvent.class, xml);		
+
+		assertTrue("Unmarchalled value of producer is not the same as marchalled object property value.", objectFromXml.getProducer().equalsIgnoreCase(SYSTEM_MESSAGE_PRODUCER));
+	}	
+	
+	@Test
+	public void testAffiliationDeletedEvent() throws JAXBException {
+		
+		AffiliationDeletedEvent event = new AffiliationDeletedEvent(
+				SYSTEM_MESSAGE_PRODUCER,
+				"Ev893",
+				new Affiliation("testtest"));		
+
+		String xml = getMarchalledObjectXml(AffiliationDeletedEvent.class, event);
+		System.out.println(xml);
+		System.out.println();		
+		
+		AffiliationEvent objectFromXml = (AffiliationEvent) getUnmarchalledObject(AffiliationEvent.class, xml);		
+
+		assertTrue("Unmarchalled value of producer is not the same as marchalled object property value.", objectFromXml.getProducer().equalsIgnoreCase(SYSTEM_MESSAGE_PRODUCER));
+	}	
+	
+	@Test
 	public void testAffiliationChangedEventMinimalXml() throws JAXBException {
 		
 		AffiliationChangedEvent event = new AffiliationChangedEvent(
 				SYSTEM_MESSAGE_PRODUCER,
+				"Ev765",
 				new Affiliation("testtest"));		
 
 		String xml = getMarchalledObjectXml(AffiliationChangedEvent.class, event);
@@ -83,6 +122,7 @@ public class ModelEventsTest {
 
 		RoleCreatedEvent event = new RoleCreatedEvent(
 				SYSTEM_MESSAGE_PRODUCER, 
+				"Ev108",
 				new Role(
 						new Student("000000000000"),
 						new Organization("X11")
@@ -97,6 +137,27 @@ public class ModelEventsTest {
 		assertTrue("Unmarchalled value of producer is not the same as marchalled object property value.", objectFromXml.getProducer().equalsIgnoreCase(SYSTEM_MESSAGE_PRODUCER));
 	
 	}
+
+	@Test
+	public void testRoleDeletedEventMinimalXml() throws JAXBException {
+
+		RoleDeletedEvent event = new RoleDeletedEvent(
+				SYSTEM_MESSAGE_PRODUCER, 
+				"Ev305",
+				new Role(
+						new Student("000000000000"),
+						new Organization("X11")
+						));
+		
+		String xml = getMarchalledObjectXml(RoleDeletedEvent.class, event);
+		System.out.println(xml);
+		System.out.println();
+		
+		RoleEvent objectFromXml = (RoleEvent) getUnmarchalledObject(RoleEvent.class, xml); 
+
+		assertTrue("Unmarchalled value of producer is not the same as marchalled object property value.", objectFromXml.getProducer().equalsIgnoreCase(SYSTEM_MESSAGE_PRODUCER));
+	
+	}	
 	
 	private Object getUnmarchalledObject(
 			@SuppressWarnings("rawtypes") Class c, String xml) throws JAXBException {
@@ -125,7 +186,8 @@ public class ModelEventsTest {
 		AffiliationEventData affiliationEventData = new AffiliationEventData();
 		UUEventDataProperty property = new UUEventDataProperty("Identifier", "test1234", "testtest");
 		affiliationEventData.addEventPropertyData(property);
-		AffiliationChangedEvent event = new AffiliationChangedEvent(SYSTEM_MESSAGE_PRODUCER, 
+		AffiliationChangedEvent event = new AffiliationChangedEvent(SYSTEM_MESSAGE_PRODUCER,
+				"Ev425",
 				affiliation, 
 				affiliationEventData);
 
@@ -153,6 +215,7 @@ public class ModelEventsTest {
 		
 		OrganizationDepartmentMappingChangedEvent event = new OrganizationDepartmentMappingChangedEvent(
 				SYSTEM_MESSAGE_PRODUCER,
+				"Ev198",
 				new OrganizationDepartmentMapping("X11", "CodeX"));
 		
 		String xml = getMarchalledObjectXml(OrganizationDepartmentMappingChangedEvent.class, event);

@@ -16,8 +16,8 @@ public class RoleDeletedEvent extends RoleEvent {
 	private RoleDeletedEvent() {
 	}
 	
-	public RoleDeletedEvent(String producer, Role role) {
-		super(producer, role);
+	public RoleDeletedEvent(String producer, String producerReferenceId, Role role) {
+		super(producer, producerReferenceId, role);
 	}
 
 }

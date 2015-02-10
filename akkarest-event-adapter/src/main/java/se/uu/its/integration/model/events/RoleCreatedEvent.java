@@ -9,11 +9,15 @@ public class RoleCreatedEvent extends RoleEvent {
 
 	private static final long serialVersionUID = -6422519057794636309L;
 
+	/**
+	 * Needed for JAXB.
+	 */	
+	@SuppressWarnings("unused")
 	private RoleCreatedEvent() {
 	}
 	
-	public RoleCreatedEvent(String producer, Role role) {
-		super(producer, role);
+	public RoleCreatedEvent(String producer, String producerReferenceId, Role role) {
+		super(producer, producerReferenceId, role);
 	}
 
 }

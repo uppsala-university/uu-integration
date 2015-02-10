@@ -16,12 +16,12 @@ public class AffiliationDeletedEvent extends AffiliationEvent {
 	private AffiliationDeletedEvent() {
 	}		
 		
-	public AffiliationDeletedEvent(String producer, Affiliation affiliation) {
-		super(producer, affiliation);
+	public AffiliationDeletedEvent(String producer, String producerReferenceId, Affiliation affiliation) {
+		super(producer, producerReferenceId, affiliation);
 	}
 	
-	public AffiliationDeletedEvent(String producer, String affiliationIdentifier) {
-		super(producer, affiliationIdentifier);
+	public AffiliationDeletedEvent(String producer, String producerReferenceId, String affiliationIdentifier) {
+		super(producer, producerReferenceId, affiliationIdentifier);
 	}
 
 }

@@ -21,18 +21,18 @@ public class AffiliationEvent extends UUEvent {
 	protected AffiliationEvent() {
 	}
 	
-	protected AffiliationEvent(String producer, String affilationIdentifier) {
-		super(producer);
+	protected AffiliationEvent(String producer, String producerReferenceId, String affilationIdentifier) {
+		super(producer, producerReferenceId);
 		this.affiliation = new Affiliation(affilationIdentifier);
 	}
 	
-	protected AffiliationEvent(String producer, Affiliation affiliation) {
-		super(producer);
+	protected AffiliationEvent(String producer, String producerReferenceId, Affiliation affiliation) {
+		super(producer, producerReferenceId);
 		this.affiliation = affiliation;
 	}
 	
-	protected AffiliationEvent(String producer, Affiliation identity, AffiliationEventData identityEventData) {
-		super(producer);
+	protected AffiliationEvent(String producer, String producerReferenceId, Affiliation identity, AffiliationEventData identityEventData) {
+		super(producer, producerReferenceId);
 		this.affiliation = identity;
 		this.affiliationEventData = identityEventData;
 	}

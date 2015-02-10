@@ -14,7 +14,7 @@ public class OrganizationDepartmentMappingChangedEvent extends
 	private OrganizationDepartmentMappingChangedEvent() {
 	}
 
-	public OrganizationDepartmentMappingChangedEvent(String producer, OrganizationDepartmentMapping orgDepMapping) {
-		super(producer, orgDepMapping);
+	public OrganizationDepartmentMappingChangedEvent(String producer, String producerReferenceId, OrganizationDepartmentMapping orgDepMapping) {
+		super(producer, producerReferenceId, orgDepMapping);
 	}
 }

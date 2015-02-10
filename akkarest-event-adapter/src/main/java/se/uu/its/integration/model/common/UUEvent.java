@@ -31,6 +31,9 @@ public abstract class UUEvent implements Serializable {
 
 	@XmlElement(name = "Producer")
 	public String producer;
+
+	@XmlElement(name = "ProducerReferenceId")
+	String producerReferenceId;
 	
 	protected UUEvent() {
 	}
@@ -56,11 +59,11 @@ public abstract class UUEvent implements Serializable {
 
 	}
 	
-	protected UUEvent(String producer) {
+	protected UUEvent(String producer, String producerReferenceId) {
 		this.time = GregorianCalendar.getInstance();
-		this.producer = producer;
 		this.type = this.getClass().getSimpleName();
-		
+		this.producer = producer;
+		this.producerReferenceId = producerReferenceId;
 	}
 	
 	public Calendar getIssuedTime() {
