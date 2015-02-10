@@ -9,6 +9,8 @@ import se.uu.its.integration.model.common.UUIntegrationObject;
 @XmlRootElement(name = "OrganizationDepartmentMapping", namespace = "http://www.uu.se/schemas/integration/2015/Identity")
 public class OrganizationDepartmentMapping extends UUIntegrationObject {
 
+	private static final long serialVersionUID = 6244901645709167722L;
+
 	@XmlElementRef
 	private Organization organization;
 	

@@ -9,6 +9,10 @@ public class RoleDeletedEvent extends RoleEvent {
 
 	private static final long serialVersionUID = 8991269975037976860L;
 
+	/**
+	 * Needed for JAXB.
+	 */		
+	@SuppressWarnings("unused")
 	private RoleDeletedEvent() {
 	}
 	

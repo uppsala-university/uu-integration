@@ -13,9 +13,6 @@ import se.uu.its.integration.model.common.UUEventDataProperty;
 @XmlRootElement(name = "AffiliationEventData", namespace = "http://www.uu.se/schemas/integration/2015/Events")
 public class AffiliationEventData extends UUEventData {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -2618604061922069506L;
 	
 	@XmlElementWrapper(name = "AffiliationEventDataProperties", namespace = "http://www.uu.se/schemas/integration/2015/Events")	

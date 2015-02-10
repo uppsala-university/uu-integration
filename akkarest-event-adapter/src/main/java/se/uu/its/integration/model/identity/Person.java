@@ -34,7 +34,11 @@ public class Person extends UUIntegrationObject {
 	    @XmlElement(name = "Employee", type = Employee.class, namespace = "http://www.uu.se/schemas/integration/2015/Identity")
 	})
 	List<Affiliation> affiliations  = null;
-	
+
+	/**
+	 * Needed for JAXB.
+	 */		
+	@SuppressWarnings("unused")
 	private Person() {
 	}
 	

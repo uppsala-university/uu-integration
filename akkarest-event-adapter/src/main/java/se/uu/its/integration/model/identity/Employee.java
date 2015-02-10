@@ -6,7 +6,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class Employee extends Affiliation {
 
 	private static final long serialVersionUID = -1199776753461842540L;
-	
+
+	/**
+	 * Needed for JAXB.
+	 */	
+	@SuppressWarnings("unused")
 	private Employee() {
 	}
 	

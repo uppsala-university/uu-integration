@@ -7,6 +7,10 @@ public class Student extends Affiliation {
 
 	private static final long serialVersionUID = 7671206260738297260L;
 
+	/**
+	 * Needed for JAXB.
+	 */		
+	@SuppressWarnings("unused")
 	private Student() {
 	}
 	

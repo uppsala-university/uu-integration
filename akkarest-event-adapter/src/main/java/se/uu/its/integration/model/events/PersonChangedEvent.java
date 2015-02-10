@@ -9,6 +9,10 @@ public class PersonChangedEvent extends PersonEvent {
 
 	private static final long serialVersionUID = 2325281187450370804L;
 
+	/**
+	 * Needed for JAXB.
+	 */		
+	@SuppressWarnings("unused")
 	private PersonChangedEvent() {
 	}
 	

@@ -16,7 +16,11 @@ public class Organization extends UUIntegrationObject {
 	public Organization(String identifier) {
 		this.identifier = identifier;
 	}
-	
+
+	/**
+	 * Needed for JAXB.
+	 */		
+	@SuppressWarnings("unused")
 	private Organization() {
 	}
 	

@@ -7,9 +7,12 @@ import se.uu.its.integration.model.identity.Affiliation;
 @XmlRootElement(name = "AffiliationEvent", namespace = "http://www.uu.se/schemas/integration/2015/Events")
 public class AffiliationChangedEvent extends AffiliationEvent {
 
+	private static final long serialVersionUID = -4284046648676116674L;
+
 	/**
 	 * Needed for JAXB.
 	 */	
+	@SuppressWarnings("unused")
 	private AffiliationChangedEvent() {
 	}
 	

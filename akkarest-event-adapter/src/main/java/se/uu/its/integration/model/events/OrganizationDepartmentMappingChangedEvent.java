@@ -10,6 +10,7 @@ public class OrganizationDepartmentMappingChangedEvent extends
 
 	private static final long serialVersionUID = 5817790543832271652L;
 	
+	@SuppressWarnings("unused")
 	private OrganizationDepartmentMappingChangedEvent() {
 	}
 
