@@ -16,12 +16,12 @@ public class AffiliationChangedEvent extends AffiliationEvent {
 	private AffiliationChangedEvent() {
 	}
 	
-	public AffiliationChangedEvent(String producer, String identity) {
-		super(producer, identity);
+	public AffiliationChangedEvent(String producer, String affiliationIdentifier) {
+		super(producer, affiliationIdentifier);
 	}
 	
-	public AffiliationChangedEvent(String producer, Affiliation identity) {
-		super(producer, identity);
+	public AffiliationChangedEvent(String producer, Affiliation affiliation) {
+		super(producer, affiliation);
 	}
 
 	public AffiliationChangedEvent(String producer, Affiliation affiliation, AffiliationEventData affiliationEventData) {
