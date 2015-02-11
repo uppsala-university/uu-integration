@@ -255,7 +255,20 @@ public class ModelEventsTest {
 		// POST: http://localhost:8989/esb/rest/affiliation/event/		
 		// POST: http://localhost:8989/esb/rest/orgdepmapping/event/	
 		// POST: http://localhost:8989/esb/rest/role/event/	
+
 		
+		//       protocol:host:port/{system}/{api}/{domain}/{object}/{type}
+		// POST: http://localhost:8989/esb/rest/identity/event/affiliation
+		// POST: http://localhost:8989/esb/rest/identity/event/person		
+		// GET:  http://localhost:8989/esb/rest/identity/affiliation/{id}	
+		// GET:  http://localhost:8989/esb/rest/identity/person/{id}		
+
+		// POST: http://localhost:8989/esb/rest/studyadm/event/course/	
+		// POST: http://localhost:8989/esb/rest/studyadm/event/program/		
+		// GET:  http://localhost:8989/esb/rest/studyadm/course/{id}/			
+		// GET:  http://localhost:8989/esb/rest/studyadm/program/{id}/courses/			
+		
+		// esb/rest/identity/event/
 	}
 	
 	@Test
