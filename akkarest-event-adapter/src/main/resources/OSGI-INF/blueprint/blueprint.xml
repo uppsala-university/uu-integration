@@ -16,7 +16,7 @@
   </cm:property-placeholder>
 
   <cxf:rsServer id="rsServer" address="${CXFserver}${service}"
-    serviceClass="se.uu.its.integration.service.identity.rest"
+    serviceClass="se.uu.its.integration.service.identity.rest.IdentityService"
     loggingFeatureEnabled="true"
     loggingSizeLimit="20"/>
 
@@ -46,8 +46,12 @@
 
       <!-- For now, just place on distribution queue. -->
       <!-- TODO: Move to filter... -->
+      <!-- 
       <to uri="activemq:queue:identity-event-distribution" />
-      
+       inonly returnerar bara en 200:a.
+       to förväntar sig ett resultat som går att skicka vidare
+       -->
+      <inOnly uri="activemq:queue:identity-event-distribution" />
       <!-- TODO: Log to event database. -->
 
     </route>
