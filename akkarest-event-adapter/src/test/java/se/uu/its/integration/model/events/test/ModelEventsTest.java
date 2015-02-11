@@ -69,7 +69,7 @@ public class ModelEventsTest {
 	}
 
 	@Test 
-	public void testPersonDeleteEvent() throws JAXBException {
+	public void testPersonDeletedEvent() throws JAXBException {
 		
 		Person person = new Person("199001011771");
 		person.AddAffiliation(new Student("studstud"));
