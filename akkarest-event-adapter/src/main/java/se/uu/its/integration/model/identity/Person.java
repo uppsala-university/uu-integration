@@ -49,6 +49,11 @@ public class Person extends UUIntegrationObject {
 		this.lastname = lastname;
 	}
 	
+	public Person(String personNumber) {
+		this.identifier = personNumber;
+		this.personNumber = personNumber;
+	}
+	
 	public void AddAffiliation(Affiliation affiliation) {
 		if (affiliations == null) 
 			affiliations = new ArrayList<Affiliation>();	

@@ -16,8 +16,17 @@ public class PersonChangedEvent extends PersonEvent {
 	private PersonChangedEvent() {
 	}
 	
-	public PersonChangedEvent(String producer, String producerReferenceId, Person person, PersonEventData personEventData) {
+	public PersonChangedEvent(String producer, 
+			String producerReferenceId, 
+			Person person, 
+			PersonEventData personEventData) {
 		super(producer, producerReferenceId, person, personEventData);
 	}
+
+	public PersonChangedEvent(String producer, 
+			String producerReferenceId, 
+			Person person) {
+		super(producer, producerReferenceId, person);
+	}	
 	
 }

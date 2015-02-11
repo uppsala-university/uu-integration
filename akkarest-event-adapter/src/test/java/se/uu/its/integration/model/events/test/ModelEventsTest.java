@@ -65,6 +65,27 @@ public class ModelEventsTest {
 
 		assertTrue("Unmarchalled value of producer is not the same as marchalled object property value.", objectFromXml.getProducer().equalsIgnoreCase(SYSTEM_MESSAGE_PRODUCER));
 	}
+
+	@Test 
+	public void testPersonChangedEventMinimalXml() throws JAXBException {
+		
+		Person person = new Person("199001011771");
+		person.AddAffiliation(new Student("studstud"));
+		
+		PersonChangedEvent event = new PersonChangedEvent(
+				SYSTEM_MESSAGE_PRODUCER, 
+				"Ev104",
+				person);
+
+		String xml = getMarchalledObjectXml(PersonChangedEvent.class, event);
+		
+		System.out.println(xml);
+		System.out.println();
+		
+		PersonEvent objectFromXml = (PersonEvent) getUnmarchalledObject(PersonEvent.class, xml);	
+
+		assertTrue("Unmarchalled value of producer is not the same as marchalled object property value.", objectFromXml.getProducer().equalsIgnoreCase(SYSTEM_MESSAGE_PRODUCER));
+	}	
 	
 	@Test
 	public void testAffiliationCreatedEvent() throws JAXBException {
