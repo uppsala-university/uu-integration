@@ -23,8 +23,8 @@ public abstract class UUEvent implements Serializable {
 	@XmlAttribute(name = "type")
 	String type;
 	
-	@XmlAttribute(name = "id")
-	String id;
+	@XmlAttribute(name = "identifier")
+	String identifier = null;
 	
 	@XmlElement(name = "IssuedTime")
 	protected Calendar time;	
@@ -76,5 +76,9 @@ public abstract class UUEvent implements Serializable {
 	
 	public String getProducer() {
 		return producer;
+	}
+	
+	public String getIdentifier() {
+		return identifier;
 	}
 }
