@@ -13,6 +13,7 @@ import javax.xml.bind.Unmarshaller;
 
 import org.junit.Test;
 
+import se.uu.its.integration.model.common.UUEvent;
 import se.uu.its.integration.model.common.UUEventDataProperty;
 import se.uu.its.integration.model.events.AffiliationChangedEvent;
 import se.uu.its.integration.model.events.AffiliationCreatedEvent;
@@ -96,7 +97,7 @@ public class ModelEventsTest {
 		AffiliationCreatedEvent event = new AffiliationCreatedEvent(
 				SYSTEM_MESSAGE_PRODUCER,
 				"Ev902",
-				new Affiliation("testtest"));		
+				new Affiliation("emplempl"));		
 
 		String xml = getMarchalledObjectXml(AffiliationChangedEvent.class, event);
 		System.out.println(xml);
@@ -243,9 +244,9 @@ public class ModelEventsTest {
 		System.out.println(xml);
 		System.out.println();
 		
-		AffiliationEvent identityEventFromXml = (AffiliationEvent) getUnmarchalledObject(AffiliationEvent.class, xml);
-		
-		assertTrue("Unmarchalled value of producer is not the same as marchalled object property value.", identityEventFromXml.getProducer().equalsIgnoreCase(SYSTEM_MESSAGE_PRODUCER));
+		AffiliationEvent objectFromXml = (AffiliationEvent) getUnmarchalledObject(AffiliationEvent.class, xml);
+
+		assertTrue("Unmarchalled value of producer is not the same as marchalled object property value.", objectFromXml.getProducer().equalsIgnoreCase(SYSTEM_MESSAGE_PRODUCER));
 
 		// curl -X POST -H "Content-Type: application/xml" -d @identity-event.xml http://localhost:8989/esb/rest/person/event/
 
@@ -268,7 +269,11 @@ public class ModelEventsTest {
 		// GET:  http://localhost:8989/esb/rest/studyadm/course/{id}/			
 		// GET:  http://localhost:8989/esb/rest/studyadm/program/{id}/courses/			
 		
-		// esb/rest/identity/event/
+		// Tested:
+		// curl -X POST -H "Content-Type: application/xml" -d @affiliation-created-event.xml http://localhost:8989/esb/rest/identity/event/affiliation/
+		// curl -X POST -H "Content-Type: application/xml" -d @role-created-event.xml http://localhost:8989/esb/rest/identity/event/role/
+		// curl -X POST -H "Content-Type: application/xml" -d @orgdepmap-created-event.xml http://localhost:8989/esb/rest/identity/event/orgdepmap/
+		// curl -X POST -H "Content-Type: application/xml" -d @person-changed-event.xml http://localhost:8989/esb/rest/identity/event/person/
 	}
 	
 	@Test
