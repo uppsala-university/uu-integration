@@ -13,6 +13,7 @@ import javax.xml.bind.Unmarshaller;
 
 import org.junit.Test;
 
+import se.uu.its.integration.model.common.ModelUtils;
 import se.uu.its.integration.model.common.UUEvent;
 import se.uu.its.integration.model.common.UUEventDataProperty;
 import se.uu.its.integration.model.events.AffiliationChangedEvent;
@@ -59,12 +60,12 @@ public class ModelEventsTest {
 				person, 
 				personEventData);
 
-		String xml = getMarchalledObjectXml(PersonChangedEvent.class, event);
+		String xml = ModelUtils.getMarchalledObjectXml(PersonChangedEvent.class, event);
 		
 		System.out.println(xml);
 		System.out.println();
 		
-		PersonEvent objectFromXml = (PersonEvent) getUnmarchalledObject(PersonEvent.class, xml);	
+		PersonEvent objectFromXml = (PersonEvent) ModelUtils.getUnmarchalledObject(PersonEvent.class, xml);	
 
 		assertTrue("Unmarchalled value of producer is not the same as marchalled object property value.", objectFromXml.getProducer().equalsIgnoreCase(SYSTEM_MESSAGE_PRODUCER));
 	}
@@ -81,12 +82,12 @@ public class ModelEventsTest {
 				"Ev104",
 				person);
 
-		String xml = getMarchalledObjectXml(PersonDeletedEvent.class, event);
+		String xml = ModelUtils.getMarchalledObjectXml(PersonDeletedEvent.class, event);
 		
 		System.out.println(xml);
 		System.out.println();
 		
-		PersonEvent objectFromXml = (PersonEvent) getUnmarchalledObject(PersonEvent.class, xml);	
+		PersonEvent objectFromXml = (PersonEvent) ModelUtils.getUnmarchalledObject(PersonEvent.class, xml);	
 
 		assertTrue("Unmarchalled value of producer is not the same as marchalled object property value.", objectFromXml.getProducer().equalsIgnoreCase(SYSTEM_MESSAGE_PRODUCER));
 	}	
@@ -99,11 +100,11 @@ public class ModelEventsTest {
 				"Ev902",
 				new Affiliation("emplempl"));		
 
-		String xml = getMarchalledObjectXml(AffiliationChangedEvent.class, event);
+		String xml = ModelUtils.getMarchalledObjectXml(AffiliationChangedEvent.class, event);
 		System.out.println(xml);
 		System.out.println();		
 		
-		AffiliationEvent objectFromXml = (AffiliationEvent) getUnmarchalledObject(AffiliationEvent.class, xml);		
+		AffiliationEvent objectFromXml = (AffiliationEvent) ModelUtils.getUnmarchalledObject(AffiliationEvent.class, xml);		
 
 		assertTrue("Unmarchalled value of producer is not the same as marchalled object property value.", objectFromXml.getProducer().equalsIgnoreCase(SYSTEM_MESSAGE_PRODUCER));
 	}	
@@ -116,11 +117,11 @@ public class ModelEventsTest {
 				"Ev893",
 				new Affiliation("testtest"));		
 
-		String xml = getMarchalledObjectXml(AffiliationDeletedEvent.class, event);
+		String xml = ModelUtils.getMarchalledObjectXml(AffiliationDeletedEvent.class, event);
 		System.out.println(xml);
 		System.out.println();		
 		
-		AffiliationEvent objectFromXml = (AffiliationEvent) getUnmarchalledObject(AffiliationEvent.class, xml);		
+		AffiliationEvent objectFromXml = (AffiliationEvent) ModelUtils.getUnmarchalledObject(AffiliationEvent.class, xml);		
 
 		assertTrue("Unmarchalled value of producer is not the same as marchalled object property value.", objectFromXml.getProducer().equalsIgnoreCase(SYSTEM_MESSAGE_PRODUCER));
 	}	
@@ -133,11 +134,11 @@ public class ModelEventsTest {
 				"Ev765",
 				new Affiliation("studstud"));		
 
-		String xml = getMarchalledObjectXml(AffiliationChangedEvent.class, event);
+		String xml = ModelUtils.getMarchalledObjectXml(AffiliationChangedEvent.class, event);
 		System.out.println(xml);
 		System.out.println();		
 		
-		AffiliationEvent objectFromXml = (AffiliationEvent) getUnmarchalledObject(AffiliationEvent.class, xml);		
+		AffiliationEvent objectFromXml = (AffiliationEvent) ModelUtils.getUnmarchalledObject(AffiliationEvent.class, xml);		
 
 		assertTrue("Unmarchalled value of producer is not the same as marchalled object property value.", objectFromXml.getProducer().equalsIgnoreCase(SYSTEM_MESSAGE_PRODUCER));
 	}
@@ -155,11 +156,11 @@ public class ModelEventsTest {
 				new Affiliation("studstud"),
 				affilationEventData);		
 
-		String xml = getMarchalledObjectXml(AffiliationChangedEvent.class, event);
+		String xml = ModelUtils.getMarchalledObjectXml(AffiliationChangedEvent.class, event);
 		System.out.println(xml);
 		System.out.println();		
 		
-		AffiliationEvent objectFromXml = (AffiliationEvent) getUnmarchalledObject(AffiliationEvent.class, xml);		
+		AffiliationEvent objectFromXml = (AffiliationEvent) ModelUtils.getUnmarchalledObject(AffiliationEvent.class, xml);		
 
 		assertTrue("Unmarchalled value of producer is not the same as marchalled object property value.", objectFromXml.getProducer().equalsIgnoreCase(SYSTEM_MESSAGE_PRODUCER));
 	}	
@@ -176,11 +177,11 @@ public class ModelEventsTest {
 						new Organization("X11")
 						));
 		
-		String xml = getMarchalledObjectXml(RoleCreatedEvent.class, event);
+		String xml = ModelUtils.getMarchalledObjectXml(RoleCreatedEvent.class, event);
 		System.out.println(xml);
 		System.out.println();
 		
-		RoleEvent objectFromXml = (RoleEvent) getUnmarchalledObject(RoleEvent.class, xml); 
+		RoleEvent objectFromXml = (RoleEvent) ModelUtils.getUnmarchalledObject(RoleEvent.class, xml); 
 
 		assertTrue("Unmarchalled value of producer is not the same as marchalled object property value.", objectFromXml.getProducer().equalsIgnoreCase(SYSTEM_MESSAGE_PRODUCER));
 	
@@ -198,34 +199,34 @@ public class ModelEventsTest {
 						new Organization("X11")
 						));
 		
-		String xml = getMarchalledObjectXml(RoleDeletedEvent.class, event);
+		String xml = ModelUtils.getMarchalledObjectXml(RoleDeletedEvent.class, event);
 		System.out.println(xml);
 		System.out.println();
 		
-		RoleEvent objectFromXml = (RoleEvent) getUnmarchalledObject(RoleEvent.class, xml); 
+		RoleEvent objectFromXml = (RoleEvent) ModelUtils.getUnmarchalledObject(RoleEvent.class, xml); 
 
 		assertTrue("Unmarchalled value of producer is not the same as marchalled object property value.", objectFromXml.getProducer().equalsIgnoreCase(SYSTEM_MESSAGE_PRODUCER));
 	
 	}	
 	
-	private Object getUnmarchalledObject(
-			@SuppressWarnings("rawtypes") Class c, String xml) throws JAXBException {
-
-		JAXBContext jaxbContext = JAXBContext.newInstance(c);
-		Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-		return jaxbUnmarshaller.unmarshal(new StringReader(xml));			
-	}
-
-	private String getMarchalledObjectXml(Class c, Object o) throws JAXBException {
-		JAXBContext jaxbContext = JAXBContext.newInstance(c);
-		Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-		jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-		
-		OutputStream objectXmlStream = new ByteArrayOutputStream();
-		jaxbMarshaller.marshal(o, objectXmlStream);
-		return objectXmlStream.toString();
-		
-	}
+//	private Object getUnmarchalledObject(
+//			@SuppressWarnings("rawtypes") Class c, String xml) throws JAXBException {
+//
+//		JAXBContext jaxbContext = JAXBContext.newInstance(c);
+//		Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+//		return jaxbUnmarshaller.unmarshal(new StringReader(xml));			
+//	}
+//
+//	private String getMarchalledObjectXml(Class c, Object o) throws JAXBException {
+//		JAXBContext jaxbContext = JAXBContext.newInstance(c);
+//		Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+//		jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+//		
+//		OutputStream objectXmlStream = new ByteArrayOutputStream();
+//		jaxbMarshaller.marshal(o, objectXmlStream);
+//		return objectXmlStream.toString();
+//		
+//	}
 
 	@Test
 	public void testAffiliationChangedEventFullXml() throws JAXBException {
@@ -240,11 +241,11 @@ public class ModelEventsTest {
 				affiliation, 
 				affiliationEventData);
 
-		String xml = getMarchalledObjectXml(AffiliationChangedEvent.class, event);
+		String xml = ModelUtils.getMarchalledObjectXml(AffiliationChangedEvent.class, event);
 		System.out.println(xml);
 		System.out.println();
 		
-		AffiliationEvent objectFromXml = (AffiliationEvent) getUnmarchalledObject(AffiliationEvent.class, xml);
+		AffiliationEvent objectFromXml = (AffiliationEvent) ModelUtils.getUnmarchalledObject(AffiliationEvent.class, xml);
 
 		assertTrue("Unmarchalled value of producer is not the same as marchalled object property value.", objectFromXml.getProducer().equalsIgnoreCase(SYSTEM_MESSAGE_PRODUCER));
 
@@ -258,7 +259,7 @@ public class ModelEventsTest {
 		// POST: http://localhost:8989/esb/rest/role/event/	
 
 		
-		//       protocol:host:port/{system}/{api}/{domain}/{object}/{type}
+		// /esb/rest/{domain}/{object}/{type}
 		// POST: http://localhost:8989/esb/rest/identity/event/affiliation
 		// POST: http://localhost:8989/esb/rest/identity/event/person		
 		// GET:  http://localhost:8989/esb/rest/identity/affiliation/{id}	
@@ -284,11 +285,11 @@ public class ModelEventsTest {
 				"Ev198",
 				new OrganizationDepartmentMapping("X11", "CodeX"));
 		
-		String xml = getMarchalledObjectXml(OrganizationDepartmentMappingCreatedEvent.class, event);
+		String xml = ModelUtils.getMarchalledObjectXml(OrganizationDepartmentMappingCreatedEvent.class, event);
 		System.out.println(xml);
 		System.out.println();		
 		
-		OrganizationDepartmentMappingEvent objectFromXml = (OrganizationDepartmentMappingEvent) getUnmarchalledObject(OrganizationDepartmentMappingCreatedEvent.class, xml); 
+		OrganizationDepartmentMappingEvent objectFromXml = (OrganizationDepartmentMappingEvent) ModelUtils.getUnmarchalledObject(OrganizationDepartmentMappingCreatedEvent.class, xml); 
 
 		assertTrue("Unmarchalled value of producer is not the same as marchalled object property value.", objectFromXml.getProducer().equalsIgnoreCase(SYSTEM_MESSAGE_PRODUCER));
 		
@@ -302,11 +303,11 @@ public class ModelEventsTest {
 				"Ev198",
 				new OrganizationDepartmentMapping("X11", "CodeX"));
 		
-		String xml = getMarchalledObjectXml(OrganizationDepartmentMappingDeletedEvent.class, event);
+		String xml = ModelUtils.getMarchalledObjectXml(OrganizationDepartmentMappingDeletedEvent.class, event);
 		System.out.println(xml);
 		System.out.println();		
 		
-		OrganizationDepartmentMappingEvent objectFromXml = (OrganizationDepartmentMappingEvent) getUnmarchalledObject(OrganizationDepartmentMappingCreatedEvent.class, xml); 
+		OrganizationDepartmentMappingEvent objectFromXml = (OrganizationDepartmentMappingEvent) ModelUtils.getUnmarchalledObject(OrganizationDepartmentMappingCreatedEvent.class, xml); 
 
 		assertTrue("Unmarchalled value of producer is not the same as marchalled object property value.", objectFromXml.getProducer().equalsIgnoreCase(SYSTEM_MESSAGE_PRODUCER));
 		
