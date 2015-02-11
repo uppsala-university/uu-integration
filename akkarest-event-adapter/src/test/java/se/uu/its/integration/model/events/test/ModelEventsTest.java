@@ -22,6 +22,7 @@ import se.uu.its.integration.model.events.AffiliationEventData;
 import se.uu.its.integration.model.events.OrganizationDepartmentMappingChangedEvent;
 import se.uu.its.integration.model.events.OrganizationDepartmentMappingEvent;
 import se.uu.its.integration.model.events.PersonChangedEvent;
+import se.uu.its.integration.model.events.PersonDeletedEvent;
 import se.uu.its.integration.model.events.PersonEvent;
 import se.uu.its.integration.model.events.PersonEventData;
 import se.uu.its.integration.model.events.RoleCreatedEvent;
@@ -43,10 +44,10 @@ public class ModelEventsTest {
 	@Test 
 	public void testPersonChangedEventFullXml() throws JAXBException {
 		
-		Person person = new Person("0000000000", "Test", "Testsson");
-		person.AddAffiliation(new Student("0000000000"));
-		person.AddAffiliation(new Employee("1111111111"));
-		UUEventDataProperty property = new UUEventDataProperty("Firstname", "Tezt", "Test");
+		Person person = new Person("198001010000", "Test", "Testsson");
+		person.AddAffiliation(new Student("studstud"));
+		person.AddAffiliation(new Employee("emplempl"));
+		UUEventDataProperty property = new UUEventDataProperty("Personnumber", "197001010000", "198001010000");
 		PersonEventData personEventData = new PersonEventData();
 		personEventData.addEventPropertyData(property);	
 		
@@ -67,17 +68,18 @@ public class ModelEventsTest {
 	}
 
 	@Test 
-	public void testPersonChangedEventMinimalXml() throws JAXBException {
+	public void testPersonDeleteEvent() throws JAXBException {
 		
 		Person person = new Person("199001011771");
 		person.AddAffiliation(new Student("studstud"));
+		person.AddAffiliation(new Employee("emplempl"));
 		
-		PersonChangedEvent event = new PersonChangedEvent(
+		PersonDeletedEvent event = new PersonDeletedEvent(
 				SYSTEM_MESSAGE_PRODUCER, 
 				"Ev104",
 				person);
 
-		String xml = getMarchalledObjectXml(PersonChangedEvent.class, event);
+		String xml = getMarchalledObjectXml(PersonDeletedEvent.class, event);
 		
 		System.out.println(xml);
 		System.out.println();
