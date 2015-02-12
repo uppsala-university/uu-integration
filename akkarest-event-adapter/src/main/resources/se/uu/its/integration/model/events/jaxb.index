@@ -1,0 +1,15 @@
+AffiliationChangedEvent
+AffiliationCreatedEvent
+AffiliationDeletedEvent
+AffiliationEvent
+AffiliationEventData
+OrganizationDepartmentMappingCreatedEvent
+OrganizationDepartmentMappingDeletedEvent
+OrganizationDepartmentMappingEvent
+PersonChangedEvent
+PersonDeletedEvent
+PersonEvent
+PersonEventData
+RoleCreatedEvent
+RoleDeletedEvent
+RoleEvent

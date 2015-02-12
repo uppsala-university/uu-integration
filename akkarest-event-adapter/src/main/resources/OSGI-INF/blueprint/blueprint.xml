@@ -20,21 +20,27 @@
     loggingFeatureEnabled="true"
     loggingSizeLimit="20"/>
 
+  <!-- This helper-bean is used to generate the uuid as event identifier. -->
+  <bean id="uuidGenerator" class="se.uu.its.integration.model.common.ModelUtils"/>
+
   <camelContext xmlns="http://camel.apache.org/schema/blueprint">
 
     <route id="IdentityServiceRoute">
 
       <!-- Listen for calls from REST-binded CXF-service. -->
       <from uri="cxfrs:bean:rsServer?bindingStyle=SimpleConsumer" />
+      
+      <!-- We use XML as internal integration language. -->
+      <marshal>
+      	<jaxb prettyPrint="true" contextPath="se.uu.its.integration.model.events"/>
+      </marshal>
 
-	  <!-- TODO: Borde nog använda sig av <unmarchal><jaxb> istället. -->
-      <convertBodyTo type="java.lang.String"/>
-      
-      <!-- TODO: Add integration event id. -->
-      <!-- 
+      <!-- Add integration event id. -->
+      <setHeader headerName="uid">
+      	<method bean="uuidGenerator" method="getNewEventId"/>
+      </setHeader>
       <to uri="xslt:se/uu/its/integration/model/transform/addIntegrationEventIdToEvent.xsl"/>
-      -->
-      
+
       <!-- TODO: Filter already received messages. 
                  Must first implement event database. -->
       <!--

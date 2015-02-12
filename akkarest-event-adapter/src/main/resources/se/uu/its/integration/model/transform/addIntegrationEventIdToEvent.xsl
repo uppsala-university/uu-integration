@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
-	xmlns:uuid="java://java.util.UUID">
+	xmlns:uuid="java://java.util.UUID"
+	xmlns:uuie="http://www.uu.se/schemas/integration/2015/Events">
 
+<!-- Does not work with default SMX Camel (xalan) or changed to Saxon (HE). Needs Saxon EE.
 	<xsl:variable name="uid" select="uuid:randomUUID()"/>
+-->
+
+	<xsl:param name="uid" />
 
 	<!-- Identity transform. -->
 	<xsl:template match="@* | node()">
