@@ -3,6 +3,7 @@ package se.uu.its.integration.model.common;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.io.StringReader;
+import java.util.UUID;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -10,6 +11,13 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
 public class ModelUtils {
+	
+	public ModelUtils() {
+	}
+	
+	public String getNewEventId() {
+		return UUID.randomUUID().toString();
+	}
 
 	public static Object getUnmarchalledObject(
 			@SuppressWarnings("rawtypes") Class c, String xml) throws JAXBException {
