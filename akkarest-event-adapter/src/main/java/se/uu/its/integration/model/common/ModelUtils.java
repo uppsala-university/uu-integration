@@ -12,6 +12,8 @@ import javax.xml.bind.Unmarshaller;
 
 public class ModelUtils {
 	
+	public static String TO_STRING_ERROR_MSG = "Error!";
+	
 	public ModelUtils() {
 	}
 	

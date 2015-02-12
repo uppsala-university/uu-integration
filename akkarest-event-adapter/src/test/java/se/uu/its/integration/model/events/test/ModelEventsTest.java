@@ -45,6 +45,28 @@ public class ModelEventsTest {
 	private static final String SYSTEM_MESSAGE_PRODUCER = "AKKA";
 	
 	@Test 
+	public void testToString() {
+
+		Person person = new Person("198001010000", "Test", "Testsson");
+		person.AddAffiliation(new Student("studstud"));
+		person.AddAffiliation(new Employee("emplempl"));
+		UUEventDataProperty property = new UUEventDataProperty("Personnumber", "197001010000", "198001010000");
+		PersonEventData personEventData = new PersonEventData();
+		personEventData.addEventPropertyData(property);	
+		
+		PersonChangedEvent event = new PersonChangedEvent(
+				SYSTEM_MESSAGE_PRODUCER, 
+				"Ev104",
+				person, 
+				personEventData);
+		
+		String xml = event.toString();
+		System.out.println(xml);
+		
+		assertTrue("String representation is not valid xml.", !xml.equalsIgnoreCase(""));
+	}
+	
+	@Test 
 	public void testPersonChangedEventFullXml() throws JAXBException {
 		
 		Person person = new Person("198001010000", "Test", "Testsson");

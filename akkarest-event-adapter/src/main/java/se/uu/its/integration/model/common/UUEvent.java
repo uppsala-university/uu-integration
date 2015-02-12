@@ -40,23 +40,16 @@ public abstract class UUEvent implements Serializable {
 	
 	public String toString() {
 
-		String result = "Error!";
+		String result = ModelUtils.TO_STRING_ERROR_MSG;
 		
 		try {
-			JAXBContext jaxbContext = JAXBContext.newInstance(this.getClass());
-			Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-			jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-			OutputStream identityEventXmlStream = new ByteArrayOutputStream();
-
-			jaxbMarshaller.marshal(this, identityEventXmlStream);
-			result = identityEventXmlStream.toString();
-
+			result = ModelUtils.getMarchalledObjectXml(this.getClass(), this);
 		} catch (JAXBException e) {
-			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
 		return result;
-
+		
 	}
 	
 	protected UUEvent(String producer, String producerReferenceId) {
