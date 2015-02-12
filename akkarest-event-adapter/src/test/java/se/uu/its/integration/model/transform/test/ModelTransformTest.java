@@ -6,6 +6,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
+import java.util.UUID;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.transform.Transformer;
@@ -27,6 +28,8 @@ public class ModelTransformTest {
 	@Test
 	public void testAddIntegrationEventIdToEvent() throws TransformerException, UnsupportedEncodingException, JAXBException {
 		
+//		System.setProperty("javax.xml.transform.TransformerFactory", "net.sf.saxon.TransformerFactoryImpl");
+		
 		String xml = new AffiliationCreatedEvent(
 				"Testsystem",
 				"Ev902",
@@ -38,7 +41,8 @@ public class ModelTransformTest {
 		// get the transformer
 		TransformerFactory tFactory = TransformerFactory.newInstance();
 		Transformer transformer = tFactory.newTransformer(new StreamSource(stylesheet));		
-
+		transformer.setParameter("uid", UUID.randomUUID());
+		
 		// the source and the target
 		StringReader reader = new StringReader(xml);
 		ByteArrayOutputStream targetDocument = new ByteArrayOutputStream();
