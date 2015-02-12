@@ -6,6 +6,7 @@
 
 <!-- Does not work with default SMX Camel (xalan) or changed to Saxon (HE). Needs Saxon EE.
 	<xsl:variable name="uid" select="uuid:randomUUID()"/>
+	Moved to camel blueprint definition which pass new uuid as uid parameter.
 -->
 
 	<xsl:param name="uid" />
