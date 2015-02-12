@@ -20,7 +20,6 @@ import org.junit.Test;
 import se.uu.its.integration.model.common.ModelUtils;
 import se.uu.its.integration.model.events.AffiliationCreatedEvent;
 import se.uu.its.integration.model.events.AffiliationEvent;
-import se.uu.its.integration.model.events.PersonEvent;
 import se.uu.its.integration.model.identity.Affiliation;
 
 public class ModelTransformTest {

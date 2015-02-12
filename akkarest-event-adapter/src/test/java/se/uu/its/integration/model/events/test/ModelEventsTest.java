@@ -2,19 +2,10 @@ package se.uu.its.integration.model.events.test;
 
 import static org.junit.Assert.*;
 
-import java.io.ByteArrayOutputStream;
-import java.io.OutputStream;
-import java.io.StringReader;
-
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
-
 import org.junit.Test;
 
 import se.uu.its.integration.model.common.ModelUtils;
-import se.uu.its.integration.model.common.UUEvent;
 import se.uu.its.integration.model.common.UUEventDataProperty;
 import se.uu.its.integration.model.events.AffiliationChangedEvent;
 import se.uu.its.integration.model.events.AffiliationCreatedEvent;

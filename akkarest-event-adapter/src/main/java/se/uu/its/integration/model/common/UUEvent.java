@@ -1,19 +1,13 @@
 package se.uu.its.integration.model.common;
 
-import java.io.ByteArrayOutputStream;
-import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
-
-import se.uu.its.integration.model.events.AffiliationChangedEvent;
 
 @XmlTransient
 public abstract class UUEvent implements Serializable {
