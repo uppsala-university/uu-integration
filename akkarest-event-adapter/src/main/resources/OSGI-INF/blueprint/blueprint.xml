@@ -49,8 +49,6 @@
       <filter>
       	<method ref="esbEventLogger" method="registerOnce"/>
       	<inOnly uri="activemq:queue:identity-event-distribution" />
-      	
-      	<!-- registerOnce should probable raise an exception that a deadchannel receives. -->
       	<stop />
       </filter>
       
