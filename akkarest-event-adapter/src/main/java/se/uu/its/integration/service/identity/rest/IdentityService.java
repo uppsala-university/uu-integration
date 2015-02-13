@@ -16,6 +16,7 @@ public class IdentityService {
     @POST
     @Path("/event/affiliation/")
     @Consumes(MediaType.APPLICATION_XML)
+    @Produces(MediaType.APPLICATION_XML)
     public Response putIdentityAffiliationEvent(AffiliationEvent event) {
         return null;
     }	
@@ -23,6 +24,7 @@ public class IdentityService {
     @POST
     @Path("/event/person/")
     @Consumes(MediaType.APPLICATION_XML)
+    @Produces(MediaType.APPLICATION_XML)
     public Response putIdentityPersonEvent(PersonEvent event) {
         return null;
     }    
@@ -30,6 +32,7 @@ public class IdentityService {
     @POST
     @Path("/event/role/")
     @Consumes(MediaType.APPLICATION_XML)
+    @Produces(MediaType.APPLICATION_XML)
     public Response putIdentityRoleEvent(RoleEvent event) {
         return null;
     } 
@@ -37,6 +40,7 @@ public class IdentityService {
     @POST
     @Path("/event/orgdepmap/")
     @Consumes(MediaType.APPLICATION_XML)
+    @Produces(MediaType.APPLICATION_XML)
     public Response putIdentityOrganizationDepartmentMappingEvent(OrganizationDepartmentMappingEvent event) {
         return null;
     }    

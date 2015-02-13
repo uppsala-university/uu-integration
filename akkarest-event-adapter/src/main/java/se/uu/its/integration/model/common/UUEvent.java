@@ -31,10 +31,10 @@ public abstract class UUEvent implements Serializable {
 	protected Calendar time;	
 
 	@XmlElement(name = "Producer")
-	public String producer;
+	protected String producer;
 
 	@XmlElement(name = "ProducerReferenceId")
-	String producerReferenceId;
+	protected String producerReferenceId;
 	
 	protected UUEvent() {
 	}
@@ -74,5 +74,9 @@ public abstract class UUEvent implements Serializable {
 	
 	public String getIdentifier() {
 		return identifier;
+	}
+	
+	public String getProducerReferenceId() {
+		return producerReferenceId;
 	}
 }

@@ -25,7 +25,7 @@
   <bean id="esbEventLogger" class="se.uu.its.integration.esb.logger.ESBEventLogger"/>
   <bean id="deadLetterErrorHandler" class="org.apache.camel.builder.DeadLetterChannelBuilder">
   	<property name="deadLetterUri" value="activemq:queue:identity-event-deadletter"/>
-  </bean> 
+  </bean>
 
   <camelContext errorHandlerRef="deadLetterErrorHandler" xmlns="http://camel.apache.org/schema/blueprint">
 
@@ -46,13 +46,14 @@
       <to uri="xslt:se/uu/its/integration/model/transform/addIntegrationEventIdToEvent.xsl"/>
       
       <!-- Don't process already processed events. -->
-      <filter>
-      	<method ref="esbEventLogger" method="registerOnce"/>
-      	<inOnly uri="activemq:queue:identity-event-distribution" />
+       <filter>
+      	<method ref="esbEventLogger" method="isEventProcessed"/>
+      	<to uri="activemq:queue:identity-event-distribution" />
+      	<to uri="bean:esbEventLogger?method=logEvent" />
       	<stop />
       </filter>
       
-      <!-- Log not processed events. -->
+      <!-- Log not processed events. Don't passes the filter. -->
       <inOnly uri="activemq:queue:identity-event-duplicate" />      
 
     </route>
