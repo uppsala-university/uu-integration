@@ -7,8 +7,15 @@ import java.util.GregorianCalendar;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlTransient;
 
+import se.uu.its.integration.model.events.AffiliationEvent;
+import se.uu.its.integration.model.events.OrganizationDepartmentMappingEvent;
+import se.uu.its.integration.model.events.PersonEvent;
+import se.uu.its.integration.model.events.RoleEvent;
+
+@XmlSeeAlso({AffiliationEvent.class, PersonEvent.class, RoleEvent.class, OrganizationDepartmentMappingEvent.class})
 @XmlTransient
 public abstract class UUEvent implements Serializable {
 	

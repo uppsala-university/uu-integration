@@ -6,12 +6,13 @@
 	<artifactId>uu-integration</artifactId>
 	<packaging>pom</packaging>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>Ladok integration components</name>
+	<name>UU integration components</name>
 
 	<modules>
 		<module>ladok-event-distribution</module>
 		<module>ladokevent-logdb-adapter</module>
     		<module>akkarest-event-adapter</module>
+    		<module>esb-event-logger</module>
   	</modules>
 
 	<properties>

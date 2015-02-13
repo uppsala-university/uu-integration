@@ -7,6 +7,7 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
+    	<groupId>se.uu.its.integration</groupId>
 	<artifactId>ladok3event-logdb-adapter</artifactId>
 	<version>${parent.version}</version>
 	<packaging>bundle</packaging>

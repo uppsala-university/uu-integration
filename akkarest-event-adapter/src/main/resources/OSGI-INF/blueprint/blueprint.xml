@@ -21,7 +21,8 @@
     loggingSizeLimit="20"/>
 
   <!-- This helper-bean is used to generate the uuid as event identifier. -->
-  <bean id="uuidGenerator" class="se.uu.its.integration.model.common.ModelUtils"/>
+  <bean id="modelUtils" class="se.uu.its.integration.model.common.ModelUtils"/>
+  <bean id="esbEventLogger" class="se.uu.its.integration.esb.logger.ESBEventLogger"/>
 
   <camelContext xmlns="http://camel.apache.org/schema/blueprint">
 
@@ -37,28 +38,19 @@
 
       <!-- Add integration event id. -->
       <setHeader headerName="uid">
-      	<method bean="uuidGenerator" method="getNewEventId"/>
+      	<method bean="modelUtils" method="getNewEventId"/>
       </setHeader>
       <to uri="xslt:se/uu/its/integration/model/transform/addIntegrationEventIdToEvent.xsl"/>
-
-      <!-- TODO: Filter already received messages. 
-                 Must first implement event database. -->
-      <!--
+      
+      <!-- Don't process already processed events. -->
       <filter>
-      	<method ref="logDb" method="isNotDuplicatEvent"/>
-      	<to uri="activemq:queue:identity-event-distribution" />
+      	<method ref="esbEventLogger" method="registerOnce"/>
+      	<inOnly uri="activemq:queue:identity-event-distribution" />
+      	<stop />
       </filter>
-      -->
-
-      <!-- For now, just place on distribution queue. -->
-      <!-- TODO: Move to filter... -->
-      <!-- 
-      <to uri="activemq:queue:identity-event-distribution" />
-       inonly returnerar bara en 200:a.
-       to förväntar sig ett resultat som går att skicka vidare
-       -->
-      <inOnly uri="activemq:queue:identity-event-distribution" />
-      <!-- TODO: Log to event database. -->
+      
+      <!-- Log not processed events. -->
+      <inOnly uri="activemq:queue:identity-event-deadletter" />      
 
     </route>
     

@@ -4,15 +4,16 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-    <artifactId>uu-integration</artifactId>
-    <groupId>se.uu.its.integration</groupId>
-    <version>0.0.1-SNAPSHOT</version>
+    	<artifactId>uu-integration</artifactId>
+    	<groupId>se.uu.its.integration</groupId>
+    	<version>0.0.1-SNAPSHOT</version>
     </parent>
 
+    <groupId>se.uu.its.integration</groupId>
     <artifactId>akkarest-event-adapter</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>bundle</packaging>
-    <name>AKKA REST event adapter</name>
+    <name>ESB Model</name>
     <description>akkarest-event-adapter OSGi blueprint bundle project.</description>
 
     <dependencies>
