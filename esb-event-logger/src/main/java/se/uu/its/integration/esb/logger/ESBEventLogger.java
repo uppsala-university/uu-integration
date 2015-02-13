@@ -37,7 +37,7 @@ public class ESBEventLogger {
 		try {
 			UUEvent event = (UUEvent) ModelUtils.getUnmarchalledObject(UUEvent.class, xml);
 			
-			log.info("Logging event: " + event.getProducer() + ":" + event.getProducerReferenceId());
+			log.info("Logging event: " + event.getProducer() + ":" + event.getProducerReferenceId() + "(" + event.getIdentifier() + ")");
 
 			// If event is already processed...
 			if (! true)

@@ -10,13 +10,18 @@
     </parent>
 
     <groupId>se.uu.its.integration</groupId>
-    <artifactId>esb-model</artifactId>
+    <artifactId>esb-service-identity-rest</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>bundle</packaging>
-    <name>ESB Model</name>
-    <description>ESB model OSGi bundle project.</description>
+    <name>ESB Identity REST Service</name>
+    <description>ESB Identity REST Service OSGi bundle project.</description>
 
     <dependencies>
+         <dependency>
+            <groupId>se.uu.its.integration</groupId>
+            <artifactId>esb-model</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-cxf</artifactId>
@@ -40,12 +45,8 @@
                 <configuration>
                     <instructions>
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
-			<Bundle-Description>${project.description}</Bundle-Description>
-<!--
-			<Export-package>se.uu.its.integration.model.transform</Export-package>
--->
-			<Export-package>*</Export-package>
-                        <Import-Package>*</Import-Package>
+                        <Bundle-Version>${project.version}</Bundle-Version>
+                        <Import-Package>javax.ws.rs.core,org.apache.camel.builder,org.osgi.service.blueprint,se.uu.its.integration.esb.logger,javax.ws.rs,se.uu.its.integration.model.common</Import-Package>
                     </instructions>
                 </configuration>
             </plugin>
