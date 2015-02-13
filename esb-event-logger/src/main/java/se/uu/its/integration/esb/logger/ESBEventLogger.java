@@ -20,9 +20,11 @@ public class ESBEventLogger {
 	 * processed e.g. exists in event database.
 	 * 
 	 * @param xml The event described as XML.
-	 * @return Returns true if event logged as processed for the first time.
+	 * @return Returns true if event logged as processed for the first time, false
+	 * if already logged. 
+	 * @throws Exception 
 	 */
-	public boolean registerOnce(String xml) {
+	public boolean registerOnce(String xml) throws Exception {
 
 		log.debug(xml);
 		
@@ -32,12 +34,16 @@ public class ESBEventLogger {
 			UUEvent event = (UUEvent) ModelUtils.getUnmarchalledObject(UUEvent.class, xml);
 			
 			log.info("Logging event: " + event.getIdentifier());
+
+			// If event is already processed...
+			if (! true)
+				success = false;
 			
 		} catch (JAXBException e) {
 			
 			log.error("Error processing event: " + e.getMessage());
+			throw new ESBLoggerUnexpectedException(e.getMessage());
 			
-			success = false;
 		}
 		
 		return success;

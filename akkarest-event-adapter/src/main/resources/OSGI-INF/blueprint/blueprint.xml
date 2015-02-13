@@ -23,8 +23,11 @@
   <!-- This helper-bean is used to generate the uuid as event identifier. -->
   <bean id="modelUtils" class="se.uu.its.integration.model.common.ModelUtils"/>
   <bean id="esbEventLogger" class="se.uu.its.integration.esb.logger.ESBEventLogger"/>
+  <bean id="deadLetterErrorHandler" class="org.apache.camel.builder.DeadLetterChannelBuilder">
+  	<property name="deadLetterUri" value="activemq:queue:identity-event-deadletter"/>
+  </bean> 
 
-  <camelContext xmlns="http://camel.apache.org/schema/blueprint">
+  <camelContext errorHandlerRef="deadLetterErrorHandler" xmlns="http://camel.apache.org/schema/blueprint">
 
     <route id="IdentityServiceRoute">
 
@@ -46,11 +49,13 @@
       <filter>
       	<method ref="esbEventLogger" method="registerOnce"/>
       	<inOnly uri="activemq:queue:identity-event-distribution" />
+      	
+      	<!-- registerOnce should probable raise an exception that a deadchannel receives. -->
       	<stop />
       </filter>
       
       <!-- Log not processed events. -->
-      <inOnly uri="activemq:queue:identity-event-deadletter" />      
+      <inOnly uri="activemq:queue:identity-event-duplicate" />      
 
     </route>
     
