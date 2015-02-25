@@ -1,4 +1,4 @@
-package se.uu.its.integration.service.identity.rest;
+package se.uu.its.integration.model.service.identity.rest;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
