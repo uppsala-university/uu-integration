@@ -46,7 +46,15 @@
                     <instructions>
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Version>${project.version}</Bundle-Version>
-                        <Import-Package>javax.ws.rs.core,org.apache.camel.builder,org.osgi.service.blueprint,se.uu.its.integration.esb.logger,javax.ws.rs,se.uu.its.integration.model.common</Import-Package>
+                        <Import-Package>
+                            javax.ws.rs,
+                            javax.ws.rs.core,
+                            org.apache.camel.builder,
+                            org.osgi.service.blueprint,
+                            se.uu.its.integration.esb.logger,
+                            se.uu.its.integration.model.common,
+                            se.uu.its.integration.model.events
+                        </Import-Package>
                     </instructions>
                 </configuration>
             </plugin>
