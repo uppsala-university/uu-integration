@@ -27,8 +27,11 @@ public abstract class UUEvent implements Serializable {
 	@XmlAttribute(name = "identifier")
 	String identifier = null;
 	
+//	@XmlElement(name = "ProcessedTime")
+//	protected Calendar processedTime;		
+	
 	@XmlElement(name = "IssuedTime")
-	protected Calendar time;	
+	protected Calendar issuedTime;	
 
 	@XmlElement(name = "Producer")
 	protected String producer;
@@ -54,14 +57,14 @@ public abstract class UUEvent implements Serializable {
 	}
 	
 	protected UUEvent(String producer, String producerReferenceId) {
-		this.time = GregorianCalendar.getInstance();
+		this.issuedTime = GregorianCalendar.getInstance();
 		this.type = this.getClass().getSimpleName();
 		this.producer = producer;
 		this.producerReferenceId = producerReferenceId;
 	}
 	
 	public Calendar getIssuedTime() {
-		return time;
+		return issuedTime;
 	}
 	
 	public String getType() {

@@ -1,14 +1,22 @@
 package se.uu.its.integration.model.common;
 
 import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
 import java.util.UUID;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
 
 public class ModelUtils {
 	
@@ -19,6 +27,34 @@ public class ModelUtils {
 	
 	public String getNewEventId() {
 		return UUID.randomUUID().toString();
+	}
+	
+	public String addIntegrationEventIdToEvent(String xml) throws UnsupportedEncodingException, TransformerException {
+		return xsltTransform(xml, "/se/uu/its/integration/model/transform/addIntegrationEventIdToEvent.xsl");
+	}
+	
+	public String xsltTransform(String xml, String xsltResourcePath) throws TransformerException, UnsupportedEncodingException {
+		
+		// get the stylesheet as an inputstream
+		InputStream stylesheet = ClassLoader.class.getResourceAsStream(xsltResourcePath);
+		
+		// get the transformer
+		TransformerFactory tFactory = TransformerFactory.newInstance();
+		Transformer transformer = tFactory.newTransformer(new StreamSource(stylesheet));		
+		transformer.setParameter("uid", UUID.randomUUID().toString());
+		
+		// the source and the target
+		StringReader reader = new StringReader(xml);
+		ByteArrayOutputStream targetDocument = new ByteArrayOutputStream();
+		
+		// do the tranformation
+		transformer.transform(new StreamSource(reader), new StreamResult(targetDocument));
+		
+		String output = targetDocument.toString("UTF-8");
+		System.out.println(output);
+		
+		return output;
+		
 	}
 
 	public static Object getUnmarchalledObject(

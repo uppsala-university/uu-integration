@@ -41,11 +41,6 @@
                     <instructions>
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
 			<Bundle-Description>${project.description}</Bundle-Description>
-<!--
-			<Export-package>se.uu.its.integration.model.transform</Export-package>
--->
-			<Export-package>*</Export-package>
-                        <Import-Package>*</Import-Package>
                     </instructions>
                 </configuration>
             </plugin>

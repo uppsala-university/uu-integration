@@ -25,6 +25,24 @@ import se.uu.its.integration.model.identity.Affiliation;
 public class ModelTransformTest {
 
 	@Test
+	public void testAddIntegrationEventIdToEventByMethod() throws UnsupportedEncodingException, TransformerException {
+		
+		String xml = new AffiliationCreatedEvent(
+				"Testsystem",
+				"Ev902",
+				new Affiliation("emplempl")).toString();
+		
+		ModelUtils utily = new ModelUtils();
+		String transformedXml = utily.addIntegrationEventIdToEvent(xml);
+		
+//		System.out.println(transformedXml);
+		
+		assertTrue(true);
+		
+	}
+	
+	
+	@Test
 	public void testAddIntegrationEventIdToEvent() throws TransformerException, UnsupportedEncodingException, JAXBException {
 		
 //		System.setProperty("javax.xml.transform.TransformerFactory", "net.sf.saxon.TransformerFactoryImpl");
