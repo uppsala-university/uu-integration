@@ -14,6 +14,7 @@
     		<module>esb-model</module>
     		<module>esb-event-logger</module>
     		<module>esb-service-identity-rest</module>
+    		<module>esb-rest-client</module>
   	</modules>
 
 	<properties>
