@@ -1,0 +1,3 @@
+restbase=https://api.mit.ladok.se/
+certificateFile=<filename or certificate>
+certificatePwd=<password for certificate>
