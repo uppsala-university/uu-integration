@@ -40,11 +40,17 @@
       </marshal>
 
       <!-- Add integration event id. -->
+<!--  
       <setHeader headerName="uid">
       	<method bean="modelUtils" method="getNewEventId"/>
       </setHeader>
+-->      
+      <to uri="bean:modelUtils?method=addIntegrationEventIdToEvent" />
+      <to uri="log:transform?level=INFO" />
+<!--
+      <to uri="xslt:addIntegrationEventIdToEvent.xsl"/>
       <to uri="xslt:se/uu/its/integration/model/transform/addIntegrationEventIdToEvent.xsl"/>
-      
+ -->
       <!-- Don't process already processed events. -->
        <filter>
       	<method ref="esbEventLogger" method="isEventProcessed"/>

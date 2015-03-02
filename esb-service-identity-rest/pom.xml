@@ -47,14 +47,25 @@
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Version>${project.version}</Bundle-Version>
                         <Import-Package>
-                            javax.ws.rs,
-                            javax.ws.rs.core,
-                            org.apache.camel.builder,
-                            org.osgi.service.blueprint,
-                            se.uu.its.integration.esb.logger,
-                            se.uu.its.integration.model.common,
-                            se.uu.its.integration.model.events
+                        <!-- 
+                        	se.uu.its.integration.model.transform;version="[0.0,1]",
+                         
+                        	javax.ws.rs, 
+                        	javax.ws.rs.core, 
+                        	org.apache.camel.builder, 
+                        	org.osgi.service.blueprint, 
+                        	se.uu.its.integration.esb.logger, 
+                        	se.uu.its.integration.model.common, 
+                        	se.uu.its.integration.model.events	
+                        	-->
+                        	*
                         </Import-Package>
+     <!-- 
+                        <Include-Resource>
+                        	../esb-model/src/main/resources/se/uu/its/integration/model/transform/addIntegrationEventIdToEvent.xsl,
+                        	{maven-resources}
+                        </Include-Resource>
+ -->
                     </instructions>
                 </configuration>
             </plugin>
