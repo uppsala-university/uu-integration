@@ -30,6 +30,8 @@ public abstract class ServiceBase {
 
     public ServiceBase() throws Exception {
 
+    	boolean useCert = true;
+    	
 		properties = new Properties();
 		try {
 			InputStream in = this.getClass().getClassLoader().getResourceAsStream("restclient.properties");
@@ -43,44 +45,56 @@ public abstract class ServiceBase {
 				throw new Exception("Missing property \"restbase\"");
 			}
 
-			// Check certificate and password.
-			certificateFile = properties.getProperty("certificateFile");
-			if (certificateFile == null || certificateFile.equals("")) {
-				throw new Exception("Missing property \"certificateFile\".");					
-			}
-			if (this.getClass().getClassLoader().getResourceAsStream(certificateFile) == null) {
-				throw new Exception("Property \"certificateFile\" have no corresponding resource.");
-			}
-			log.info("certificate=" + certificateFile);
-
-			certificatePwd = properties.getProperty("certificatePwd");
-			if (certificatePwd == null || certificatePwd.equals("")) {
-				throw new Exception("Missing property \"certificatePwd\".");					
+			useCert = properties.getProperty("useCert").equalsIgnoreCase("true");
+			
+			if (useCert) {
+				// Check certificate and password.
+				certificateFile = properties.getProperty("certificateFile");
+				if (certificateFile == null || certificateFile.equals("")) {
+					throw new Exception("Missing property \"certificateFile\".");
+				}
+				if (this.getClass().getClassLoader()
+						.getResourceAsStream(certificateFile) == null) {
+					throw new Exception(
+							"Property \"certificateFile\" have no corresponding resource.");
+				}
+				log.info("certificate=" + certificateFile);
+				certificatePwd = properties.getProperty("certificatePwd");
+				if (certificatePwd == null || certificatePwd.equals("")) {
+					throw new Exception("Missing property \"certificatePwd\".");
+				}
 			}
 
 		} catch (IOException e) {
-			log.error("Unable to read feedfetcher.properties");
+			log.error("Unable to read restclient.properties");
 			throw e;
 		}
 
-		KeyStore keystore;
-		try {
-			SSLContext sc = SSLContext.getInstance("SSLv3");
-			KeyManagerFactory kmf = KeyManagerFactory.getInstance( KeyManagerFactory.getDefaultAlgorithm() );			
-			
-			keystore = KeyStore.getInstance("PKCS12");
-			keystore.load(this.getClass().getClassLoader().getResourceAsStream(certificateFile), certificatePwd.toCharArray());
-			
-			kmf.init( keystore, certificatePwd.toCharArray() );
-			sc.init( kmf.getKeyManagers(), null, null );
-			
-			cb = ClientBuilder.newBuilder();
-			cb.keyStore(keystore, certificatePwd);
+		cb = ClientBuilder.newBuilder();
+		
+		if (useCert) {
+			KeyStore keystore;
+			try {
+				SSLContext sc = SSLContext.getInstance("SSLv3");
+				KeyManagerFactory kmf = KeyManagerFactory
+						.getInstance(KeyManagerFactory.getDefaultAlgorithm());
 
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			throw new Exception(e.getMessage());
+				keystore = KeyStore.getInstance("PKCS12");
+				keystore.load(this.getClass().getClassLoader()
+						.getResourceAsStream(certificateFile),
+						certificatePwd.toCharArray());
+
+				kmf.init(keystore, certificatePwd.toCharArray());
+				sc.init(kmf.getKeyManagers(), null, null);
+
+//				cb = ClientBuilder.newBuilder();
+				cb.keyStore(keystore, certificatePwd);
+
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				throw new Exception(e.getMessage());
+			}
 		}    	
     	
     }

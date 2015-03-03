@@ -1,3 +1,4 @@
-restbase=https://api.mit.ladok.se/
+restbase=http://localhost:8989/esb/rest
+useCert=false
 certificateFile=<filename or certificate>
 certificatePwd=<password for certificate>

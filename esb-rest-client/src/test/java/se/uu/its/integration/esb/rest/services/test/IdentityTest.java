@@ -1,4 +1,4 @@
-package se.sunet.ati.ladok.rest.services.test;
+package se.uu.its.integration.esb.rest.services.test;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -14,7 +14,7 @@ public class IdentityTest {
 		
 		Identity identity = new IdentityImpl();
 		
-		System.out.println(identity);
+		identity.registerAkkaAccoungChange("akka-internal-ref-01", "marja992", "19720704xxxx");
 		
 		assertNotNull(new Object());
 	}

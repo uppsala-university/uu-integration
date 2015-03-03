@@ -1,57 +1,59 @@
 package se.uu.its.integration.esb.client.services.impl;
 
-import java.io.ByteArrayInputStream;
-import java.util.zip.GZIPInputStream;
-
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
 
 import se.uu.its.integration.esb.client.services.Identity;
 import se.uu.its.integration.esb.client.services.ServiceBase;
+import se.uu.its.integration.model.common.UUEventDataProperty;
+import se.uu.its.integration.model.events.PersonChangedEvent;
+import se.uu.its.integration.model.events.PersonEvent;
+import se.uu.its.integration.model.events.PersonEventData;
+import se.uu.its.integration.model.identity.Employee;
+import se.uu.its.integration.model.identity.Person;
+import se.uu.its.integration.model.identity.Student;
 
 public class IdentityImpl extends ServiceBase implements Identity {
 
-	private String kataloginformationUrl = "kataloginformation/";
-
+	private String identityUrl = "/identity";
+	private String personEventPath = "/event/person/";
 	private static final String RESPONSE_TYPE_KATALOGINFORMATION = "application/vnd.ladok-kataloginformation";
+
+	private static final String SYSTEM_MESSAGE_PRODUCER = "AKKA";
+	
 	
     public IdentityImpl() throws Exception {
 		super();
 		
+		String targetUrl = restBase + identityUrl;
+		
+		log.info("Using target URL: " + targetUrl);
+		
 		if (cb != null)
-			webtarget = cb.build().target(restBase + kataloginformationUrl);
+			webtarget = cb.build().target(targetUrl);
 		else
 			throw new Exception("Could not initialize service.");
 	}
 
 	
 	@Override
-	public void registerAkkaAccoungChange(String akkaId, String personnummer) throws Exception {
+	public void registerAkkaAccoungChange(String akkaEventRefId, String akkaId, String personnummer) throws Exception {
 
-    	log.info("Query URL: " +  restBase + kataloginformationUrl + "behorigheter");
-    	log.info("Requested response type: " + RESPONSE_TYPE_KATALOGINFORMATION.toString() + mediaType);		
+		Person person = new Person(personnummer);
 		
-    	
-    	Response res = webtarget.path("behorigheter").request(RESPONSE_TYPE_KATALOGINFORMATION + mediaType).get();
-    	String body = res.readEntity(String.class);
-    	
-    	GZIPInputStream  gzip = new GZIPInputStream(new ByteArrayInputStream (body.getBytes()));
+		PersonChangedEvent event = new PersonChangedEvent(
+				SYSTEM_MESSAGE_PRODUCER, 
+				"Ev104",
+				person);
 
-    	StringBuffer  szBuffer = new StringBuffer();
+		PersonEvent eventResponse =
+				webtarget.path(personEventPath).request().post(Entity.entity(event, "application/xml"), 
+						PersonEvent.class);
 
-    	byte  tByte [] = new byte [1024];
-
-    	while (true)
-    	{
-    	    int  iLength = gzip.read (tByte, 0, 1024); // <-- Error comes here
-
-    	    if (iLength < 0)
-    	        break;
-
-    	    szBuffer.append (new String (tByte, 0, iLength));
-    	}
-    	
-    	
-//    	return szBuffer.toString();	
+		if (eventResponse != null) {
+			System.out.println("HIT: " + eventResponse.getIdentifier());
+		}
+		
     }
 
 }
