@@ -4,7 +4,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
 import java.util.UUID;
 
 import javax.xml.bind.JAXBContext;
@@ -12,15 +11,17 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 public class ModelUtils {
 	
 	public static String TO_STRING_ERROR_MSG = "Error!";
+	protected Log log = LogFactory.getLog(this.getClass());
 	
 	public ModelUtils() {
 	}
@@ -30,6 +31,9 @@ public class ModelUtils {
 	}
 	
 	public String addIntegrationEventIdToEvent(String xml) throws Exception {
+		
+		log.debug("Adding new integration event id.");
+		
 		return xsltTransform(xml, "/se/uu/its/integration/model/transform/addIntegrationEventIdToEvent.xsl");
 	}
 	
@@ -46,7 +50,10 @@ public class ModelUtils {
 		TransformerFactory tFactory = TransformerFactory.newInstance();
 		Transformer transformer = tFactory.newTransformer(new StreamSource(stylesheet));		
 
-		transformer.setParameter("uid", UUID.randomUUID().toString());
+		// TODO: Should be moved to method signature as parameter.
+		String uid = UUID.randomUUID().toString();
+		log.info("Setting parameter uid: " + uid);
+		transformer.setParameter("uid", uid);
 		
 		// the source and the target
 		StringReader reader = new StringReader(xml);
@@ -55,10 +62,10 @@ public class ModelUtils {
 		// do the tranformation
 		transformer.transform(new StreamSource(reader), new StreamResult(targetDocument));
 		
-		String output = targetDocument.toString("UTF-8");
-		System.out.println(output);
+		String transformedXml = targetDocument.toString("UTF-8");
+		log.debug(transformedXml);
 		
-		return output;
+		return transformedXml;
 		
 	}
 

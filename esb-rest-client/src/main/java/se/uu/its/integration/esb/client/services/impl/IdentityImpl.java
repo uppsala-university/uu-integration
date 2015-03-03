@@ -23,10 +23,11 @@ public class IdentityImpl extends ServiceBase implements Identity {
 	
 	
     public IdentityImpl() throws Exception {
-		super();
 		
+    	super();
+
+    	log.info("Initializing Identity service client.");
 		String targetUrl = restBase + identityUrl;
-		
 		log.info("Using target URL: " + targetUrl);
 		
 		if (cb != null)
@@ -46,6 +47,7 @@ public class IdentityImpl extends ServiceBase implements Identity {
 				"Ev104",
 				person);
 
+		log.info("Posting to path: " + personEventPath);
 		PersonEvent eventResponse =
 				webtarget.path(personEventPath).request().post(Entity.entity(event, "application/xml"), 
 						PersonEvent.class);

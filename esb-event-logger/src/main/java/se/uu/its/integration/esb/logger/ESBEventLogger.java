@@ -1,5 +1,7 @@
 package se.uu.its.integration.esb.logger;
 
+import java.awt.Event;
+
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
@@ -8,6 +10,8 @@ import javax.xml.bind.JAXBException;
 
 import se.uu.its.integration.model.common.ModelUtils;
 import se.uu.its.integration.model.common.UUEvent;
+
+import se.uu.its.integration.esb.logger.ESBLoggerUnexpectedException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -37,7 +41,7 @@ public class ESBEventLogger {
 		try {
 			UUEvent event = (UUEvent) ModelUtils.getUnmarchalledObject(UUEvent.class, xml);
 			
-			log.info("Logging event: " + event.getProducer() + ":" + event.getProducerReferenceId() + "(" + event.getIdentifier() + ")");
+			log.info("Check duplicate event: " + event.getProducer() + ":" + event.getProducerReferenceId() + "(" + event.getIdentifier() + ")");
 
 			// If event is already processed...
 			if (! true)
@@ -58,8 +62,13 @@ public class ESBEventLogger {
 	 * 
 	 * @param xml The event described as XML.
 	 * @return Proper HTTP response.
+	 * @throws JAXBException 
 	 */
-	public Response logEvent(String xml) {
+	public Response logEvent(String xml) throws JAXBException {
+		
+		UUEvent event = (UUEvent) ModelUtils.getUnmarchalledObject(UUEvent.class, xml);
+		
+		log.info("Loggin event: " + event.getProducer() + ":" + event.getProducerReferenceId() + "(" + event.getIdentifier() + ")");
 		
 		ResponseBuilder builder = new ResponseBuilderImpl();
 		builder.status(Status.ACCEPTED);

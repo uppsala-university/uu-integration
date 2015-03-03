@@ -15,6 +15,8 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
 
 import se.uu.its.integration.model.common.ModelUtils;
@@ -24,6 +26,8 @@ import se.uu.its.integration.model.identity.Affiliation;
 
 public class ModelTransformTest {
 
+	private Log log = LogFactory.getLog(this.getClass());
+	
 	@Test
 	public void testAddIntegrationEventIdToEventByMethod() throws Exception {
 		
@@ -35,7 +39,7 @@ public class ModelTransformTest {
 		ModelUtils utily = new ModelUtils();
 		String transformedXml = utily.addIntegrationEventIdToEvent(xml);
 		
-		assertTrue(true);
+		assertNotNull(transformedXml);
 		
 	}
 	
@@ -68,11 +72,11 @@ public class ModelTransformTest {
 		String transformedXml = targetDocument.toString("UTF-8");
 
 		// print
-		System.out.println(transformedXml);		
+		log.debug(transformedXml);		
 				
 		AffiliationEvent objectFromXml = (AffiliationEvent) ModelUtils.getUnmarchalledObject(AffiliationEvent.class, transformedXml);	
 
-		System.out.println("Generated id: " + objectFromXml.getIdentifier());
+		log.info("Generated id: " + objectFromXml.getIdentifier());
 		
 		assertTrue("Unmarchalled object does not av a proper identifier.", (objectFromXml.getIdentifier() != null));
 	}

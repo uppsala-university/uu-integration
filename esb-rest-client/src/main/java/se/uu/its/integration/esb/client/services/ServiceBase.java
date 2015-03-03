@@ -87,7 +87,6 @@ public abstract class ServiceBase {
 				kmf.init(keystore, certificatePwd.toCharArray());
 				sc.init(kmf.getKeyManagers(), null, null);
 
-//				cb = ClientBuilder.newBuilder();
 				cb.keyStore(keystore, certificatePwd);
 
 			} catch (Exception e) {

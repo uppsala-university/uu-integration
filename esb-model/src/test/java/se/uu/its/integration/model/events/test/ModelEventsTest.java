@@ -3,6 +3,9 @@ package se.uu.its.integration.model.events.test;
 import static org.junit.Assert.*;
 
 import javax.xml.bind.JAXBException;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
 
 import se.uu.its.integration.model.common.ModelUtils;
@@ -34,6 +37,7 @@ import se.uu.its.integration.model.identity.Student;
 public class ModelEventsTest {
 
 	private static final String SYSTEM_MESSAGE_PRODUCER = "AKKA";
+	protected Log log = LogFactory.getLog(this.getClass());
 	
 	@Test 
 	public void testToString() {
