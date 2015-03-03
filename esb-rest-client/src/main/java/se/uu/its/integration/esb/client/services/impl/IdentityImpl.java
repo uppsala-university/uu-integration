@@ -37,7 +37,7 @@ public class IdentityImpl extends ServiceBase implements Identity {
 
 	
 	@Override
-	public void registerAkkaAccoungChange(String akkaEventRefId, String akkaId, String personnummer) throws Exception {
+	public String registerAkkaAccountChange(String akkaEventRefId, String akkaId, String personnummer) throws Exception {
 
 		Person person = new Person(personnummer);
 		
@@ -50,9 +50,7 @@ public class IdentityImpl extends ServiceBase implements Identity {
 				webtarget.path(personEventPath).request().post(Entity.entity(event, "application/xml"), 
 						PersonEvent.class);
 
-		if (eventResponse != null) {
-			System.out.println("HIT: " + eventResponse.getIdentifier());
-		}
+		return eventResponse.getIdentifier();
 		
     }
 
