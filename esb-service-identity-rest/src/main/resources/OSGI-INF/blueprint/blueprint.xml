@@ -10,7 +10,7 @@
 
   <cm:property-placeholder persistent-id="se.uu.its.integration.service.cxf.receive">
     <cm:default-properties>
-      <cm:property name="CXFserver" value="http://localhost:8989/"/>
+      <cm:property name="CXFserver" value="http://0.0.0.0:8989/"/>
       <cm:property name="service" value="esb/rest" />
     </cm:default-properties>
   </cm:property-placeholder>
