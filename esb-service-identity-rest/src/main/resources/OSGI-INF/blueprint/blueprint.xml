@@ -26,8 +26,10 @@
   <bean id="deadLetterErrorHandler" class="org.apache.camel.builder.DeadLetterChannelBuilder">
   	<property name="deadLetterUri" value="activemq:queue:identity-event-deadletter"/>
   </bean>
-
+<!--  
   <camelContext errorHandlerRef="deadLetterErrorHandler" xmlns="http://camel.apache.org/schema/blueprint">
+-->
+  <camelContext xmlns="http://camel.apache.org/schema/blueprint">
 
     <route id="IdentityServiceRoute">
 
@@ -40,21 +42,18 @@
       </marshal>
 
       <!-- Add integration event id. -->
-<!--  
+      <to uri="bean:modelUtils?method=addIntegrationEventIdToEvent" />
+<!--  Moved to bean cause camel cant load resource from other bundle. 
       <setHeader headerName="uid">
       	<method bean="modelUtils" method="getNewEventId"/>
       </setHeader>
--->      
-      <to uri="bean:modelUtils?method=addIntegrationEventIdToEvent" />
-      <to uri="log:transform?level=INFO" />
-<!--
       <to uri="xslt:addIntegrationEventIdToEvent.xsl"/>
       <to uri="xslt:se/uu/its/integration/model/transform/addIntegrationEventIdToEvent.xsl"/>
- -->
+--> 
       <!-- Don't process already processed events. -->
-       <filter>
+      <filter>
       	<method ref="esbEventLogger" method="isEventProcessed"/>
-      	<to uri="activemq:queue:identity-event-distribution" />
+      	<inOnly uri="activemq:queue:identity-event-distribution" />
       	<to uri="bean:esbEventLogger?method=logEvent" />
       	<stop />
       </filter>
