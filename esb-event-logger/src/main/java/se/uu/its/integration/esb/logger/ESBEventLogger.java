@@ -41,7 +41,7 @@ public class ESBEventLogger {
 		try {
 			UUEvent event = (UUEvent) ModelUtils.getUnmarchalledObject(UUEvent.class, xml);
 			
-			log.info("Check duplicate event: " + event.getProducer() + ":" + event.getProducerReferenceId() + "(" + event.getIdentifier() + ")");
+			log.info("Check duplicate event: " + event.getProducer() + ":" + event.getProducerReferenceId() + " (" + event.getIdentifier() + ")");
 
 			// If event is already processed...
 			if (! true)
@@ -68,7 +68,7 @@ public class ESBEventLogger {
 		
 		UUEvent event = (UUEvent) ModelUtils.getUnmarchalledObject(UUEvent.class, xml);
 		
-		log.info("Loggin event: " + event.getProducer() + ":" + event.getProducerReferenceId() + "(" + event.getIdentifier() + ")");
+		log.info("Loggin event: " + event.getProducer() + ":" + event.getProducerReferenceId() + " (" + event.getIdentifier() + ")");
 		
 		ResponseBuilder builder = new ResponseBuilderImpl();
 		builder.status(Status.ACCEPTED);
