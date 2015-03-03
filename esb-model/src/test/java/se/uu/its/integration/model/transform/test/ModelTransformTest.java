@@ -25,7 +25,7 @@ import se.uu.its.integration.model.identity.Affiliation;
 public class ModelTransformTest {
 
 	@Test
-	public void testAddIntegrationEventIdToEventByMethod() throws UnsupportedEncodingException, TransformerException {
+	public void testAddIntegrationEventIdToEventByMethod() throws Exception {
 		
 		String xml = new AffiliationCreatedEvent(
 				"Testsystem",
@@ -34,8 +34,6 @@ public class ModelTransformTest {
 		
 		ModelUtils utily = new ModelUtils();
 		String transformedXml = utily.addIntegrationEventIdToEvent(xml);
-		
-//		System.out.println(transformedXml);
 		
 		assertTrue(true);
 		

@@ -29,18 +29,23 @@ public class ModelUtils {
 		return UUID.randomUUID().toString();
 	}
 	
-	public String addIntegrationEventIdToEvent(String xml) throws UnsupportedEncodingException, TransformerException {
+	public String addIntegrationEventIdToEvent(String xml) throws Exception {
 		return xsltTransform(xml, "/se/uu/its/integration/model/transform/addIntegrationEventIdToEvent.xsl");
 	}
 	
-	public String xsltTransform(String xml, String xsltResourcePath) throws TransformerException, UnsupportedEncodingException {
+	public String xsltTransform(String xml, String xsltResourcePath) throws Exception {
 		
 		// get the stylesheet as an inputstream
-		InputStream stylesheet = ClassLoader.class.getResourceAsStream(xsltResourcePath);
+		InputStream stylesheet = this.getClass().getResourceAsStream(xsltResourcePath);
+
+		if (stylesheet == null) {
+			throw new Exception("ELENDESSKIT");
+		}		
 		
 		// get the transformer
 		TransformerFactory tFactory = TransformerFactory.newInstance();
 		Transformer transformer = tFactory.newTransformer(new StreamSource(stylesheet));		
+
 		transformer.setParameter("uid", UUID.randomUUID().toString());
 		
 		// the source and the target
