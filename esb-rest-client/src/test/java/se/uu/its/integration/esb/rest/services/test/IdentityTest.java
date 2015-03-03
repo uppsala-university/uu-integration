@@ -14,9 +14,9 @@ public class IdentityTest {
 		
 		Identity identity = new IdentityImpl();
 		
-		identity.registerAkkaAccoungChange("akka-internal-ref-01", "marja992", "19720704xxxx");
+		String id = identity.registerAkkaAccountChange("akka-internal-ref-01", "marja992", "19720704xxxx");
 		
-		assertNotNull(new Object());
+		assertNotNull(id);
 	}
 	
 }
