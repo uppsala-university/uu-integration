@@ -11,7 +11,7 @@
 	<artifactId>ladok-event-distribution</artifactId>
 	<version>${parent.version}</version>
 	<packaging>bundle</packaging>
-	<name>Ladok event distribution</name>
+	<name>Ladok Event Distribution</name>
 
 	<build>
 		<plugins>

@@ -11,7 +11,7 @@
 	<artifactId>ladok3event-logdb-adapter</artifactId>
 	<version>${parent.version}</version>
 	<packaging>bundle</packaging>
-	<name>Ladok event LogDB adapter</name>
+	<name>Ladok Event LogDB Adapter</name>
 
 	<build>
 		<plugins>

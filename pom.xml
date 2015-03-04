@@ -6,7 +6,7 @@
 	<artifactId>uu-integration</artifactId>
 	<packaging>pom</packaging>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>UU integration components</name>
+	<name>UU Integration Components</name>
 
 	<modules>
 		<module>ladok-event-distribution</module>
