@@ -15,4 +15,29 @@ public interface Identity {
 			String akkaKId, 
 			String personnummer) throws Exception;
 
+	public String registerNewAkkaAccount(String akkaEventRefId,
+			String akkaKId, 
+			String personnummer);
+
+	public String registerDeletedAkkaAccount(String akkaEventRefId,
+			String akkaKId, 
+			String personnummer);
+
+	public String registerAkkaChangedPersonNumber(String akkaEventRefId,
+			String akkaKId, 
+			String personnummer,
+			String previousPersonnumber);
+
+	public String registerAkkaAccountRoleDeleted(String akkaEventRefId, String role,
+			String accountId, String organizationId);
+
+	public String registerAkkaAccountRoleCreated(String akkaEventRefId, String role,
+			String accountId, String organizationId);
+
+	public String registerOrganizationDepartmentMappingCreated(String organizationId,
+			String mappedId);
+
+	public String registerOrganizationDepartmentMappingDeleted(String organizationId,
+			String mappedId);
+
 }
