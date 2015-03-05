@@ -34,10 +34,10 @@ public interface Identity {
 	public String registerAkkaAccountRoleCreated(String akkaEventRefId, String role,
 			String accountId, String organizationId);
 
-	public String registerOrganizationDepartmentMappingCreated(String organizationId,
+	public String registerOrganizationDepartmentMappingCreated(String akkaEventRefId, String organizationId,
 			String mappedId);
 
-	public String registerOrganizationDepartmentMappingDeleted(String organizationId,
+	public String registerOrganizationDepartmentMappingDeleted(String akkaEventRefId, String organizationId,
 			String mappedId);
 
 }

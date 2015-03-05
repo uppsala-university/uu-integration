@@ -56,7 +56,7 @@ public class IdentityImpl extends ServiceBase implements Identity {
 		
 		PersonChangedEvent event = new PersonChangedEvent(
 				SYSTEM_MESSAGE_PRODUCER, 
-				"Ev104",
+				akkaEventRefId,
 				person);
 
 		log.info("Posting to path: " + PATH_PERSON_EVENT);
@@ -76,7 +76,7 @@ public class IdentityImpl extends ServiceBase implements Identity {
 		
 		PersonCreatedEvent event = new PersonCreatedEvent(
 				SYSTEM_MESSAGE_PRODUCER, 
-				"Ev104",
+				akkaEventRefId,
 				person);
 
 		log.info("Posting to path: " + PATH_PERSON_EVENT);
@@ -96,7 +96,7 @@ public class IdentityImpl extends ServiceBase implements Identity {
 		
 		PersonDeletedEvent event = new PersonDeletedEvent(
 				SYSTEM_MESSAGE_PRODUCER, 
-				"Ev104",
+				akkaEventRefId,
 				person);
 
 		log.info("Posting to path: " + PATH_PERSON_EVENT);
@@ -119,7 +119,7 @@ public class IdentityImpl extends ServiceBase implements Identity {
 		
 		PersonChangedEvent event = new PersonChangedEvent(
 				SYSTEM_MESSAGE_PRODUCER, 
-				"Ev104",
+				akkaEventRefId,
 				person,
 				personEventData);
 				
@@ -139,7 +139,7 @@ public class IdentityImpl extends ServiceBase implements Identity {
 
 		RoleCreatedEvent event = new RoleCreatedEvent(
 				SYSTEM_MESSAGE_PRODUCER, 
-				"Ev108",
+				akkaEventRefId,
 				new Role(
 						"Betygsättande lärare",
 						new Employee("emplempl"),
@@ -161,7 +161,7 @@ public class IdentityImpl extends ServiceBase implements Identity {
 
 		RoleDeletedEvent event = new RoleDeletedEvent(
 				SYSTEM_MESSAGE_PRODUCER, 
-				"Ev108",
+				akkaEventRefId,
 				new Role(
 						"Betygsättande lärare",
 						new Employee("emplempl"),
@@ -178,12 +178,12 @@ public class IdentityImpl extends ServiceBase implements Identity {
 
 
 	@Override
-	public String registerOrganizationDepartmentMappingCreated(
+	public String registerOrganizationDepartmentMappingCreated(String akkaEventRefId,
 			String organizationId, String mappedId) {
 
 		OrganizationDepartmentMappingCreatedEvent event = new OrganizationDepartmentMappingCreatedEvent(
 				SYSTEM_MESSAGE_PRODUCER,
-				"Ev198",
+				akkaEventRefId,
 				new OrganizationDepartmentMapping("X11", "CodeX"));	
 
 		log.info("Posting to path: " + PATH_ORGDEPMAP_EVENT);
@@ -196,12 +196,12 @@ public class IdentityImpl extends ServiceBase implements Identity {
 
 
 	@Override
-	public String registerOrganizationDepartmentMappingDeleted(
+	public String registerOrganizationDepartmentMappingDeleted(String akkaEventRefId,
 			String organizationId, String mappedId) {
 
 		OrganizationDepartmentMappingDeletedEvent event = new OrganizationDepartmentMappingDeletedEvent(
 				SYSTEM_MESSAGE_PRODUCER,
-				"Ev198",
+				akkaEventRefId,
 				new OrganizationDepartmentMapping("X11", "CodeX"));	
 
 		log.info("Posting to path: " + PATH_ORGDEPMAP_EVENT);

@@ -88,7 +88,7 @@ public class IdentityTest {
 	public void testRegisterOrganizationDepartmentMappingCreated() throws Exception {
 		
 		Identity identity = new IdentityImpl();
-		String id = identity.registerOrganizationDepartmentMappingCreated("X11", "CodeX");
+		String id = identity.registerOrganizationDepartmentMappingCreated("akka-internal-ref-07", "X11", "CodeX");
 		
 		log.info("Event id: " + id);
 		
@@ -100,7 +100,7 @@ public class IdentityTest {
 	public void testRegisterOrganizationDepartmentMappingDeleted() throws Exception {
 		
 		Identity identity = new IdentityImpl();
-		String id = identity.registerOrganizationDepartmentMappingDeleted("X11", "CodeX");
+		String id = identity.registerOrganizationDepartmentMappingDeleted("akka-internal-ref-08", "X11", "CodeX");
 		
 		log.info("Event id: " + id);
 		
