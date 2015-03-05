@@ -17,7 +17,7 @@ public class IdentityTest {
 	public void testRegisterAkkaAccountChange() throws Exception {
 		
 		Identity identity = new IdentityImpl();
-		String id = identity.registerAkkaAccountChange("akka-internal-ref-01", "marja992", "19720704xxxx");
+		String id = identity.registerAkkaAccountChange("akka-internal-ref-01", "akkaid", "19700101xxxx");
 		
 		log.info("Event id: " + id);
 		
@@ -28,7 +28,7 @@ public class IdentityTest {
 	public void testRegisterNewAkkaAccount() throws Exception {
 		
 		Identity identity = new IdentityImpl();
-		String id = identity.registerNewAkkaAccount("akka-internal-ref-01", "marja992", "19720704xxxx");
+		String id = identity.registerNewAkkaAccount("akka-internal-ref-02", "akkaid", "19700101xxxx");
 		
 		log.info("Event id: " + id);
 		
@@ -40,7 +40,7 @@ public class IdentityTest {
 	public void testRegisterDeletedAkkaAccount() throws Exception {
 		
 		Identity identity = new IdentityImpl();
-		String id = identity.registerDeletedAkkaAccount("akka-internal-ref-01", "marja992", "19720704xxxx");
+		String id = identity.registerDeletedAkkaAccount("akka-internal-ref-03", "akkaid", "19700101xxxx");
 		
 		log.info("Event id: " + id);
 		
@@ -52,7 +52,7 @@ public class IdentityTest {
 	public void testRegisterAkkaChangedPersonNumber() throws Exception {
 
 		Identity identity = new IdentityImpl();
-		String id = identity.registerAkkaChangedPersonNumber("akka-internal-ref-01", "marja992", "19720704xxxx", "19720704yyyy");
+		String id = identity.registerAkkaChangedPersonNumber("akka-internal-ref-04", "akkaid", "19700101xxxx", "19700101yyyy");
 		
 		log.info("Event id: " + id);
 		
@@ -64,7 +64,7 @@ public class IdentityTest {
 	public void testRegisterAkkaAccountRoleDeleted() throws Exception {
 		
 		Identity identity = new IdentityImpl();
-		String id = identity.registerAkkaAccountRoleDeleted("akka-internal-ref-01", "Role", "marja992", "X11");
+		String id = identity.registerAkkaAccountRoleDeleted("akka-internal-ref-05", "Role", "akkaid", "X11");
 		
 		log.info("Event id: " + id);
 		
@@ -76,7 +76,7 @@ public class IdentityTest {
 	public void testRegisterAkkaAccountRoleCreated() throws Exception {
 		
 		Identity identity = new IdentityImpl();
-		String id = identity.registerAkkaAccountRoleCreated("akka-internal-ref-01", "Role", "marja992", "X11");
+		String id = identity.registerAkkaAccountRoleCreated("akka-internal-ref-06", "Role", "akkaid", "X11");
 		
 		log.info("Event id: " + id);
 		
