@@ -148,7 +148,7 @@ public class IdentityImpl extends ServiceBase implements Identity {
 
 		log.info("Posting to path: " + PATH_ROLE_EVENT);
 		RoleEvent eventResponse =
-				webtarget.path(PATH_PERSON_EVENT).request().post(Entity.entity(event, "application/xml"), 
+				webtarget.path(PATH_ROLE_EVENT).request().post(Entity.entity(event, "application/xml"), 
 						RoleEvent.class);
 
 		return eventResponse.getIdentifier();
@@ -170,7 +170,7 @@ public class IdentityImpl extends ServiceBase implements Identity {
 
 		log.info("Posting to path: " + PATH_ROLE_EVENT);
 		RoleEvent eventResponse =
-				webtarget.path(PATH_PERSON_EVENT).request().post(Entity.entity(event, "application/xml"), 
+				webtarget.path(PATH_ROLE_EVENT).request().post(Entity.entity(event, "application/xml"), 
 						RoleEvent.class);
 
 		return eventResponse.getIdentifier();
@@ -188,7 +188,7 @@ public class IdentityImpl extends ServiceBase implements Identity {
 
 		log.info("Posting to path: " + PATH_ORGDEPMAP_EVENT);
 		OrganizationDepartmentMappingEvent eventResponse =
-				webtarget.path(PATH_PERSON_EVENT).request().post(Entity.entity(event, "application/xml"), 
+				webtarget.path(PATH_ORGDEPMAP_EVENT).request().post(Entity.entity(event, "application/xml"), 
 						OrganizationDepartmentMappingEvent.class);
 
 		return eventResponse.getIdentifier();
@@ -206,7 +206,7 @@ public class IdentityImpl extends ServiceBase implements Identity {
 
 		log.info("Posting to path: " + PATH_ORGDEPMAP_EVENT);
 		OrganizationDepartmentMappingEvent eventResponse =
-				webtarget.path(PATH_PERSON_EVENT).request().post(Entity.entity(event, "application/xml"), 
+				webtarget.path(PATH_ORGDEPMAP_EVENT).request().post(Entity.entity(event, "application/xml"), 
 						OrganizationDepartmentMappingEvent.class);
 
 		return eventResponse.getIdentifier();
