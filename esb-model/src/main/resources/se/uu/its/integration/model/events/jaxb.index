@@ -6,6 +6,7 @@ AffiliationEventData
 OrganizationDepartmentMappingCreatedEvent
 OrganizationDepartmentMappingDeletedEvent
 OrganizationDepartmentMappingEvent
+PersonCreatedEvent
 PersonChangedEvent
 PersonDeletedEvent
 PersonEvent
