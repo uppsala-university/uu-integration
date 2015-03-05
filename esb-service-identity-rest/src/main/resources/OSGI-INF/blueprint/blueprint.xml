@@ -27,7 +27,7 @@
   	<property name="deadLetterUri" value="activemq:queue:identity-event-deadletter"/>
   </bean>
 
-  <camelContext errorHandlerRef="deadLetterErrorHandler" xmlns="http://camel.apache.org/schema/blueprint">
+  <camelContext id="IdentityService" errorHandlerRef="deadLetterErrorHandler" xmlns="http://camel.apache.org/schema/blueprint">
 
     <route id="IdentityServiceRoute">
 
