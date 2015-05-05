@@ -3,15 +3,13 @@ mvn3 -Dmaven.test.skip=true clean package;cp -v */target/*.jar ../integration-ru
 ssh -p 8101 smx@localhost
 
 features:chooseurl hawtio 1.4.48
-#features:install hawtio-offline
+features:install hawtio-offline
 
-#features:install camel-jaxb
-#features:install camel-jpa
-#features:install jpa
-#features:install open-jpa
+features:install camel-jaxb
+features:install camel-jpa
+features:install jpa
+features:install open-jpa
 
-#features:install hawtio-offline camel-jaxb camel-jpa jpa open-jpa
-features:install hawtio-offline camel-jaxb camel-jpa jpa
 
 sudo rm /opt/servicemix/apache-servicemix-5.1.2/deploy	
 sudo mkdir /opt/servicemix/apache-servicemix-5.1.2/deploy
