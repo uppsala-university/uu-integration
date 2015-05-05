@@ -4,6 +4,10 @@ import java.io.Serializable;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
@@ -15,31 +19,37 @@ import se.uu.its.integration.model.events.OrganizationDepartmentMappingEvent;
 import se.uu.its.integration.model.events.PersonEvent;
 import se.uu.its.integration.model.events.RoleEvent;
 
+@Entity
+@Table(name="uuevents")
 @XmlSeeAlso({AffiliationEvent.class, PersonEvent.class, RoleEvent.class, OrganizationDepartmentMappingEvent.class})
 @XmlTransient
-public abstract class UUEvent implements Serializable {
+public  class UUEvent implements Serializable {
 	
 	private static final long serialVersionUID = 6670201491567203786L;
-
-	@XmlAttribute(name = "type")
-	String type;
 	
+	@XmlAttribute(name = "type")
+	public String type;
+	
+	@Id
 	@XmlAttribute(name = "identifier")
-	String identifier = null;
+	public String identifier = null;
 	
 //	@XmlElement(name = "ProcessedTime")
 //	protected Calendar processedTime;		
 	
+	@Column
 	@XmlElement(name = "IssuedTime")
-	protected Calendar issuedTime;	
+	public Calendar issuedTime;	
 
+	@Column
 	@XmlElement(name = "Producer")
-	protected String producer;
+	public String producer;
 
+	@Column
 	@XmlElement(name = "ProducerReferenceId")
-	protected String producerReferenceId;
+	public String producerReferenceId;
 	
-	protected UUEvent() {
+	public UUEvent() {
 	}
 	
 	public String toString() {
@@ -81,5 +91,25 @@ public abstract class UUEvent implements Serializable {
 	
 	public String getProducerReferenceId() {
 		return producerReferenceId;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public void setIdentifier(String identifier) {
+		this.identifier = identifier;
+	}
+
+	public void setIssuedTime(Calendar issuedTime) {
+		this.issuedTime = issuedTime;
+	}
+
+	public void setProducer(String producer) {
+		this.producer = producer;
+	}
+
+	public void setProducerReferenceId(String producerReferenceId) {
+		this.producerReferenceId = producerReferenceId;
 	}
 }

@@ -34,6 +34,8 @@
       <!-- Listen for calls from REST-binded CXF-service. -->
       <from uri="cxfrs:bean:rsServer?bindingStyle=SimpleConsumer" />
       
+      <to uri="jpa:?persistenceUnit=logDb" />
+        
       <!-- We use XML as internal integration language. -->
       <marshal>
       	<jaxb prettyPrint="true" contextPath="se.uu.its.integration.model.events"/>

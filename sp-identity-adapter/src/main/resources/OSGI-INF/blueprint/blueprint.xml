@@ -5,12 +5,31 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd">
 	
-	<cxf:cxfEndPoint id="spIndentityServiceEndpoint" address=""></cxf:cxfEndPoint>
+<!--
+    <cm:property-placeholder id="myblueprint.placeholder" persistent-id="se.uu.studentportalen">
+        <cm:default-properties>
+            <cm:property name="sp.queue" value="activemq:queue:result"/>
+        </cm:default-properties>
+    </cm:property-placeholder>
+	<cxf:rsClient id="rsClient"
+		address="${sp.host}"
+		serviceClass="se.uu.its.integration.client.identity.StudentportalProxy"
+		loggingFeatureEnabled="true"/>
+ -->
 
 	<camelContext xmlns="http://camel.apache.org/schema/blueprint" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:ui="http://schemas.ladok.se/utbildningsinformation">
+		<!-- Explicitly integrating Apache Camel property placeholder with OSGI property placeholder   -->
+		<!--
+		<propertyPlaceholder id="properties" location="blueprint:myblueprint.placeholder"/>
+		 -->
 		<route id="sp-identity-adapter">
 			<from uri="activemq:queue:identity-event-distribution?transacted=true" />
- 	        <to uri="activemq:queue:ladok3event-logdb" />
+
+			<to uri="activemq:queue:foobar" />
+ 	        <!--
+			<to uri="{{sp.queue}}" />
+ 	        <to uri="cxfrs:bean:rsClient" />
+ 	         -->
 		</route>
 	</camelContext>
 

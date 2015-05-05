@@ -12,7 +12,7 @@ import se.uu.its.integration.model.events.RoleEvent;
 
 @Path("/identity/")
 public class IdentityService {
-
+	
     @POST
     @Path("/event/affiliation/")
     @Consumes(MediaType.APPLICATION_XML)
