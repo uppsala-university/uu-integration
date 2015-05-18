@@ -19,35 +19,35 @@ import se.uu.its.integration.model.events.OrganizationDepartmentMappingEvent;
 import se.uu.its.integration.model.events.PersonEvent;
 import se.uu.its.integration.model.events.RoleEvent;
 
-@Entity
-@Table(name="uuevents")
+//Entity
+//Table(name="uuevents")
 @XmlSeeAlso({AffiliationEvent.class, PersonEvent.class, RoleEvent.class, OrganizationDepartmentMappingEvent.class})
 @XmlTransient
 public  class UUEvent implements Serializable {
 	
 	private static final long serialVersionUID = 6670201491567203786L;
 	
-	@XmlAttribute(name = "type")
-	public String type;
+	//XmlAttribute(name = "type")
+	private String type;
 	
-	@Id
-	@XmlAttribute(name = "identifier")
-	public String identifier = null;
+	//Id
+	//XmlAttribute(name = "identifier")
+	private String identifier = null;
 	
 //	@XmlElement(name = "ProcessedTime")
 //	protected Calendar processedTime;		
 	
-	@Column
-	@XmlElement(name = "IssuedTime")
-	public Calendar issuedTime;	
+	//Column
+	//XmlElement(name = "IssuedTime")
+	private Calendar issuedTime;	
 
-	@Column
-	@XmlElement(name = "Producer")
-	public String producer;
+	//Column
+	//XmlElement(name = "Producer")
+	private String producer;
 
-	@Column
-	@XmlElement(name = "ProducerReferenceId")
-	public String producerReferenceId;
+	//Column
+	//XmlElement(name = "ProducerReferenceId")
+	private String producerReferenceId;
 	
 	public UUEvent() {
 	}
@@ -73,22 +73,27 @@ public  class UUEvent implements Serializable {
 		this.producerReferenceId = producerReferenceId;
 	}
 	
+	@XmlElement(name = "IssuedTime")
 	public Calendar getIssuedTime() {
 		return issuedTime;
 	}
 	
+	@XmlAttribute(name = "type")
 	public String getType() {
 		return type;
 	}
 	
+	@XmlAttribute(name = "producer")
 	public String getProducer() {
 		return producer;
 	}
 	
+	@XmlAttribute(name = "identifier")
 	public String getIdentifier() {
 		return identifier;
 	}
 	
+	@XmlAttribute(name = "ProducerReferenceId")
 	public String getProducerReferenceId() {
 		return producerReferenceId;
 	}
