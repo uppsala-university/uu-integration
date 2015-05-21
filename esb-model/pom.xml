@@ -23,34 +23,12 @@
             <version>2.14.1</version>
         </dependency>
 
-<!-- 
 		<dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-core</artifactId>
-            <version>4.0.1.Final</version>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-validator</artifactId>
-            <version>4.2.0.Final</version>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate.javax.persistence</groupId>
-            <artifactId>hibernate-jpa-2.0-api</artifactId>
-            <version>1.0.1.Final</version>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-entitymanager</artifactId>
-            <version>4.0.1.Final</version>
-        </dependency>
- -->
-        <dependency>
-            <groupId>org.glassfish</groupId>
-            <artifactId>javax.persistence</artifactId>
-            <version>10.0-b28</version>
-        </dependency>
-		
+			<groupId>org.hibernate.javax.persistence</groupId>
+			<artifactId>hibernate-jpa-2.1-api</artifactId>
+			<version>1.0.0.Final</version>
+		</dependency>
+
         <dependency>
           <groupId>junit</groupId>
           <artifactId>junit</artifactId>
@@ -61,37 +39,7 @@
 
     <build>
         <plugins>
-        <!-- 
-		     <plugin>
-		        <groupId>org.codehaus.mojo</groupId>
-		        <artifactId>openjpa-maven-plugin</artifactId>
-		        <version>1.2</version>
-		        <configuration>
-		          <includes>se/uu/its/integration/model/**/*.class</includes>
-		          <addDefaultConstructor>true</addDefaultConstructor>
-		          <enforcePropertyRestrictions>true</enforcePropertyRestrictions>
-		        </configuration>
-		        <executions>
-		          <execution>
-		            <id>enhancer</id>
-		            <phase>process-classes</phase>
-		            <goals>
-		              <goal>enhance</goal>
-		            </goals>
-		          </execution>
-		        </executions>
-		
-		        <dependencies>
-		          <dependency>
-		            <groupId>org.apache.openjpa</groupId>
-		            <artifactId>openjpa</artifactId>
-		            <version>2.0.1</version>
-		          </dependency>
-		        </dependencies>
-		      </plugin>
-         -->
-
-              <plugin>
+        	<plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
                 <version>2.3.7</version>
@@ -99,7 +47,7 @@
                 <configuration>
                     <instructions>
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
-			<Bundle-Description>${project.description}</Bundle-Description>
+						<Bundle-Description>${project.description}</Bundle-Description>
                     </instructions>
                 </configuration>
             </plugin>
