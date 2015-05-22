@@ -38,6 +38,8 @@
       <!-- Listen for calls from REST-binded CXF-service. -->
       <from id="Identity REST endpoint" uri="cxfrs:bean:rsServer?bindingStyle=SimpleConsumer" />
       
+      <to uri="jpa:?persistenceUnit=logDb" />
+        
       <!-- We use XML as internal integration language. -->
       <marshal id="XML translation">
       	<jaxb prettyPrint="true" contextPath="se.uu.its.integration.model.events"/>
