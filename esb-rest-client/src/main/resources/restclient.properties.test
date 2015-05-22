@@ -1,0 +1,4 @@
+restbase=http://its-srvmix001-u.its.uu.se:8989/esb/rest
+useCert=false
+certificateFile=
+certificatePwd=

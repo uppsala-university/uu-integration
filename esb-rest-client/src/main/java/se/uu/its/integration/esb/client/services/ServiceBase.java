@@ -24,6 +24,10 @@ public abstract class ServiceBase {
 	protected String certificatePwd = null;
 	protected String restBase;
 
+	public String getRestBase() {
+		return restBase;
+	}
+
 	protected String mediaType = "+xml";
 	
 	protected ClientBuilder cb = null;
