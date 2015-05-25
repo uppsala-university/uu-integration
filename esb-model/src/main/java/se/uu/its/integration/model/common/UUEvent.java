@@ -110,7 +110,7 @@ public  class UUEvent implements Serializable {
 	
 	@Id
 	@GeneratedValue
-	@Column(name = "identifier2")	
+	@Column(name = "identifier")	
 	public String getIdentifier() {
 		return identifier;
 	}
