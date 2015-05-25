@@ -5,7 +5,8 @@
   xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.0.0"
   xmlns:cxf="http://camel.apache.org/schema/blueprint/cxf"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd"
+  xmlns:jpa="http://aries.apache.org/xmlns/jpa/v1.1.0"
+  xsi:schemaLocation="http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd http://aries.apache.org/xmlns/jpa/v1.1.0 http://aries.apache.org/schemas/jpa/jpa_110.xsd"
   default-activation="eager">
 
   <cm:property-placeholder persistent-id="se.uu.its.integration.service.cxf.receive">
@@ -27,6 +28,20 @@
   	<property name="deadLetterUri" value="activemq:queue:identity-event-deadletter"/>
   </bean>
 
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean">
+        <property name="persistenceUnitName" value="logDb" />
+        <property name="jpaVendorAdapter" ref="hibernateJpaAdapter" />
+    </bean>
+
+    <bean id="jpa" class="org.apache.camel.component.jpa.JpaComponent">
+        <property name="entityManagerFactory" ref="entityManagerFactory" />
+		<jpa:unit unitname="logDb" property="entityManagerFactory"/>       
+    </bean>
+
+    <bean id="hibernateJpaAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+    	<property name="showSql" value="true" />
+    </bean>
+    
   <camelContext id="IdentityService" errorHandlerRef="deadLetterErrorHandler" xmlns="http://camel.apache.org/schema/blueprint">
 
     <route id="IdentityServiceRoute">
@@ -38,7 +53,8 @@
       <!-- Listen for calls from REST-binded CXF-service. -->
       <from id="Identity REST endpoint" uri="cxfrs:bean:rsServer?bindingStyle=SimpleConsumer" />
       
-      <to uri="jpa:?persistenceUnit=logDb" />
+      <!-- Persist log entry in log database. -->  
+      <to id="Log processed events" uri="jpa:se.uu.its.integration.model.common.UUEvent?persistenceUnit=logDb" />
         
       <!-- We use XML as internal integration language. -->
       <marshal id="XML translation">

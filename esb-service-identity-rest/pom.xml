@@ -94,7 +94,8 @@
                         	org.osgi.service.blueprint, 
                         	se.uu.its.integration.esb.logger, 
                         	se.uu.its.integration.model.common, 
-                        	se.uu.its.integration.model.events	
+                        	se.uu.its.integration.model.events,
+                        	javax.persistence,	
                         </Import-Package>
                         	-->
      <!-- 

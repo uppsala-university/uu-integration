@@ -48,6 +48,15 @@
                     <instructions>
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
 						<Bundle-Description>${project.description}</Bundle-Description>
+						<Import-Package>
+<!--
+        javax.persistence,
+--> 
+				        org.hibernate.proxy,
+				        org.hibernate.jpa,
+				        javassist.util.proxy,
+        				*
+      </Import-Package>
                     </instructions>
                 </configuration>
             </plugin>
