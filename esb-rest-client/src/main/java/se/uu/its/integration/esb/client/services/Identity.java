@@ -39,5 +39,7 @@ public interface Identity {
 
 	public String registerOrganizationDepartmentMappingDeleted(String akkaEventRefId, String organizationId,
 			String mappedId);
+	
+	public String getRestBase();
 
 }
