@@ -28,21 +28,32 @@
   	<property name="deadLetterUri" value="activemq:queue:identity-event-deadletter"/>
   </bean>
 
+    <!-- 
+    <bean id="hibernateJpaAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+    	<property name="showSql" value="true" />
+    </bean>
+    -->
+    
     <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean">
         <property name="persistenceUnitName" value="logDb" />
+        <!-- 
         <property name="jpaVendorAdapter" ref="hibernateJpaAdapter" />
+        -->
+    </bean>
+
+    <bean id="jpaTxManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
     </bean>
 
     <bean id="jpa" class="org.apache.camel.component.jpa.JpaComponent">
         <property name="entityManagerFactory" ref="entityManagerFactory" />
-		<jpa:unit unitname="logDb" property="entityManagerFactory"/>       
+        <property name="transactionManager" ref="jpaTxManager"/>
+        <!-- 
+		<jpa:unit unitname="logDb" property="entityManagerFactory"/>
+		-->       
     </bean>
 
-    <bean id="hibernateJpaAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
-    	<property name="showSql" value="true" />
-    </bean>
-    
-  <camelContext id="IdentityService" errorHandlerRef="deadLetterErrorHandler" xmlns="http://camel.apache.org/schema/blueprint">
+  <camelContext id="IdentityService" xmlns="http://camel.apache.org/schema/blueprint">
 
     <route id="IdentityServiceRoute">
     

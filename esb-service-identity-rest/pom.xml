@@ -82,7 +82,7 @@
                         </Import-Package>
                         	-->
                         <Import-Package>
-                        	*,org.mariadb.jdbc,org.hibernate,org.hibernate.ejb,javax.sql,javax.persistence.criteria,org.hibernate.proxy,javassist.util.proxy
+                        	*,org.mariadb.jdbc,org.hibernate,org.hibernate.ejb,javax.sql,javax.persistence,javax.persistence.criteria,org.hibernate.proxy,javassist.util.proxy
                         </Import-Package>
                         <!-- 
                         <Import-Package>

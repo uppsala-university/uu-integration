@@ -7,9 +7,9 @@ import java.util.GregorianCalendar;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
@@ -29,34 +29,31 @@ public  class UUEvent implements Serializable {
 	
 	private static final long serialVersionUID = 6670201491567203786L;
 	
+	@Transient
 	@XmlAttribute(name = "type")
-	private String type;
+	private String _type;
 	
-//	@Id
-//	@GeneratedValue
-//	@Column(name = "identifier")
+	@Id
+	@GeneratedValue
+	@Column(name = "identifier")	
 	@XmlAttribute(name = "identifier")
-	private String identifier = null;
+	private String _identifier = null;
 
-//	@Id
-//	@GeneratedValue
-//	@Column(name = "identifier2")
-	private int identifier2;	
-	
+	@Transient
 	@XmlElement(name = "ProcessedTime")
-	protected Calendar processedTime;		
+	protected Calendar _processedTime;		
 	
-//	@Column(name = "issuedTime")
+	@Column(name = "issuedTime")
 	@XmlElement(name = "IssuedTime")
-	private Calendar issuedTime;	
+	private Calendar _issuedTime;	
 	
-//	@Column(name = "producer")
+	@Column(name = "producer")
 	@XmlElement(name = "Producer")
-	private String producer;
+	private String _producer;
 	
-//	@Column(name = "producerReferenceId")
+	@Column(name = "producerReferenceId")
 	@XmlElement(name = "ProducerReferenceId")
-	private String producerReferenceId;
+	private String _producerReferenceId;
 	
 	public UUEvent() {
 	}
@@ -76,56 +73,50 @@ public  class UUEvent implements Serializable {
 	}
 	
 	protected UUEvent(String producer, String producerReferenceId) {
-		this.issuedTime = GregorianCalendar.getInstance();
-		this.type = this.getClass().getSimpleName();
-		this.producer = producer;
-		this.producerReferenceId = producerReferenceId;
+		this._issuedTime = GregorianCalendar.getInstance();
+		this._type = this.getClass().getSimpleName();
+		this._producer = producer;
+		this._producerReferenceId = producerReferenceId;
 	}
 	
-	@Column(name = "issuedTime")
 	public Calendar getIssuedTime() {
-		return issuedTime;
+		return _issuedTime;
 	}
 
 	public void setIssuedTime(Calendar issuedTime) {
-		this.issuedTime = issuedTime;
+		this._issuedTime = issuedTime;
 	}	
 
 	public String getType() {
-		return type;
+		return _type;
 	}
 	
 	public void setType(String type) {
-		this.type = type;
+		this._type = type;
 	}
 
-	@Column(name = "producer")
 	public String getProducer() {
-		return producer;
+		return _producer;
 	}
 
 	public void setProducer(String producer) {
-		this.producer = producer;
+		this._producer = producer;
 	}	
 	
-	@Id
-	@GeneratedValue
-	@Column(name = "identifier")	
 	public String getIdentifier() {
-		return identifier;
+		return _identifier;
 	}
 	
 	public void setIdentifier(String identifier) {
-		this.identifier = identifier;
+		this._identifier = identifier;
 	}
 	
-	@Column(name = "producerReferenceId")
 	public String getProducerReferenceId() {
-		return producerReferenceId;
+		return _producerReferenceId;
 	}
 	
 	public void setProducerReferenceId(String producerReferenceId) {
-		this.producerReferenceId = producerReferenceId;
+		this._producerReferenceId = producerReferenceId;
 	}	
 	
 }
