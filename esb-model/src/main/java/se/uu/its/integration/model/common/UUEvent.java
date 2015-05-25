@@ -94,6 +94,10 @@ public  class UUEvent implements Serializable {
 	public String getType() {
 		return type;
 	}
+	
+	public void setType(String type) {
+		this.type = type;
+	}
 
 	@Column(name = "producer")
 	public String getProducer() {
