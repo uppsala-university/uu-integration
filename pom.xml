@@ -15,7 +15,7 @@
     		<module>esb-event-logger</module>
     		<module>esb-service-identity-rest</module>
     		<module>esb-rest-client</module>
-                <module>sp-identity-adapter</module>
+        <module>sp-identity-adapter</module>
   	</modules>
 
 	<properties>
