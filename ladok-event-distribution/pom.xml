@@ -9,7 +9,7 @@
 	
     	<groupId>se.uu.its.integration</groupId>
 	<artifactId>ladok-event-distribution</artifactId>
-	<version>${parent.version}</version>
+	<version>${project.parent.version}</version>
 	<packaging>bundle</packaging>
 	<name>Ladok Event Distribution</name>
 

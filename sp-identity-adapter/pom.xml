@@ -9,7 +9,7 @@
 
    	<groupId>se.uu.its.integration</groupId>
 	<artifactId>sp-identity-adapter</artifactId>
-	<version>${parent.version}</version>
+	<version>${project.parent.version}</version>
 	<packaging>bundle</packaging>
 	<name>SP Identitty Adapter</name>
 

@@ -10,7 +10,7 @@
 
     	<groupId>se.uu.its.integration</groupId>
 	<artifactId>esb-event-logger</artifactId>
-	<version>${parent.version}</version>
+	<version>${project.parent.version}</version>
 	<packaging>bundle</packaging>
 	<name>ESB Event Logger</name>
 

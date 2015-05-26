@@ -6,7 +6,6 @@ import java.util.GregorianCalendar;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -31,29 +30,28 @@ public  class UUEvent implements Serializable {
 	
 	@Transient
 	@XmlAttribute(name = "type")
-	private String _type;
+	String _type;
 	
 	@Id
-	@GeneratedValue
-	@Column(name = "identifier")	
+	@Column(name = "identifier")
 	@XmlAttribute(name = "identifier")
-	private String _identifier = null;
+	String _identifier;
 
 	@Transient
 	@XmlElement(name = "ProcessedTime")
-	protected Calendar _processedTime;		
+	Calendar _processedTime;		
 	
 	@Column(name = "issuedTime")
 	@XmlElement(name = "IssuedTime")
-	private Calendar _issuedTime;	
+	Calendar _issuedTime;	
 	
 	@Column(name = "producer")
 	@XmlElement(name = "Producer")
-	private String _producer;
+	String _producer;
 	
 	@Column(name = "producerReferenceId")
 	@XmlElement(name = "ProducerReferenceId")
-	private String _producerReferenceId;
+	String _producerReferenceId;
 	
 	public UUEvent() {
 	}
@@ -70,6 +68,17 @@ public  class UUEvent implements Serializable {
 
 		return result;
 		
+	}
+	
+	public UUEvent exportUUEvent() {
+		UUEvent uuEvent = new UUEvent();
+		uuEvent._identifier = this._identifier;
+		uuEvent._issuedTime = this._issuedTime;
+		uuEvent._processedTime = this._processedTime;
+		uuEvent._producer = this._producer;
+		uuEvent._producerReferenceId = this._producerReferenceId;
+		uuEvent._type = this._type;
+		return uuEvent;
 	}
 	
 	protected UUEvent(String producer, String producerReferenceId) {

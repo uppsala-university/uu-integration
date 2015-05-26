@@ -26,6 +26,16 @@ public class ModelUtils {
 	public ModelUtils() {
 	}
 	
+	public Object convertToUUEvent(Object message) {
+		if (message instanceof UUEvent) {
+			UUEvent e = ((UUEvent) message).exportUUEvent();
+			e.setIdentifier("debugid_xyz");
+			return e;
+		} else {
+			return message;
+		}
+	}
+	
 	public String getNewEventId() {
 		return UUID.randomUUID().toString();
 	}
