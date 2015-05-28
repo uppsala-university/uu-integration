@@ -114,9 +114,9 @@
 			<filter id="Event processing filter">
 
 				<method id="isEventProcessed" ref="esbEventLogger" method="isEventProcessed" />
-<!-- 
+
 				<inOnly id="Event distribution" uri="activemq:queue:identity-event-distribution" />
- -->
+
 				<!-- Här loggar vi just nu ingenting, bara skapar responsen. -->
 				<to id="Log event" uri="bean:esbEventLogger?method=logEvent" />
 
@@ -137,9 +137,8 @@
 			</filter>
 
 			<!-- Log not processed events. Don't passes the filter. -->
-			<!-- 
 			<inOnly id="Log duplicate event" uri="activemq:queue:identity-event-duplicate" />
- -->
+
 		</route>
 
 	</camelContext>
