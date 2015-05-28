@@ -25,6 +25,7 @@ import se.uu.its.integration.model.events.PersonEventData;
 import se.uu.its.integration.model.events.RoleCreatedEvent;
 import se.uu.its.integration.model.events.RoleDeletedEvent;
 import se.uu.its.integration.model.events.RoleEvent;
+import se.uu.its.integration.model.events.UUEvent;
 import se.uu.its.integration.model.identity.Affiliation;
 import se.uu.its.integration.model.identity.Employee;
 import se.uu.its.integration.model.identity.Organization;
@@ -60,6 +61,38 @@ public class ModelEventsTest {
 		
 		assertTrue("String representation is not valid xml.", !xml.equalsIgnoreCase(""));
 	}
+	
+	@Test 
+	public void testPersonChangedEventFullXml2() throws JAXBException {
+		
+		Person person = new Person("198001010000", "Test", "Testsson");
+		person.AddAffiliation(new Student("studstud"));
+		person.AddAffiliation(new Employee("emplempl"));
+		UUEventDataProperty property = new UUEventDataProperty("Personnumber", "197001010000", "198001010000");
+		PersonEventData personEventData = new PersonEventData();
+		personEventData.addEventPropertyData(property);	
+		
+		PersonChangedEvent event = new PersonChangedEvent(
+				SYSTEM_MESSAGE_PRODUCER, 
+				"Ev104",
+				person, 
+				personEventData);
+
+		
+		
+		String xml = ModelUtils.getMarchalledObjectXml(PersonChangedEvent.class, event);
+		
+		System.out.println(xml);
+		System.out.println();
+		
+		PersonEvent objectFromXml = (PersonEvent) ModelUtils.getUnmarchalledObject(PersonEvent.class, xml);	
+
+		UUEvent uue = (UUEvent) objectFromXml;
+		
+		String xml2 = ModelUtils.getMarchalledObjectXml(UUEvent.class, uue);
+		
+		assertTrue("Unmarchalled value of producer is not the same as marchalled object property value.", objectFromXml.getProducer().equalsIgnoreCase(SYSTEM_MESSAGE_PRODUCER));
+	}	
 	
 	@Test 
 	public void testPersonChangedEventFullXml() throws JAXBException {

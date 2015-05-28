@@ -4,11 +4,11 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import se.uu.its.integration.model.common.UUEvent;
 import se.uu.its.integration.model.events.AffiliationEvent;
 import se.uu.its.integration.model.events.OrganizationDepartmentMappingEvent;
 import se.uu.its.integration.model.events.PersonEvent;
 import se.uu.its.integration.model.events.RoleEvent;
+import se.uu.its.integration.model.events.UUEvent;
 
 @Path("/identity/")
 public class IdentityService {

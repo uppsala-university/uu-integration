@@ -11,7 +11,7 @@
 	<artifactId>sp-identity-adapter</artifactId>
 	<version>${project.parent.version}</version>
 	<packaging>bundle</packaging>
-	<name>SP Identitty Adapter</name>
+	<name>SP Identity Adapter</name>
 
     <dependencies>
          <dependency>

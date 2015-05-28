@@ -9,7 +9,7 @@ import javax.ws.rs.core.Response.Status;
 import javax.xml.bind.JAXBException;
 
 import se.uu.its.integration.model.common.ModelUtils;
-import se.uu.its.integration.model.common.UUEvent;
+import se.uu.its.integration.model.events.UUEvent;
 
 import se.uu.its.integration.esb.logger.ESBLoggerUnexpectedException;
 
@@ -76,6 +76,13 @@ public class ESBEventLogger {
 		builder.entity(xml);
 		
 		return builder.build();
+	}
+	
+	public Object debuggo(Object o) {
+		
+		log.info("DEBUUUUUGOOO: " + o.getClass().getName());
+		
+		return o;
 	}
 	
 }

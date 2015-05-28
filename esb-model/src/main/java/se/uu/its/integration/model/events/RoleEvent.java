@@ -3,7 +3,6 @@ package se.uu.its.integration.model.events;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import se.uu.its.integration.model.common.UUEvent;
 import se.uu.its.integration.model.identity.Role;
 
 @XmlRootElement(name = "RoleEvent", namespace ="http://www.uu.se/schemas/integration/2015/Events")

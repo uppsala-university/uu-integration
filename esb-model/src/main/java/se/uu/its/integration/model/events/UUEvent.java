@@ -1,29 +1,33 @@
-package se.uu.its.integration.model.common;
+package se.uu.its.integration.model.events;
 
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.UUID;
 
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlTransient;
 
-import se.uu.its.integration.model.events.AffiliationEvent;
-import se.uu.its.integration.model.events.OrganizationDepartmentMappingEvent;
-import se.uu.its.integration.model.events.PersonEvent;
-import se.uu.its.integration.model.events.RoleEvent;
+import se.uu.its.integration.model.common.ModelUtils;
 
 @Entity
+//@Inheritance
+//@DiscriminatorColumn (name = "type")
 @Table(name="uuevents")
 @XmlSeeAlso({AffiliationEvent.class, PersonEvent.class, RoleEvent.class, OrganizationDepartmentMappingEvent.class})
-@XmlTransient
+//@XmlTransient
+@XmlRootElement(name = "UUEvent", namespace = "http://www.uu.se/schemas/integration/2015/Events")
 public  class UUEvent implements Serializable {
 	
 	private static final long serialVersionUID = 6670201491567203786L;
@@ -35,7 +39,7 @@ public  class UUEvent implements Serializable {
 	@Id
 	@Column(name = "identifier")
 	@XmlAttribute(name = "identifier")
-	String _identifier;
+	String _myNewId;
 
 	@Transient
 	@XmlElement(name = "ProcessedTime")
@@ -72,7 +76,7 @@ public  class UUEvent implements Serializable {
 	
 	public UUEvent exportUUEvent() {
 		UUEvent uuEvent = new UUEvent();
-		uuEvent._identifier = this._identifier;
+		uuEvent._myNewId = UUID.randomUUID().toString();
 		uuEvent._issuedTime = this._issuedTime;
 		uuEvent._processedTime = this._processedTime;
 		uuEvent._producer = this._producer;
@@ -88,44 +92,44 @@ public  class UUEvent implements Serializable {
 		this._producerReferenceId = producerReferenceId;
 	}
 	
-	public Calendar getIssuedTime() {
-		return _issuedTime;
-	}
-
-	public void setIssuedTime(Calendar issuedTime) {
-		this._issuedTime = issuedTime;
-	}	
-
-	public String getType() {
-		return _type;
-	}
-	
-	public void setType(String type) {
-		this._type = type;
-	}
-
+//	public Calendar getIssuedTime() {
+//		return _issuedTime;
+//	}
+//
+//	public void setIssuedTime(Calendar issuedTime) {
+//		this._issuedTime = issuedTime;
+//	}	
+//
+//	public String getType() {
+//		return _type;
+//	}
+//	
+//	public void setType(String type) {
+//		this._type = type;
+//	}
+//
 	public String getProducer() {
 		return _producer;
 	}
-
-	public void setProducer(String producer) {
-		this._producer = producer;
-	}	
-	
+//
+//	public void setProducer(String producer) {
+//		this._producer = producer;
+//	}	
+//	
 	public String getIdentifier() {
-		return _identifier;
+		return _myNewId;
 	}
-	
-	public void setIdentifier(String identifier) {
-		this._identifier = identifier;
-	}
-	
+//	
+//	public void setIdentifier(String identifier) {
+//		this._identifier = identifier;
+//	}
+//	
 	public String getProducerReferenceId() {
 		return _producerReferenceId;
 	}
-	
-	public void setProducerReferenceId(String producerReferenceId) {
-		this._producerReferenceId = producerReferenceId;
-	}	
+//	
+//	public void setProducerReferenceId(String producerReferenceId) {
+//		this._producerReferenceId = producerReferenceId;
+//	}	
 	
 }

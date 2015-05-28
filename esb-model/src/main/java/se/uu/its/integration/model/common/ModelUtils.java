@@ -18,6 +18,10 @@ import javax.xml.transform.stream.StreamSource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.sun.media.jfxmedia.logging.Logger;
+
+import se.uu.its.integration.model.events.UUEvent;
+
 public class ModelUtils {
 	
 	public static String TO_STRING_ERROR_MSG = "Error!";
@@ -27,9 +31,12 @@ public class ModelUtils {
 	}
 	
 	public Object convertToUUEvent(Object message) {
+		
+		log.info("+++++++++++++++++ HEJ!");
+		
 		if (message instanceof UUEvent) {
 			UUEvent e = ((UUEvent) message).exportUUEvent();
-			e.setIdentifier("debugid_xyz");
+//			e.setIdentifier("debugid_xyz");
 			return e;
 		} else {
 			return message;

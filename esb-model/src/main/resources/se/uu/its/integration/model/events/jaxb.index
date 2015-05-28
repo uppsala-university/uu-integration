@@ -11,3 +11,4 @@ PersonEventData
 RoleCreatedEvent
 RoleDeletedEvent
 RoleEvent
+UUEvent
