@@ -10,7 +10,6 @@ import javax.xml.bind.JAXBException;
 
 import se.uu.its.integration.model.common.ModelUtils;
 import se.uu.its.integration.model.events.UUEvent;
-
 import se.uu.its.integration.esb.logger.ESBLoggerUnexpectedException;
 
 import org.apache.commons.logging.Log;
@@ -85,4 +84,7 @@ public class ESBEventLogger {
 		return o;
 	}
 	
+	public Object kaboom(Object o) {
+		throw new RuntimeException("Kaboom! " + o.toString());
+	}
 }

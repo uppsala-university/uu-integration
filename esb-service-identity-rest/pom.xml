@@ -92,7 +92,7 @@
                         	javax.persistence.criteria,
                         	org.hibernate.proxy,
                         	javassist.util.proxy,
-                        	org.osgi.service.jdbc
+				javax.transaction;version="[1.1,2)"
                         </Import-Package>
 
                         <!-- 
