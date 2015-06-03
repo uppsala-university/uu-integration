@@ -24,15 +24,15 @@ public  class UUEvent implements Serializable {
 	
 	private static final long serialVersionUID = 6670201491567203786L;
 	
-	@Transient
-	@XmlAttribute(name = "type")
-	String _type;
-	
 	@Id
 	@Column(name = "identifier")
 	@XmlAttribute(name = "identifier")
-	String _myNewId;
+	String _identifier;
 
+	@Column(name = "type")
+	@XmlAttribute(name = "type")
+	String _type;	
+	
 	@Transient
 	@XmlElement(name = "ProcessedTime")
 	Calendar _processedTime;		
@@ -68,7 +68,7 @@ public  class UUEvent implements Serializable {
 	
 	public UUEvent exportUUEvent() {
 		UUEvent uuEvent = new UUEvent();
-		uuEvent._myNewId = this._myNewId;
+		uuEvent._identifier = this._identifier;
 		uuEvent._issuedTime = this._issuedTime;
 		uuEvent._processedTime = this._processedTime;
 		uuEvent._producer = this._producer;
@@ -89,7 +89,7 @@ public  class UUEvent implements Serializable {
 	}
 
 	public String getIdentifier() {
-		return _myNewId;
+		return _identifier;
 	}
 
 	public String getProducerReferenceId() {
