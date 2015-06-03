@@ -3,8 +3,6 @@ package se.uu.its.integration.model.events;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.UUID;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -19,11 +17,8 @@ import javax.xml.bind.annotation.XmlSeeAlso;
 import se.uu.its.integration.model.common.ModelUtils;
 
 @Entity
-//@Inheritance
-//@DiscriminatorColumn (name = "type")
 @Table(name="uuevents")
 @XmlSeeAlso({AffiliationEvent.class, PersonEvent.class, RoleEvent.class, OrganizationDepartmentMappingEvent.class})
-//@XmlTransient
 @XmlRootElement(name = "UUEvent", namespace = "http://www.uu.se/schemas/integration/2015/Events")
 public  class UUEvent implements Serializable {
 	
@@ -73,7 +68,7 @@ public  class UUEvent implements Serializable {
 	
 	public UUEvent exportUUEvent() {
 		UUEvent uuEvent = new UUEvent();
-		uuEvent._myNewId = UUID.randomUUID().toString();
+		uuEvent._myNewId = this._myNewId;
 		uuEvent._issuedTime = this._issuedTime;
 		uuEvent._processedTime = this._processedTime;
 		uuEvent._producer = this._producer;
@@ -89,44 +84,16 @@ public  class UUEvent implements Serializable {
 		this._producerReferenceId = producerReferenceId;
 	}
 	
-//	public Calendar getIssuedTime() {
-//		return _issuedTime;
-//	}
-//
-//	public void setIssuedTime(Calendar issuedTime) {
-//		this._issuedTime = issuedTime;
-//	}	
-//
-//	public String getType() {
-//		return _type;
-//	}
-//	
-//	public void setType(String type) {
-//		this._type = type;
-//	}
-//
 	public String getProducer() {
 		return _producer;
 	}
-//
-//	public void setProducer(String producer) {
-//		this._producer = producer;
-//	}	
-//	
+
 	public String getIdentifier() {
 		return _myNewId;
 	}
-//	
-//	public void setIdentifier(String identifier) {
-//		this._identifier = identifier;
-//	}
-//	
+
 	public String getProducerReferenceId() {
 		return _producerReferenceId;
 	}
-//	
-//	public void setProducerReferenceId(String producerReferenceId) {
-//		this._producerReferenceId = producerReferenceId;
-//	}	
 	
 }
