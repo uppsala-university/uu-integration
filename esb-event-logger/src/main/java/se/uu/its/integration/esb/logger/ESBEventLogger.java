@@ -77,14 +77,4 @@ public class ESBEventLogger {
 		return builder.build();
 	}
 	
-	public Object debuggo(Object o) {
-		
-		log.info("DEBUUUUUGOOO: " + o.getClass().getName());
-		
-		return o;
-	}
-	
-	public Object kaboom(Object o) {
-		throw new RuntimeException("Kaboom! " + o.toString());
-	}
 }
