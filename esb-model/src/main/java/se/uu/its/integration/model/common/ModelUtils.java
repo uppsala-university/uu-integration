@@ -103,4 +103,8 @@ public class ModelUtils {
 		
 	}	
 	
+	public Object exceptionTrigger(Object o) {
+		throw new RuntimeException("New triggered RuntimeException! " + o.toString());
+	}
+
 }
