@@ -87,7 +87,35 @@
 		<property name="propagationBehaviorName" value="PROPAGATION_REQUIRED" />
 	</bean>
 
-	<camelContext id="IdentityService" allowUseOriginalMessage="false"
+	<!-- 
+	
+	TODO: Define how to handle logs.
+	
+	When using a errorHandlerRef raised exception is consider handled by the transaction manager.
+	This means that Camel will abort the route, but the container will commit the statements 
+	handled by the transaction manager.
+	
+	Our dead letter handling must trigger a explicit rollback.
+	
+	Link:
+		https://access.redhat.com/documentation/en-US/Red_Hat_JBoss_Fuse/6.0/html/EIP_Transaction_Guide/files/TxnDemarcation-ErrorHandling.html
+	
+	Enable logging in Karaf with:
+		log:set DEBUG org.apache.activemq.transaction 
+		log:set DEBUG org.springframework.transaction 	
+		log:set DEBUG org.springframework.jms.connection.JmsTransactionManager 
+		log:set DEBUG org.springframework.orm.jpa.JpaTransactionManager 
+		log:set TRACE org.apache.geronimo.transaction.manager.WrapperNamedXAResource 
+		log:set DEBUG org.apache.geronimo.transaction.log 
+		log:set DEBUG org.jencks
+	
+	-->
+
+	<camelContext id="IdentityService" 
+<!-- 
+		errorHandlerRef="deadLetterErrorHandler" 
+ -->
+		allowUseOriginalMessage="false"
 		xmlns="http://camel.apache.org/schema/blueprint">
 
 		<route id="IdentityServiceRoute">
@@ -125,7 +153,9 @@
  				
 				<!-- Här loggar vi just nu ingenting, bara skapar responsen. -->
 				<to id="Log event" uri="bean:esbEventLogger?method=logEvent" />
-
+<!-- 
+				<to id="KabooOOOOOmm" uri="bean:modelUtils?method=exceptionTrigger" />
+ -->
 				<unmarshal id="Object translation again">
 					<jaxb prettyPrint="true" contextPath="se.uu.its.integration.model.events" />
 				</unmarshal>
@@ -133,14 +163,9 @@
 				<to id="Convert to UUEvent" uri="bean:modelUtils?method=convertToUUEvent" />
 				<to id="Log processed events" uri="jpa:se.uu.its.integration.model.events.UUEvent?persistenceUnit=logDb" />
 
-				<to id="TESTTESTTEST" uri="bean:esbEventLogger?method=debuggo" />
 				<marshal id="XML translation again">
 					<jaxb prettyPrint="true" contextPath="se.uu.its.integration.model.events" />
 				</marshal>
-
-				<!-- 
-				<to id="KabooOOOOOmm" uri="bean:esbEventLogger?method=kaboom" />
-				-->
 
 				<stop id="Event processing finished" />
 
