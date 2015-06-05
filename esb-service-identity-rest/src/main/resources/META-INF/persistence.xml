@@ -6,7 +6,7 @@
     <persistence-unit name="logDb" transaction-type="JTA">
 
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-        <jta-data-source>osgi:service/javax.sql.XADataSource/(osgi.jndi.service.name=jdbc/UUDS)</jta-data-source>
+        <jta-data-source>osgi:service/jdbc/UUDS</jta-data-source>
 
         <class>se.uu.its.integration.model.events.UUEvent</class>
 

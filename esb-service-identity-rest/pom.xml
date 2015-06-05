@@ -75,16 +75,9 @@
                     <instructions>
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Version>${project.version}</Bundle-Version>
-                        <!-- 
-						<Import-Package>*,org.hibernate,org.hibernate.ejb,org.hibernate.ejb.connection,javax.sql,javax.persistence.criteria</Import-Package>
-                        <Import-Package>
-                        	*,org.mariadb.jdbc,org.hibernate,org.hibernate.ejb,org.hibernate.ejb.connection,javax.sql,javax.persistence.criteria,org.hibernate.proxy,javassist.util.proxy
-                        </Import-Package>
-                        -->
-
                         <Import-Package>
                         	*,
-                        	org.mariadb.jdbc,
+                        	com.mysql.jdbc,
                         	org.hibernate,
                         	org.hibernate.ejb,
                         	javax.sql,
@@ -92,29 +85,15 @@
                         	javax.persistence.criteria,
                         	org.hibernate.proxy,
                         	javassist.util.proxy,
-				javax.transaction;version="[1.1,2)"
+                        	org.apache.activemq,
+                        	javax.transaction;version="[1.1,2)"
                         </Import-Package>
-
                         <!-- 
-                        <Import-Package>
-                        	se.uu.its.integration.model.transform;version="[0.0,1]",
-                         
-                        	javax.ws.rs, 
-                        	javax.ws.rs.core, 
-                        	org.apache.camel.builder, 
-                        	org.osgi.service.blueprint, 
-                        	se.uu.its.integration.esb.logger, 
-                        	se.uu.its.integration.model.common, 
-                        	se.uu.its.integration.model.events,
-                        	javax.persistence,	
-                        </Import-Package>
-                        	-->
-     <!-- 
                         <Include-Resource>
                         	../esb-model/src/main/resources/se/uu/its/integration/model/transform/addIntegrationEventIdToEvent.xsl,
                         	{maven-resources}
                         </Include-Resource>
- -->
+                        -->
 			<Meta-Persistence>META-INF/persistence.xml</Meta-Persistence>
                     </instructions>
                 </configuration>
