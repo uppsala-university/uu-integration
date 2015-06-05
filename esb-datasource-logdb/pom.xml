@@ -13,8 +13,8 @@
   <artifactId>esb-datasource-logdb</artifactId>
   <version>1.0-SNAPSHOT</version>
   <packaging>bundle</packaging>
-  <name>LogDB Datasource</name>
-  <description>LogDB datasource as OSGi bundle project.</description>
+  <name>ESB LogDB Datasource</name>
+  <description>ESB LogDB datasource as OSGi bundle project.</description>
 
   <dependencies>
     <dependency>
