@@ -29,7 +29,7 @@ public  class UUEvent implements Serializable {
 	@XmlAttribute(name = "identifier")
 	String _identifier;
 
-	@Column(name = "type")
+	@Column(name = "event_type")
 	@XmlAttribute(name = "type")
 	String _type;	
 	
