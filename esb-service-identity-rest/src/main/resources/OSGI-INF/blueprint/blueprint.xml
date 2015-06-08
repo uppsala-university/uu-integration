@@ -112,11 +112,11 @@
 	-->
 
 	<camelContext id="IdentityService" 
+		allowUseOriginalMessage="false"
+		xmlns="http://camel.apache.org/schema/blueprint">
 <!-- 
 		errorHandlerRef="deadLetterErrorHandler" 
  -->
-		allowUseOriginalMessage="false"
-		xmlns="http://camel.apache.org/schema/blueprint">
 
 		<route id="IdentityServiceRoute">
 
