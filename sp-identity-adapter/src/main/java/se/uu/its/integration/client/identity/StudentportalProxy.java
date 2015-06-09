@@ -5,14 +5,15 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-@Path("/")
+@Path("/akka-event")
 public interface StudentportalProxy {
 
 	@POST
-	@Path(value="/user/{userId}")
-	public void invalidateUserCache(@PathParam("userId") String userId);
+	@Path(value="")
+	public void invalidateUserCache(@QueryParam("accountId") String accountId);
 
 	@GET
 	@Path(value="/user/{userId}")

@@ -5,31 +5,37 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd">
 	
-<!--
-    <cm:property-placeholder id="myblueprint.placeholder" persistent-id="se.uu.studentportalen">
+
+	<!-- Properties from /opt/servicemix/apache-servicemix-5.4.0/etc/se.uu.studentportalen.cfg -->
+    <cm:property-placeholder persistent-id="se.uu.studentportalen">
         <cm:default-properties>
-            <cm:property name="sp.queue" value="activemq:queue:result"/>
+            <cm:property name="sp.rest.identity.pw" value="CHANGEME"/>
+            <cm:property name="sp.host" value="https://dev.studentportalen.uu.se"/>
         </cm:default-properties>
     </cm:property-placeholder>
+
+ 	<bean id="modelUtils" class="se.uu.its.integration.model.common.ModelUtils" />
+
 	<cxf:rsClient id="rsClient"
-		address="${sp.host}"
+		address="${sp.host}/uusp-webapp/spring/akka-event/"
 		serviceClass="se.uu.its.integration.client.identity.StudentportalProxy"
 		loggingFeatureEnabled="true"/>
- -->
 
 	<camelContext xmlns="http://camel.apache.org/schema/blueprint" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:ui="http://schemas.ladok.se/utbildningsinformation">
-		<!-- Explicitly integrating Apache Camel property placeholder with OSGI property placeholder   -->
-		<!--
-		<propertyPlaceholder id="properties" location="blueprint:myblueprint.placeholder"/>
-		 -->
 		<route id="sp-identity-adapter">
 			<from uri="activemq:queue:identity-event-distribution?transacted=true" />
 
-			<to uri="activemq:queue:foobar" />
- 	        <!--
-			<to uri="{{sp.queue}}" />
- 	        <to uri="cxfrs:bean:rsClient" />
- 	         -->
+ 	        <to id="Extract accountid" uri="bean:modelUtils?method=getAccountId" />
+
+ 	        <setHeader headerName="CamelHttpQuery">
+         		<simple>pw={{sp.rest.identity.pw}}&amp;accountId=${body}</simple>
+       		</setHeader>
+ 	        <setHeader headerName="CamelHttpPath">
+         		<constant></constant>
+       		</setHeader>
+
+ 	        <to uri="log:sp-identity-adaptor?level=info"/>
+ 	        <to uri="cxfrs://bean://rsClient" />
 		</route>
 	</camelContext>
 
