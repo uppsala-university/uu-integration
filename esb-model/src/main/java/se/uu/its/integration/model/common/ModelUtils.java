@@ -27,15 +27,7 @@ public class ModelUtils {
 	
 	public ModelUtils() {
 	}
-	public String getAccountId(String xml) {
-		try {
-			UUEvent event = (UUEvent) getUnmarchalledObject(UUEvent.class, xml);
-			return event.getProducerReferenceId();
-		} catch (JAXBException e) {
-			log.error("Unable to parse incomming xml", e);
-		}
-		return "";
-	}
+
 	public Object convertToUUEvent(Object message) {
 		
 		log.info("+++++++++++++++++ HEJ!");
