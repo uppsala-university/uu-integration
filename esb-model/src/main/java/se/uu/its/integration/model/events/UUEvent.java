@@ -3,9 +3,11 @@ package se.uu.its.integration.model.events;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.xml.bind.JAXBException;
@@ -18,6 +20,7 @@ import se.uu.its.integration.model.common.ModelUtils;
 
 @Entity
 @Table(name="uuevents")
+@NamedQuery(name = "selectUUEventById", query = "select e from UUEvent e where e.id = :id")
 @XmlSeeAlso({AffiliationEvent.class, PersonEvent.class, RoleEvent.class, OrganizationDepartmentMappingEvent.class})
 @XmlRootElement(name = "UUEvent", namespace = "http://www.uu.se/schemas/integration/2015/Events")
 public  class UUEvent implements Serializable {

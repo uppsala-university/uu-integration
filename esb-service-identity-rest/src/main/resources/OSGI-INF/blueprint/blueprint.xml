@@ -87,6 +87,21 @@
 		<property name="propagationBehaviorName" value="PROPAGATION_REQUIRED" />
 	</bean>
 
+	<!-- Idempotent JPA consumer - ->
+	<bean id="jpaTemplate" class="org.springframework.orm.jpa.JpaTemplate">
+    	<property name="entityManagerFactory" ref="entityManagerFactory"/>
+	</bean>
+	<bean id="messageIdRepo" class="org.apache.camel.processor.idempotent.jpa.JpaMessageIdRepository">
+	    <constructor-arg index="0" ref="jpaTemplate" />
+    	<constructor-arg index="1" value="FileConsumer" />
+	</bean>
+	-->
+
+	<bean id="idPersistence" class="se.uu.its.integration.service.identity.jpa.IdentityPersistence">
+		<property name="entityManagerFactory" ref="entityManagerFactory" />
+	</bean>
+	<!-- 
+	-->
 	<!-- 
 	
 	TODO: Define how to handle logs.
@@ -113,7 +128,9 @@
 
 	<camelContext id="IdentityService" 
 		allowUseOriginalMessage="false"
-		xmlns="http://camel.apache.org/schema/blueprint">
+		xmlns="http://camel.apache.org/schema/blueprint"
+		xmlns:uuie="http://www.uu.se/schemas/integration/2015/Events"
+		>
 <!-- 
 		errorHandlerRef="deadLetterErrorHandler" 
  -->
@@ -133,6 +150,14 @@
 			<marshal id="XML translation">
 				<jaxb prettyPrint="true" contextPath="se.uu.its.integration.model.events" />
 			</marshal>
+			
+			<setHeader headerName="uuieProducer">
+				<xpath resultType="java.lang.String">/*/uuie:Producer/text()</xpath>
+			</setHeader>
+
+			<setHeader headerName="uuieProducerReferenceId">
+				<xpath resultType="java.lang.String">/*/uuie:ProducerReferenceId/text()</xpath>
+			</setHeader>
 
 			<!-- Add integration event id. -->
 			<to id="Event id assignment" uri="bean:modelUtils?method=addIntegrationEventIdToEvent" />
@@ -146,8 +171,16 @@
 			
 			<!-- Don't process already processed events. -->
 			<filter id="Event processing filter">
-
+			<!-- 
+			<idempotentConsumer messageIdRepositoryRef="messageIdRepo">
+			-->
+			
+				<!-- use the messageId header as key for identifying duplicate messages -->
+				<method id="isEventProcessed" ref="idPersistence" method="isNewMessage" />
+				<!-- 
 				<method id="isEventProcessed" ref="esbEventLogger" method="isEventProcessed" />
+            	<header>producerReferenceId</header>
+				-->
 
  				<inOnly id="Event distribution" uri="amq:queue:identity-event-distribution" />
  				
@@ -169,6 +202,9 @@
 
 				<stop id="Event processing finished" />
 
+			<!-- 
+			</idempotentConsumer>
+			-->
 			</filter>
 
 			<!-- Log not processed events. Don't passes the filter. -->
