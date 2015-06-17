@@ -21,21 +21,32 @@
 		serviceClass="se.uu.its.integration.client.identity.StudentportalProxy"
 		loggingFeatureEnabled="true"/>
 
-	<camelContext xmlns="http://camel.apache.org/schema/blueprint" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:ui="http://schemas.ladok.se/utbildningsinformation">
+	<camelContext xmlns="http://camel.apache.org/schema/blueprint"
+					xmlns:uuie="http://www.uu.se/schemas/integration/2015/Events">
 		<route id="sp-identity-adapter">
 			<from uri="activemq:queue:identity-event-distribution?transacted=true" />
 
- 	        <to id="Extract accountid" uri="bean:modelUtils?method=getAccountId" />
+			<choice>
+				<when>
+					<xpath>/uuie:PersonEvent/uuie:Producer = 'AKKA'</xpath>
 
- 	        <setHeader headerName="CamelHttpQuery">
-         		<simple>pw={{sp.rest.identity.pw}}&amp;accountId=${body}</simple>
-       		</setHeader>
- 	        <setHeader headerName="CamelHttpPath">
-         		<constant></constant>
-       		</setHeader>
+					<setBody>
+						<xpath resultType="java.lang.String">/uuie:PersonEvent/uuie:ProducerReferenceId</xpath>
+					</setBody>
 
- 	        <to uri="log:sp-identity-adaptor?level=info"/>
- 	        <to uri="cxfrs://bean://rsClient" />
+					<setHeader headerName="CamelHttpQuery">
+						<simple>pw={{sp.rest.identity.pw}}&amp;accountId=${body}</simple>
+					</setHeader>
+					<setHeader headerName="CamelHttpPath">
+						<constant></constant>
+					</setHeader>
+
+					<to uri="cxfrs://bean://rsClient" />
+				</when>
+				<otherwise>
+					<to uri="activemq:queue:sp-unknown-events?transacted=true" />
+				</otherwise>
+			</choice>
 		</route>
 	</camelContext>
 
