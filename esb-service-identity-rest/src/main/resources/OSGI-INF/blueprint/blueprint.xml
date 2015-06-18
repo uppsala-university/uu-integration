@@ -87,15 +87,18 @@
 		<property name="propagationBehaviorName" value="PROPAGATION_REQUIRED" />
 	</bean>
 
-	<!-- Idempotent JPA consumer - ->
-	<bean id="jpaTemplate" class="org.springframework.orm.jpa.JpaTemplate">
-    	<property name="entityManagerFactory" ref="entityManagerFactory"/>
-	</bean>
+	<!-- JPA idempotent Camel component configured with Hibernate and JTA. -->
 	<bean id="messageIdRepo" class="org.apache.camel.processor.idempotent.jpa.JpaMessageIdRepository">
-	    <constructor-arg index="0" ref="jpaTemplate" />
-    	<constructor-arg index="1" value="FileConsumer" />
+    	<argument index="0" ref="entityManagerFactory"/>
+    	<argument index="1" ref="jtaTransactionTemplate" />
+    	<argument index="2" value="JpaTestTimer"/>
 	</bean>
-	-->
+
+	<!-- Transaction template for JTA. -->
+	<bean id="jtaTransactionTemplate" class="org.springframework.transaction.support.TransactionTemplate">
+		<property name="transactionManager" ref="platformTxManager" />
+		<property name="propagationBehavior" value="0" />	
+	</bean>
 
 	<bean id="idPersistence" class="se.uu.its.integration.esb.logger.ESBEventLogger">
 		<property name="entityManagerFactory" ref="entityManagerFactory" />
@@ -113,7 +116,6 @@
 	-->
 	
 	<!-- 
-	
 		Enable logging in Karaf with:
 			log:set DEBUG org.apache.activemq.transaction 
 			log:set DEBUG org.springframework.transaction 	
@@ -122,7 +124,6 @@
 			log:set TRACE org.apache.geronimo.transaction.manager.WrapperNamedXAResource 
 			log:set DEBUG org.apache.geronimo.transaction.log 
 			log:set DEBUG org.jencks
-	
 	-->
 
 	<camelContext id="IdentityService" 
@@ -141,7 +142,7 @@
 			<inOnly uri="amq-dead-letter:queue:identity-event-deadletter?" />
 
 			<convertBodyTo type="java.lang.String" />
-			<!-- 400 deras fel: 406 not acceptable annars 500 -->
+			<!-- 400 Producer error: 406 not acceptable otherwise 500 -->
 			<to id="Log event" uri="bean:esbEventLogger?method=getErrorResponse" />
 
 			<rollback markRollbackOnly="true" />
@@ -160,19 +161,16 @@
 			<from id="Identity REST endpoint" uri="cxfrs:bean:rsServer?bindingStyle=SimpleConsumer" />
 
 			<transacted ref="PROPAGATION_REQUIRED" />
-			
+
 			<!-- We use XML as internal integration language. -->
 			<marshal id="XML translation">
 				<jaxb prettyPrint="true" contextPath="se.uu.its.integration.model.events" />
 			</marshal>
 			
-			<setHeader headerName="eventProducer">
-				<xpath resultType="java.lang.String">/*/uuie:Producer/text()</xpath>
-			</setHeader>
-
-			<setHeader headerName="eventProducerReferenceId">
-				<xpath resultType="java.lang.String">/*/uuie:ProducerReferenceId/text()</xpath>
-			</setHeader>
+			<!-- Message identifier extracted form message and put in header. -->
+			<setHeader headerName="MessageId">
+				<xpath resultType="java.lang.String">concat(/*/uuie:Producer/text(), "/" , /*/uuie:ProducerReferenceId/text())</xpath>
+			</setHeader>			
 
 			<!-- Add integration event id. -->
 			<to id="Event id assignment" uri="bean:modelUtils?method=addIntegrationEventIdToEvent" />
@@ -185,21 +183,21 @@
 			<to uri="xslt:se/uu/its/integration/model/transform/addIntegrationEventIdToEvent.xsl"/> -->
 			
 			<!-- Don't process already processed events. -->
-			<filter id="Event processing filter">
-			<!-- 
-			<idempotentConsumer messageIdRepositoryRef="messageIdRepo">
-			-->
-			
-				<!-- use the messageId header as key for identifying duplicate messages -->
-				<method id="isEventProcessed" ref="idPersistence" method="isNewEvent" />
-				<!-- 
-            	<header>producerReferenceId</header>
-				-->
+			<idempotentConsumer messageIdRepositoryRef="messageIdRepo" skipDuplicate="false">
 
+				<!-- Identifier for idempotence. -->		
+            	<header>MessageId</header>
+
+				<!-- Filter duplicate messages. -->
+				<filter>
+                	<!-- Filter react on duplicate messages, property is set on the Exchange -->
+                	<property>CamelDuplicateMessage</property>
+                	<inOnly id="Log duplicate event" uri="activemq:queue:identity-event-duplicate" />                	
+                	<stop id="Duplicate message handling finished" />
+            	</filter>
+			
  				<inOnly id="Event distribution" uri="amq:queue:identity-event-distribution" />
 
-				<throwException ref="forced" />
- 				
 				<unmarshal id="Object translation again">
 					<jaxb prettyPrint="true" contextPath="se.uu.its.integration.model.events" />
 				</unmarshal>
@@ -216,13 +214,7 @@
 				
 				<stop id="Event processing finished" />
 
-			<!-- 
 			</idempotentConsumer>
-			-->
-			</filter>
-
-			<!-- Log not processed events. Don't passes the filter. -->
-			<inOnly id="Log duplicate event" uri="activemq:queue:identity-event-duplicate" />
 
 		</route>
 
