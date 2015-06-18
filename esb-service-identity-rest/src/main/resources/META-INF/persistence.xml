@@ -9,6 +9,7 @@
         <jta-data-source>osgi:service/jdbc/UUDS</jta-data-source>
 
         <class>se.uu.its.integration.model.events.UUEvent</class>
+		<class>org.apache.camel.processor.idempotent.jpa.MessageProcessed</class>
 
         <properties>
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect" />
