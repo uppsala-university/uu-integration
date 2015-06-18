@@ -52,8 +52,7 @@
 
 	<!-- Defines an ActiveMQ XA-aware ConnectionFactory -->
 	<bean id="AmqXaCF" class="org.apache.activemq.ActiveMQXAConnectionFactory">
-		<property name="brokerURL"
-			value="failover:(tcp://localhost:61616)?jms.prefetchPolicy.all=1" />
+		<property name="brokerURL" value="failover:(tcp://localhost:61616)?jms.prefetchPolicy.all=1" />
 		<property name="userName" value="smx" />
 		<property name="password" value="smx" />
 	</bean>
@@ -73,10 +72,11 @@
 
 	<bean id="modelUtils" class="se.uu.its.integration.model.common.ModelUtils" />
 	<bean id="esbEventLogger" class="se.uu.its.integration.esb.logger.ESBEventLogger" />
+<!-- We can't use a simple dead letter handler since we must build a valid http repsonse. 
 	<bean id="deadLetterErrorHandler" class="org.apache.camel.builder.DeadLetterChannelBuilder">
 		<property name="deadLetterUri" value="activemq:queue:identity-event-deadletter" />
 	</bean>
-
+ -->
 	<bean id="jpa" class="org.apache.camel.component.jpa.JpaComponent">
 		<property name="entityManagerFactory" ref="entityManagerFactory" />
 		<property name="transactionManager" ref="platformTxManager" />
@@ -101,38 +101,54 @@
 		<property name="entityManagerFactory" ref="entityManagerFactory" />
 	</bean>
 
+	<!-- We us a separate broker for dead letters since we need to exclude queue from XA-transactions. -->
+	<bean id="amq-dead-letter" class="org.apache.activemq.camel.component.ActiveMQComponent">
+		<property name="brokerURL" value="tcp://localhost:61617"/>
+		<property name="userName" value="smx" />
+		<property name="password" value="smx" />		
+ 	</bean>
+
+	<!-- Used for testing: <throwException ref="forced" /> 
+	<bean id="forced" class="java.lang.RuntimeException" />
+	-->
+	
 	<!-- 
 	
-	TODO: Define how to handle logs.
-	
-	When using a errorHandlerRef raised exception is consider handled by the transaction manager.
-	This means that Camel will abort the route, but the container will commit the statements 
-	handled by the transaction manager.
-	
-	Our dead letter handling must trigger a explicit rollback.
-	
-	Link:
-		https://access.redhat.com/documentation/en-US/Red_Hat_JBoss_Fuse/6.0/html/EIP_Transaction_Guide/files/TxnDemarcation-ErrorHandling.html
-	
-	Enable logging in Karaf with:
-		log:set DEBUG org.apache.activemq.transaction 
-		log:set DEBUG org.springframework.transaction 	
-		log:set DEBUG org.springframework.jms.connection.JmsTransactionManager 
-		log:set DEBUG org.springframework.orm.jpa.JpaTransactionManager 
-		log:set TRACE org.apache.geronimo.transaction.manager.WrapperNamedXAResource 
-		log:set DEBUG org.apache.geronimo.transaction.log 
-		log:set DEBUG org.jencks
+		Enable logging in Karaf with:
+			log:set DEBUG org.apache.activemq.transaction 
+			log:set DEBUG org.springframework.transaction 	
+			log:set DEBUG org.springframework.jms.connection.JmsTransactionManager 
+			log:set DEBUG org.springframework.orm.jpa.JpaTransactionManager 
+			log:set TRACE org.apache.geronimo.transaction.manager.WrapperNamedXAResource 
+			log:set DEBUG org.apache.geronimo.transaction.log 
+			log:set DEBUG org.jencks
 	
 	-->
 
 	<camelContext id="IdentityService" 
 		allowUseOriginalMessage="false"
 		xmlns="http://camel.apache.org/schema/blueprint"
-		xmlns:uuie="http://www.uu.se/schemas/integration/2015/Events"
-		>
-<!-- 
-		errorHandlerRef="deadLetterErrorHandler" 
- -->
+		xmlns:uuie="http://www.uu.se/schemas/integration/2015/Events">
+
+		<onException id="GeneralRouteException" useOriginalMessage="true">
+
+			<exception>java.lang.RuntimeException</exception>
+
+			<handled>
+				<constant>true</constant>
+	    	</handled>
+
+			<inOnly uri="amq-dead-letter:queue:identity-event-deadletter?" />
+
+			<convertBodyTo type="java.lang.String" />
+			<!-- 400 deras fel: 406 not acceptable annars 500 -->
+			<to id="Log event" uri="bean:esbEventLogger?method=getErrorResponse" />
+
+			<rollback markRollbackOnly="true" />
+
+			<stop id="Error handling finished" />
+
+		</onException>
 
 		<route id="IdentityServiceRoute">
 
@@ -181,10 +197,9 @@
 				-->
 
  				<inOnly id="Event distribution" uri="amq:queue:identity-event-distribution" />
+
+				<throwException ref="forced" />
  				
-<!-- 
-				<to id="KabooOOOOOmm" uri="bean:modelUtils?method=exceptionTrigger" />
- -->
 				<unmarshal id="Object translation again">
 					<jaxb prettyPrint="true" contextPath="se.uu.its.integration.model.events" />
 				</unmarshal>
