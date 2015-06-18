@@ -24,7 +24,9 @@ public class ESBEventLogger {
 	
 	public ESBEventLogger() {
 	}
-	
+/*	
+ *  Code is deprecated since we use Camel idempotent component.  
+ * 
 	EntityManagerFactory emf;
 
 	public void setEntityManagerFactory(EntityManagerFactory emf) {
@@ -34,6 +36,7 @@ public class ESBEventLogger {
 	 
 	public boolean isNewEvent(Exchange e) {
 		boolean isNewEvent = true;
+
 		String producer = (String) e.getIn().getHeader("eventProducer");
 		String producerReferenceId = (String) e.getIn().getHeader("eventProducerReferenceId");
 		if (producer == null || producerReferenceId == null) {
@@ -41,7 +44,7 @@ public class ESBEventLogger {
 			throw new RuntimeException("Invalid producer or ref id: " + producer + "/" + producerReferenceId);
 		}
 		EntityManager entityManager = this.emf.createEntityManager();
-		//entityManager.getTransaction().begin();
+
 		List<UUEvent> ev = entityManager
 				.createQuery("select e from UUEvent e where "
 						+ " e._producer = :producer "
@@ -50,13 +53,13 @@ public class ESBEventLogger {
 				.setParameter("producer", producer)
 				.setParameter("producerReferenceId", producerReferenceId)
 				.getResultList();
-		//entityManager.getTransaction().commit();
-		//entityManager.close();
+
 		isNewEvent = ev.isEmpty();
 		log.debug("Event from producer " + producer + " with reference id " + producerReferenceId + " is new?: " + isNewEvent);
+
 		return isNewEvent;
 	}
-
+*/
 	/**
 	 * Checks if is already processed e.g. exists in event database.
 	 * 
