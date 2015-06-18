@@ -30,11 +30,8 @@ public class ModelUtils {
 
 	public Object convertToUUEvent(Object message) {
 		
-		log.info("+++++++++++++++++ HEJ!");
-		
 		if (message instanceof UUEvent) {
 			UUEvent e = ((UUEvent) message).exportUUEvent();
-//			e.setIdentifier("debugid_xyz");
 			return e;
 		} else {
 			return message;
