@@ -172,6 +172,7 @@
 			<to id="Event id assignment" uri="bean:modelUtils?method=addIntegrationEventIdToEvent" />
 
 			<!-- Moved to bean cause camel cant load resource from other bundle. 
+			TODO: Fix. <Export-Package> in pom?
 			<setHeader headerName="uid">
 				<method bean="modelUtils" method="getNewEventId"/> 
 			</setHeader> 
