@@ -111,4 +111,23 @@ public class ESBEventLogger {
 		return builder.build();
 	}
 	
+	/**
+	 * Returns a HTTP error response. 
+	 * 
+	 * TODO: Move to utility bundle.
+	 * 
+	 * @param xml The event described as XML.
+	 * @return Proper HTTP response.
+	 * @throws JAXBException 
+	 */
+	public Response getErrorResponse(String xml) throws JAXBException {
+		
+		ResponseBuilder builder = new ResponseBuilderImpl();
+		builder.status(400);
+		builder.type(MediaType.APPLICATION_XML);
+		builder.entity(xml);
+		
+		return builder.build();
+	}	
+	
 }
