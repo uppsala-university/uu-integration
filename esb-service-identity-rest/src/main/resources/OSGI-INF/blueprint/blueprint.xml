@@ -97,11 +97,10 @@
 	</bean>
 	-->
 
-	<bean id="idPersistence" class="se.uu.its.integration.service.identity.jpa.IdentityPersistence">
+	<bean id="idPersistence" class="se.uu.its.integration.esb.logger.ESBEventLogger">
 		<property name="entityManagerFactory" ref="entityManagerFactory" />
 	</bean>
-	<!-- 
-	-->
+
 	<!-- 
 	
 	TODO: Define how to handle logs.
@@ -151,11 +150,11 @@
 				<jaxb prettyPrint="true" contextPath="se.uu.its.integration.model.events" />
 			</marshal>
 			
-			<setHeader headerName="uuieProducer">
+			<setHeader headerName="eventProducer">
 				<xpath resultType="java.lang.String">/*/uuie:Producer/text()</xpath>
 			</setHeader>
 
-			<setHeader headerName="uuieProducerReferenceId">
+			<setHeader headerName="eventProducerReferenceId">
 				<xpath resultType="java.lang.String">/*/uuie:ProducerReferenceId/text()</xpath>
 			</setHeader>
 
@@ -176,16 +175,13 @@
 			-->
 			
 				<!-- use the messageId header as key for identifying duplicate messages -->
-				<method id="isEventProcessed" ref="idPersistence" method="isNewMessage" />
+				<method id="isEventProcessed" ref="idPersistence" method="isNewEvent" />
 				<!-- 
-				<method id="isEventProcessed" ref="esbEventLogger" method="isEventProcessed" />
             	<header>producerReferenceId</header>
 				-->
 
  				<inOnly id="Event distribution" uri="amq:queue:identity-event-distribution" />
  				
-				<!-- Här loggar vi just nu ingenting, bara skapar responsen. -->
-				<to id="Log event" uri="bean:esbEventLogger?method=logEvent" />
 <!-- 
 				<to id="KabooOOOOOmm" uri="bean:modelUtils?method=exceptionTrigger" />
  -->
@@ -200,6 +196,9 @@
 					<jaxb prettyPrint="true" contextPath="se.uu.its.integration.model.events" />
 				</marshal>
 
+				<!-- Här loggar vi just nu ingenting, bara skapar responsen. -->
+				<to id="Log event" uri="bean:esbEventLogger?method=logEvent" />
+				
 				<stop id="Event processing finished" />
 
 			<!-- 

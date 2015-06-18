@@ -27,8 +27,8 @@ public class IdentityPersistence {
 		String producer = (String) e.getIn().getHeader("uuieProducer");
 		String producerReferenceId = (String) e.getIn().getHeader("uuieProducerReferenceId");
 		if (producer == null || producerReferenceId == null) {
-			log.info("No producer or producerReferenceId headers. Can't check if message is new.");
-			return false;
+			log.error("No producer or producerReferenceId headers. Can't check if message is new.");
+			throw new RuntimeException("Invalid producer or ref id: " + producer + "/" + producerReferenceId);
 		}
 		EntityManager entityManager = this.emf.createEntityManager();
 		//entityManager.getTransaction().begin();
@@ -43,8 +43,8 @@ public class IdentityPersistence {
 		//entityManager.getTransaction().commit();
 		//entityManager.close();
 		isNewMessage = ev.isEmpty();
-		log.info("DEBUG Message ev.size " + ev.size());
-		log.info("Message from producer " + producer + " with reference id " + producerReferenceId + " is new?: " + isNewMessage);
+		log.debug("Message from producer " + producer + " with reference id "
+				+ producerReferenceId + " is new?: " + isNewMessage);
 		return isNewMessage;
 	}
 }
