@@ -138,7 +138,9 @@
 			<inOnly uri="amq-dead-letter:queue:identity-event-deadletter" />
 
 			<convertBodyTo type="java.lang.String" />
-			<!-- 400 Producer error: 406 not acceptable otherwise 500 -->
+			<!-- 400 Producer error: 406 not acceptable otherwise 500
+						TODO: Flytta till utility-paket.
+			-->
 			<to id="Log event" uri="bean:esbEventLogger?method=getErrorResponse" />
 
 			<rollback markRollbackOnly="true" />
@@ -206,7 +208,9 @@
 					<jaxb prettyPrint="true" contextPath="se.uu.its.integration.model.events" />
 				</marshal>
 
-				<!-- Här loggar vi just nu ingenting, bara skapar responsen. -->
+				<!-- TODO: Här loggar vi just nu ingenting, bara skapar responsen.
+										Flytta till utility-paket.
+				-->
 				<to id="Log event" uri="bean:esbEventLogger?method=logEvent" />
 
 				<stop id="Event processing finished" />
