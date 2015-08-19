@@ -83,9 +83,9 @@
 
 	<!-- JPA idempotent Camel component configured with Hibernate and JTA. -->
 	<bean id="messageIdRepo" class="org.apache.camel.processor.idempotent.jpa.JpaMessageIdRepository">
-    	<argument index="0" ref="entityManagerFactory"/>
-    	<argument index="1" ref="jtaTransactionTemplate" />
-    	<argument index="2" value="Identity"/>
+		<argument index="0" ref="entityManagerFactory"/>
+		<argument index="1" ref="jtaTransactionTemplate" />
+		<argument index="2" value="Identity"/>
 	</bean>
 
 	<!-- Transaction used in route. -->
