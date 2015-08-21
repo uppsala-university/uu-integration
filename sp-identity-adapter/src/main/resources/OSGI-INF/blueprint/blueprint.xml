@@ -24,7 +24,7 @@
 	<camelContext xmlns="http://camel.apache.org/schema/blueprint"
 					xmlns:uuie="http://www.uu.se/schemas/integration/2015/Events">
 		<route id="sp-identity-adapter">
-			<from uri="activemq:queue:identity-event-distribution?transacted=true" />
+			<from uri="activemq:queue:identity-event-distribution-sp?transacted=true" />
 
 			<choice>
 				<when>
