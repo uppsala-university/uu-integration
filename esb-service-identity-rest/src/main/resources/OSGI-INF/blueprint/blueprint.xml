@@ -2,7 +2,7 @@
 
 <blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
 	xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.0.0"
-	xmlns:cxf="http://camel.apache.org/schema/blueprint/cxf" 
+	xmlns:cxf="http://camel.apache.org/schema/blueprint/cxf"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:jpa="http://aries.apache.org/xmlns/jpa/v1.1.0"
 	xsi:schemaLocation="http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd http://aries.apache.org/xmlns/jpa/v1.1.0 http://aries.apache.org/schemas/jpa/jpa_110.xsd"
@@ -27,9 +27,9 @@
 	<reference id="transactionManager" interface="javax.transaction.TransactionManager" />
 	<reference id="recoverableTxManager" interface="org.apache.geronimo.transaction.manager.RecoverableTransactionManager" />
 
-	<!-- Setting up the amq:// components with a configuration that points to 
-		the JcaPooledConnectionFactory and the global Spring PlatformTransactiongManager. 
-		Note that transacted is set to 'false' because it's the JTA TransactionManager 
+	<!-- Setting up the amq:// components with a configuration that points to
+		the JcaPooledConnectionFactory and the global Spring PlatformTransactiongManager.
+		Note that transacted is set to 'false' because it's the JTA TransactionManager
 		that manages the transactions and not the JMS component itself. -->
 	<bean id="amq" class="org.apache.camel.component.jms.JmsComponent">
 		<property name="configuration" ref="AMQConfig" />
@@ -43,7 +43,7 @@
 		<property name="cacheLevelName" value="CACHE_NONE" />
 	</bean>
 
-	<!-- The JcaPooledConnectionFactory ensures that the JMS Sessions get enlisted 
+	<!-- The JcaPooledConnectionFactory ensures that the JMS Sessions get enlisted
 		in the global transaction manager -->
 	<bean id="XAPooledCF" class="org.apache.activemq.pool.JcaPooledConnectionFactory" init-method="start" destroy-method="stop">
 		<property name="name" value="activemq.default" />
@@ -59,9 +59,9 @@
 		<property name="password" value="smx" />
 	</bean>
 
-	<!-- A ResourceManager is needed for every transactional resource in order 
-		to recover any outstanding transactions after a crash. It will register with 
-		the Aries transaction manager, which then calls recoverResource() on the 
+	<!-- A ResourceManager is needed for every transactional resource in order
+		to recover any outstanding transactions after a crash. It will register with
+		the Aries transaction manager, which then calls recoverResource() on the
 		transactional resource itself. -->
 	<bean id="resourceManager-AMQ" class="org.apache.activemq.pool.ActiveMQResourceManager" init-method="recoverResource">
 		<property name="transactionManager" ref="recoverableTxManager" />
@@ -83,9 +83,9 @@
 
 	<!-- JPA idempotent Camel component configured with Hibernate and JTA. -->
 	<bean id="messageIdRepo" class="org.apache.camel.processor.idempotent.jpa.JpaMessageIdRepository">
-    	<argument index="0" ref="entityManagerFactory"/>
-    	<argument index="1" ref="jtaTransactionTemplate" />
-    	<argument index="2" value="Identity"/>
+		<argument index="0" ref="entityManagerFactory"/>
+		<argument index="1" ref="jtaTransactionTemplate" />
+		<argument index="2" value="Identity"/>
 	</bean>
 
 	<!-- Transaction used in route. -->
@@ -97,32 +97,32 @@
 	<!-- Transaction template for JTA. -->
 	<bean id="jtaTransactionTemplate" class="org.springframework.transaction.support.TransactionTemplate">
 		<property name="transactionManager" ref="platformTxManager" />
-		<property name="propagationBehavior" value="0" />	
+		<property name="propagationBehavior" value="0" />
 	</bean>
 
 	<!-- We us a separate broker for dead letters since we need to exclude queue from XA-transactions. -->
 	<bean id="amq-dead-letter" class="org.apache.activemq.camel.component.ActiveMQComponent">
 		<property name="brokerURL" value="tcp://localhost:61617"/>
 		<property name="userName" value="smx" />
-		<property name="password" value="smx" />		
+		<property name="password" value="smx" />
  	</bean>
 
-	<!-- Used for testing: <throwException ref="forced" /> 
+	<!-- Used for testing: <throwException ref="forced" />
 	<bean id="forced" class="java.lang.RuntimeException" />
 	-->
-	
-	<!-- 
+
+	<!--
 		Enable logging in Karaf with:
-			log:set DEBUG org.apache.activemq.transaction 
-			log:set DEBUG org.springframework.transaction 	
-			log:set DEBUG org.springframework.jms.connection.JmsTransactionManager 
-			log:set DEBUG org.springframework.orm.jpa.JpaTransactionManager 
-			log:set TRACE org.apache.geronimo.transaction.manager.WrapperNamedXAResource 
-			log:set DEBUG org.apache.geronimo.transaction.log 
+			log:set DEBUG org.apache.activemq.transaction
+			log:set DEBUG org.springframework.transaction
+			log:set DEBUG org.springframework.jms.connection.JmsTransactionManager
+			log:set DEBUG org.springframework.orm.jpa.JpaTransactionManager
+			log:set TRACE org.apache.geronimo.transaction.manager.WrapperNamedXAResource
+			log:set DEBUG org.apache.geronimo.transaction.log
 			log:set DEBUG org.jencks
 	-->
 
-	<camelContext id="IdentityService" 
+	<camelContext id="IdentityService"
 		allowUseOriginalMessage="false"
 		xmlns="http://camel.apache.org/schema/blueprint"
 		xmlns:uuie="http://www.uu.se/schemas/integration/2015/Events">
@@ -133,12 +133,14 @@
 
 			<handled>
 				<constant>true</constant>
-	    	</handled>
+			</handled>
 
-			<inOnly uri="amq-dead-letter:queue:identity-event-deadletter?" />
+			<inOnly uri="amq-dead-letter:queue:identity-event-deadletter" />
 
 			<convertBodyTo type="java.lang.String" />
-			<!-- 400 Producer error: 406 not acceptable otherwise 500 -->
+			<!-- 400 Producer error: 406 not acceptable otherwise 500
+						TODO: Flytta till utility-paket.
+			-->
 			<to id="Log event" uri="bean:esbEventLogger?method=getErrorResponse" />
 
 			<rollback markRollbackOnly="true" />
@@ -162,37 +164,37 @@
 			<marshal id="XML translation">
 				<jaxb prettyPrint="true" contextPath="se.uu.its.integration.model.events" />
 			</marshal>
-			
+
 			<!-- Message identifier extracted form message and put in header. -->
 			<setHeader headerName="MessageId">
 				<xpath resultType="java.lang.String">concat(/*/uuie:Producer/text(), "/" , /*/uuie:ProducerReferenceId/text())</xpath>
-			</setHeader>			
+			</setHeader>
 
 			<!-- Add integration event id. -->
 			<to id="Event id assignment" uri="bean:modelUtils?method=addIntegrationEventIdToEvent" />
 
-			<!-- Moved to bean cause camel cant load resource from other bundle. 
+			<!-- Moved to bean cause camel cant load resource from other bundle.
 			TODO: Fix. <Export-Package> in pom?
 			<setHeader headerName="uid">
-				<method bean="modelUtils" method="getNewEventId"/> 
-			</setHeader> 
-			<to uri="xslt:addIntegrationEventIdToEvent.xsl"/> 
+				<method bean="modelUtils" method="getNewEventId"/>
+			</setHeader>
+			<to uri="xslt:addIntegrationEventIdToEvent.xsl"/>
 			<to uri="xslt:se/uu/its/integration/model/transform/addIntegrationEventIdToEvent.xsl"/> -->
-			
+
 			<!-- Don't process already processed events. -->
 			<idempotentConsumer messageIdRepositoryRef="messageIdRepo" skipDuplicate="false">
 
-				<!-- Identifier for idempotence. -->		
-            	<header>MessageId</header>
+				<!-- Identifier for idempotence. -->
+				<header>MessageId</header>
 
 				<!-- Filter duplicate messages. -->
 				<filter>
-                	<!-- Filter react on duplicate messages, property is set on the Exchange -->
-                	<property>CamelDuplicateMessage</property>
-                	<inOnly id="Log duplicate event" uri="activemq:queue:identity-event-duplicate" />                	
-                	<stop id="Duplicate message handling finished" />
-            	</filter>
-			
+					<!-- Filter react on duplicate messages, property is set on the Exchange -->
+					<property>CamelDuplicateMessage</property>
+					<inOnly id="Log duplicate event" uri="activemq:queue:identity-event-duplicate" />
+					<stop id="Duplicate message handling finished" />
+				</filter>
+
  				<inOnly id="Event distribution" uri="amq:queue:identity-event-distribution" />
 
 				<unmarshal id="Object translation again">
@@ -206,9 +208,11 @@
 					<jaxb prettyPrint="true" contextPath="se.uu.its.integration.model.events" />
 				</marshal>
 
-				<!-- Här loggar vi just nu ingenting, bara skapar responsen. -->
+				<!-- TODO: Här loggar vi just nu ingenting, bara skapar responsen.
+										Flytta till utility-paket.
+				-->
 				<to id="Log event" uri="bean:esbEventLogger?method=logEvent" />
-				
+
 				<stop id="Event processing finished" />
 
 			</idempotentConsumer>
