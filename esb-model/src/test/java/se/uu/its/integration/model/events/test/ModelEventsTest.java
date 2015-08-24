@@ -121,6 +121,26 @@ public class ModelEventsTest {
 	}
 
 	@Test 
+	public void testPersonChangedEventMinimal() throws JAXBException {
+		
+		Person person = new Person("197001010000");
+		
+		PersonChangedEvent event = new PersonChangedEvent(
+				SYSTEM_MESSAGE_PRODUCER, 
+				"Ev104",
+				person);
+		
+		String xml = ModelUtils.getMarchalledObjectXml(PersonChangedEvent.class, event);
+		
+		System.out.println(xml);
+		System.out.println();
+		
+		PersonEvent objectFromXml = (PersonEvent) ModelUtils.getUnmarchalledObject(PersonEvent.class, xml);	
+
+		assertTrue("Unmarchalled value of producer is not the same as marchalled object property value.", objectFromXml.getProducer().equalsIgnoreCase(SYSTEM_MESSAGE_PRODUCER));
+	}	
+	
+	@Test 
 	public void testPersonDeletedEvent() throws JAXBException {
 		
 		Person person = new Person("199001011771");
