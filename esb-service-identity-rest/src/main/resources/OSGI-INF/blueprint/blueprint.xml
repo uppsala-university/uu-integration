@@ -219,22 +219,6 @@
 
 		</route>
 
-		<!-- Distribute identity events to registered consumers -->
-		<route id="IdentityDistributionRoute">
-			<description>
-				This is the distribution route for messages in the identity event domain.
-			</description>
-
-			<!-- Listen for events on distribution channel. -->
-			<from id="Event distribution consumer" uri="amq:queue:identity-event-distribution" />
-
-			<transacted ref="PROPAGATION_REQUIRED" />
-
-			<multicast>
-				<to id="Event distribution for SP" uri="amq:queue:identity-event-distribution-sp" />
-			</multicast>
-		</route>
-
 	</camelContext>
 
 </blueprint>

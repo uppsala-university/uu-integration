@@ -25,7 +25,7 @@
 					xmlns:uuie="http://www.uu.se/schemas/integration/2015/Events"
 					xmlns:uuii="http://www.uu.se/schemas/integration/2015/Identity">
 		<route id="sp-identity-adapter">
-			<from uri="activemq:queue:identity-event-distribution-sp?transacted=true" />
+			<from uri="activemq:queue:identity-event-distribution-sp" />
 
 			<choice>
 				<when>
