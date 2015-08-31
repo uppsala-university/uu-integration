@@ -22,20 +22,21 @@
 		loggingFeatureEnabled="true"/>
 
 	<camelContext xmlns="http://camel.apache.org/schema/blueprint"
-					xmlns:uuie="http://www.uu.se/schemas/integration/2015/Events">
+					xmlns:uuie="http://www.uu.se/schemas/integration/2015/Events"
+					xmlns:uuii="http://www.uu.se/schemas/integration/2015/Identity">
 		<route id="sp-identity-adapter">
-			<from uri="activemq:queue:identity-event-distribution?transacted=true" />
+			<from uri="activemq:queue:identity-event-distribution-sp" />
 
 			<choice>
 				<when>
 					<xpath>/uuie:PersonEvent/uuie:Producer = 'AKKA'</xpath>
 
 					<setBody>
-						<xpath resultType="java.lang.String">/uuie:PersonEvent/uuie:ProducerReferenceId</xpath>
+						<xpath resultType="java.lang.String">/uuie:PersonEvent/uuii:Person/uuii:PersonNumber</xpath>
 					</setBody>
 
 					<setHeader headerName="CamelHttpQuery">
-						<simple>pw={{sp.rest.identity.pw}}&amp;accountId=${body}</simple>
+						<simple>pw={{sp.rest.identity.pw}}&amp;pnr=${body}</simple>
 					</setHeader>
 					<setHeader headerName="CamelHttpPath">
 						<constant></constant>
