@@ -14,18 +14,40 @@
         </cm:default-properties>
     </cm:property-placeholder>
 
+	<!-- Used for testing: <throwException ref="forced" />
+	<bean id="forced" class="java.lang.RuntimeException" />
+	-->
+
  	<bean id="modelUtils" class="se.uu.its.integration.model.common.ModelUtils" />
+
+	<reference id="txManager" interface="org.springframework.transaction.PlatformTransactionManager" />
+	<reference id="jmsTxManager" interface="org.springframework.jms.connection.JmsTransactionManager" />
+
+	<bean id="required" class="org.apache.camel.spring.spi.SpringTransactionPolicy">
+  		<property name="transactionManager" ref="jmsTxManager"/>
+  		<property name="propagationBehaviorName" value="PROPAGATION_REQUIRED"/>
+	</bean>
+
 
 	<cxf:rsClient id="rsClient"
 		address="${sp.host}/uusp-webapp/spring/akka-event/"
 		serviceClass="se.uu.its.integration.client.identity.StudentportalProxy"
 		loggingFeatureEnabled="true"/>
 
-	<camelContext xmlns="http://camel.apache.org/schema/blueprint"
+	<camelContext 	id="sp-identity-adapter-ctx"
+					trace="false"
+					xmlns="http://camel.apache.org/schema/blueprint"
 					xmlns:uuie="http://www.uu.se/schemas/integration/2015/Events"
 					xmlns:uuii="http://www.uu.se/schemas/integration/2015/Identity">
-		<route id="sp-identity-adapter">
+
+		<onException>
+			<exception>java.lang.Exception</exception>
+			<redeliveryPolicy maximumRedeliveries="-1" redeliveryDelay="5000" logStackTrace="true"/>
+		</onException>
+
+		<route id="sp-identity-adapter" >
 			<from uri="activemq:queue:identity-event-distribution-sp" />
+			<transacted ref="required"/>
 
 			<choice>
 				<when>

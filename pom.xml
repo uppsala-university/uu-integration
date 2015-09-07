@@ -11,14 +11,14 @@
 	<modules>
 		<module>ladok-event-distribution</module>
 		<module>ladokevent-logdb-adapter</module>
-    		<module>esb-model</module>
-    		<module>esb-event-logger</module>
-    		<module>esb-service-identity-rest</module>
-    		<module>esb-rest-client</module>
-    		<module>esb-datasource-logdb</module>
-                <module>esb-identity-event-distribution</module>
-        	<module>sp-identity-adapter</module>
-  	</modules>
+		<module>esb-model</module>
+		<module>esb-event-logger</module>
+		<module>esb-service-identity-rest</module>
+		<module>esb-rest-client</module>
+		<module>esb-datasource-logdb</module>
+		<module>esb-identity-event-distribution</module>
+		<module>sp-identity-adapter</module>
+	</modules>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
