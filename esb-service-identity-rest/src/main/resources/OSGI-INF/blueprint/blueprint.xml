@@ -8,16 +8,24 @@
 	xsi:schemaLocation="http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd http://aries.apache.org/xmlns/jpa/v1.1.0 http://aries.apache.org/schemas/jpa/jpa_110.xsd"
 	default-activation="eager">
 
-	<!-- Properties used in route. -->
-	<cm:property-placeholder persistent-id="se.uu.its.integration.service.cxf.receive">
+	<cm:property-placeholder persistent-id="se.uu.its.integration.amq">
 		<cm:default-properties>
-			<cm:property name="CXFserver" value="http://0.0.0.0:8989/" />
-			<cm:property name="service" value="esb/rest" />
+			<cm:property name="amq.url" value="tcp://localhost:61616" />
+			<cm:property name="amq.deadletterUrl" value="tcp://localhost:61617" />
+			<cm:property name="amq.user" value="smx" />
+			<cm:property name="amq.pw" value="smx" />
+		</cm:default-properties>
+	</cm:property-placeholder>
+
+	<cm:property-placeholder persistent-id="se.uu.its.integration.esb-service-identity-rest">
+		<cm:default-properties>
+			<cm:property name="id.CXFserver" value="http://0.0.0.0:8989/" />
+			<cm:property name="id.service" value="esb/rest" />
 		</cm:default-properties>
 	</cm:property-placeholder>
 
 	<!-- This is the CXF-based front for the route. -->
-	<cxf:rsServer id="rsServer" address="${CXFserver}${service}"
+	<cxf:rsServer id="rsServer" address="${id.CXFserver}${id.service}"
 		serviceClass="se.uu.its.integration.service.identity.rest.IdentityService"
 		loggingFeatureEnabled="true" loggingSizeLimit="20" />
 
@@ -54,9 +62,9 @@
 
 	<!-- Defines an ActiveMQ XA-aware ConnectionFactory -->
 	<bean id="AmqXaCF" class="org.apache.activemq.ActiveMQXAConnectionFactory">
-		<property name="brokerURL" value="failover:(tcp://localhost:61616)?jms.prefetchPolicy.all=1" />
-		<property name="userName" value="smx" />
-		<property name="password" value="smx" />
+		<property name="brokerURL" value="failover:(${amq.url})?jms.prefetchPolicy.all=1" />
+		<property name="userName" value="${amq.user}" />
+		<property name="password" value="${amq.pw}" />
 	</bean>
 
 	<!-- A ResourceManager is needed for every transactional resource in order
@@ -68,8 +76,8 @@
 		<!-- CF must be of type ActiveMQConnectionFactory, otherwise no recovery will occur -->
 		<property name="connectionFactory" ref="AmqXaCF" />
 		<property name="resourceName" value="activemq.default" />
-		<property name="userName" value="smx" />
-		<property name="password" value="smx" />
+		<property name="userName" value="${amq.user}" />
+		<property name="password" value="${amq.pw}" />
 	</bean>
 
 	<bean id="modelUtils" class="se.uu.its.integration.model.common.ModelUtils" />
@@ -102,9 +110,9 @@
 
 	<!-- We us a separate broker for dead letters since we need to exclude queue from XA-transactions. -->
 	<bean id="amq-dead-letter" class="org.apache.activemq.camel.component.ActiveMQComponent">
-		<property name="brokerURL" value="tcp://localhost:61617"/>
-		<property name="userName" value="smx" />
-		<property name="password" value="smx" />
+		<property name="brokerURL" value="${amq.deadletterUrl}" />
+		<property name="userName" value="${amq.user}" />
+		<property name="password" value="${amq.pw}" />
  	</bean>
 
 	<!-- Used for testing: <throwException ref="forced" />
@@ -170,7 +178,7 @@
 				<xpath resultType="java.lang.String">concat(/*/uuie:Producer/text(), "/" , /*/uuie:ProducerReferenceId/text())</xpath>
 			</setHeader>
 
-			<!-- Add integration event id. -->
+			<!-- Add integration event id -->
 			<to id="Event id assignment" uri="bean:modelUtils?method=addIntegrationEventIdToEvent" />
 
 			<!-- Moved to bean cause camel cant load resource from other bundle.
