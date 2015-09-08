@@ -20,14 +20,26 @@
 
  	<bean id="modelUtils" class="se.uu.its.integration.model.common.ModelUtils" />
 
-	<reference id="txManager" interface="org.springframework.transaction.PlatformTransactionManager" />
-	<reference id="jmsTxManager" interface="org.springframework.jms.connection.JmsTransactionManager" />
-
-	<bean id="required" class="org.apache.camel.spring.spi.SpringTransactionPolicy">
-  		<property name="transactionManager" ref="jmsTxManager"/>
-  		<property name="propagationBehaviorName" value="PROPAGATION_REQUIRED"/>
+	<bean id="jmsTransactionManager"
+		class="org.springframework.jms.connection.JmsTransactionManager">
+		<property name="connectionFactory" ref="jmsConnectionFactory" />
 	</bean>
 
+	<bean id="jmsConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+		<property name="brokerURL" value="tcp://localhost:61616" />
+        <property name="userName" value="smx" />
+        <property name="password" value="smx" />
+	</bean>
+
+	<bean id="activemq" class="org.apache.activemq.camel.component.ActiveMQComponent">
+		<property name="connectionFactory" ref="jmsConnectionFactory" />
+		<property name="transacted" value="true" />
+	</bean>
+
+	<bean id="required" class="org.apache.camel.spring.spi.SpringTransactionPolicy">
+  		<property name="transactionManager" ref="jmsTransactionManager"/>
+  		<property name="propagationBehaviorName" value="PROPAGATION_REQUIRED"/>
+	</bean>
 
 	<cxf:rsClient id="rsClient"
 		address="${sp.host}/uusp-webapp/spring/akka-event/"
