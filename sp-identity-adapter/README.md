@@ -35,7 +35,7 @@ mysql --user=idintegration --password=foobar logdb
 #The following bundles may need to be refreshed: org.springframework.context (86), org.springframework.core (82), org.springframework.context.support (87)
 
 #Identity events
-Configuration of SP indentity event endpoint is found in `/opt/servicemix/apache-servicemix-5.4.0/etc/se.uu.studentportalen.cfg`
+Configuration of SP indentity event endpoint is found in `/opt/servicemix/apache-servicemix-5.4.0/etc/se.uu.its.integration.uu-integration.cfg`
 
 Default values:
 sp.rest.identity.pw=CHANGEME
