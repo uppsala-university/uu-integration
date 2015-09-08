@@ -7,7 +7,7 @@
 	
 
 	<!-- Properties from /opt/servicemix/apache-servicemix-5.4.0/etc/se.uu.its.integration.uu-integration.cfg -->
-    <cm:property-placeholder persistent-id="se.uu.its.integration.uu-integration">
+    <cm:property-placeholder persistent-id="se.uu.its.integration.sp-identity-adapter">
         <cm:default-properties>
             <cm:property name="sp.rest.identity.pw" value="CHANGEME"/>
             <cm:property name="sp.host" value="https://dev.studentportalen.uu.se"/>
