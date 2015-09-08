@@ -5,6 +5,15 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd http://aries.apache.org/xmlns/jpa/v1.1.0 http://aries.apache.org/schemas/jpa/jpa_110.xsd"
 default-activation="eager">
 
+	<!-- Properties from /opt/servicemix/apache-servicemix-5.4.0/etc/se.uu.its.integration.uu-integration.cfg -->
+    <cm:property-placeholder persistent-id="se.uu.its.integration.esb-datasource-logdb">
+        <cm:default-properties>
+            <cm:property name="ds.pw" value="foobar"/>
+            <cm:property name="ds.host" value="localhost"/>
+            <cm:property name="ds.port" value="3306"/>
+        </cm:default-properties>
+    </cm:property-placeholder>
+
 	<!--
 	 	 Following configuration are based on below links. 
 	 
@@ -72,10 +81,10 @@ default-activation="eager">
 	-->
 	<bean id="jdbcManagedConnectionFactory" class="org.tranql.connector.mysql.XAMCF">
 		<property name="databaseName" value="logdb" />
-		<property name="serverName" value="localhost" />
 		<property name="userName" value="idintegration"/>
-		<property name="password" value="foobar" />
-        <property name="portNumber" value="3306" />
+		<property name="password" value="${ds.pw}" />
+		<property name="serverName" value="${ds.host}" />
+		<property name="portNumber" value="${ds.port}" />
 	</bean>
 	
 	<!-- Creates the JDBC ConnectionFactory -->
