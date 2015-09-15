@@ -17,7 +17,7 @@
 		</cm:default-properties>
 	</cm:property-placeholder>
 
-	<cm:property-placeholder persistent-id="se.uu.its.integration.esb-service-identity-rest">
+	<cm:property-placeholder persistent-id="se.uu.its.integration.esb-service-identity-rest" placeholder-prefix="$(" placeholder-suffix=")">
 		<cm:default-properties>
 			<cm:property name="id.CXFserver" value="http://0.0.0.0:8989/" />
 			<cm:property name="id.service" value="esb/rest" />
@@ -25,7 +25,7 @@
 	</cm:property-placeholder>
 
 	<!-- This is the CXF-based front for the route. -->
-	<cxf:rsServer id="rsServer" address="${id.CXFserver}${id.service}"
+	<cxf:rsServer id="rsServer" address="$(id.CXFserver)$(id.service)"
 		serviceClass="se.uu.its.integration.service.identity.rest.IdentityService"
 		loggingFeatureEnabled="true" loggingSizeLimit="20" />
 
