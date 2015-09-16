@@ -198,7 +198,7 @@
 				<!-- Filter duplicate messages. -->
 				<filter>
 					<!-- Filter react on duplicate messages, property is set on the Exchange -->
-					<property>CamelDuplicateMessage</property>
+					<exchangeProperty>CamelDuplicateMessage</exchangeProperty>
 					<inOnly id="Log duplicate event" uri="activemq:queue:identity-event-duplicate" />
 					<stop id="Duplicate message handling finished" />
 				</filter>
