@@ -27,11 +27,33 @@
             <artifactId>camel-cxf</artifactId>
             <version>2.13.2</version>
         </dependency>
+
+
+        <dependency>
+            <groupId>org.apache.geronimo.specs</groupId>
+            <artifactId>geronimo-jpa_2.0_spec</artifactId>
+            <version>1.1</version>
+        </dependency> 
+        <dependency>
+            <groupId>org.apache.openjpa</groupId>
+            <artifactId>openjpa</artifactId>
+            <version>2.3.0</version>
+        </dependency>
+
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-jpa</artifactId>
-            <version>2.13.2</version>
+            <version>2.14.1</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-sql</artifactId>
+            <version>2.14.1</version>
+        </dependency>
+	<!--
+	-->
+        
         
         <dependency>
             <groupId>org.mariadb.jdbc</groupId>
@@ -39,6 +61,7 @@
             <version>1.1.7</version>
         </dependency>
 
+	<!--
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
@@ -55,6 +78,8 @@
             <artifactId>hibernate-jpa-2.0-api</artifactId>
             <version>1.0.1.Final</version>
         </dependency>
+	-->
+        
 
         <dependency>
           <groupId>junit</groupId>
@@ -78,6 +103,12 @@
                         <Import-Package>
                         	*,
                         	com.mysql.jdbc,
+				org.apache.openjpa.persistence
+                        </Import-Package>
+                        <!-- 
+                        <Import-Package>
+                        	*,
+                        	com.mysql.jdbc,
                         	org.hibernate,
                         	org.hibernate.ejb,
                         	javax.sql,
@@ -88,6 +119,7 @@
                         	org.apache.activemq,
                         	javax.transaction;version="[1.1,2)"
                         </Import-Package>
+                        -->
                         <!-- 
                         <Include-Resource>
                         	../esb-model/src/main/resources/se/uu/its/integration/model/transform/addIntegrationEventIdToEvent.xsl,

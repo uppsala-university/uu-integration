@@ -1,9 +1,5 @@
 package se.uu.its.integration.esb.logger;
 
-import java.util.List;
-
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
@@ -24,42 +20,7 @@ public class ESBEventLogger {
 	
 	public ESBEventLogger() {
 	}
-/*	
- *  Code is deprecated since we use Camel idempotent component.  
- * 
-	EntityManagerFactory emf;
 
-	public void setEntityManagerFactory(EntityManagerFactory emf) {
-		log.info("Setting entity manager factory " + emf);
-		this.emf = emf;
-	}
-	 
-	public boolean isNewEvent(Exchange e) {
-		boolean isNewEvent = true;
-
-		String producer = (String) e.getIn().getHeader("eventProducer");
-		String producerReferenceId = (String) e.getIn().getHeader("eventProducerReferenceId");
-		if (producer == null || producerReferenceId == null) {
-			log.error("No producer or producerReferenceId headers. Can't check if event is new.");
-			throw new RuntimeException("Invalid producer or ref id: " + producer + "/" + producerReferenceId);
-		}
-		EntityManager entityManager = this.emf.createEntityManager();
-
-		List<UUEvent> ev = entityManager
-				.createQuery("select e from UUEvent e where "
-						+ " e._producer = :producer "
-						+ " and e._producerReferenceId = :producerReferenceId", 
-						UUEvent.class)
-				.setParameter("producer", producer)
-				.setParameter("producerReferenceId", producerReferenceId)
-				.getResultList();
-
-		isNewEvent = ev.isEmpty();
-		log.debug("Event from producer " + producer + " with reference id " + producerReferenceId + " is new?: " + isNewEvent);
-
-		return isNewEvent;
-	}
-*/
 	/**
 	 * Checks if is already processed e.g. exists in event database.
 	 * 
@@ -100,19 +61,22 @@ public class ESBEventLogger {
 	 * @return Proper HTTP response.
 	 * @throws JAXBException 
 	 */
-	public Response logEvent(String xml) throws JAXBException {
-		
+	public void logEvent(Exchange e) throws JAXBException {
+		String message = e.getIn().getBody(String.class);
+		UUEvent event = (UUEvent) ModelUtils.getUnmarchalledObject(UUEvent.class, message);
+		log.info("Logging event: " + event.getProducer() + ":" + event.getProducerReferenceId() + " (" + event.getIdentifier() + ")");
+		e.setOut(e.getIn());
+		e.getOut().setHeader(Exchange.CONTENT_TYPE, MediaType.APPLICATION_XML);
+	}
+	public Response logEvent_DEPRECATED(String xml) throws JAXBException {
 		UUEvent event = (UUEvent) ModelUtils.getUnmarchalledObject(UUEvent.class, xml);
-		
 		log.info("Loggin event: " + event.getProducer() + ":" + event.getProducerReferenceId() + " (" + event.getIdentifier() + ")");
-		
 		ResponseBuilder builder = new ResponseBuilderImpl();
 		builder.status(Status.ACCEPTED);
 		builder.type(MediaType.APPLICATION_XML);
 		builder.entity(xml);
-		
 		return builder.build();
-	}
+	}	
 	
 	/**
 	 * Returns a HTTP error response. 
@@ -123,14 +87,17 @@ public class ESBEventLogger {
 	 * @return Proper HTTP response.
 	 * @throws JAXBException 
 	 */
-	public Response getErrorResponse(String xml) throws JAXBException {
-		
+	public void getErrorResponse(Exchange e) {
+		e.setOut(e.getIn());
+		e.getOut().setHeader(Exchange.CONTENT_TYPE, MediaType.APPLICATION_XML);
+		e.getOut().setHeader(Exchange.HTTP_RESPONSE_CODE, Status.BAD_REQUEST); // Status.INTERNAL_SERVER_ERROR
+	}
+	public Response getErrorResponse_DEPRECATED(String xml) throws JAXBException {
 		ResponseBuilder builder = new ResponseBuilderImpl();
 		builder.status(400);
 		builder.type(MediaType.APPLICATION_XML);
 		builder.entity(xml);
-		
 		return builder.build();
 	}	
-	
+
 }

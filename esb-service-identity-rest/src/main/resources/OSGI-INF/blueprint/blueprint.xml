@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+<blueprint default-activation="eager"
+	xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.0.0"
 	xmlns:cxf="http://camel.apache.org/schema/blueprint/cxf"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:jpa="http://aries.apache.org/xmlns/jpa/v1.1.0"
-	xsi:schemaLocation="http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd http://aries.apache.org/xmlns/jpa/v1.1.0 http://aries.apache.org/schemas/jpa/jpa_110.xsd"
-	default-activation="eager">
+        xmlns:tx="http://aries.apache.org/xmlns/transactions/v1.0.0"
+	xsi:schemaLocation="http://www.osgi.org/xmlns/blueprint/v1.0.0
+			    http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
+			    http://aries.apache.org/xmlns/jpa/v1.1.0
+			    http://aries.apache.org/schemas/jpa/jpa_110.xsd">
 
 	<cm:property-placeholder persistent-id="se.uu.its.integration.amq">
 		<cm:default-properties>
@@ -34,6 +38,7 @@
 	<reference id="platformTxManager" interface="org.springframework.transaction.PlatformTransactionManager" />
 	<reference id="transactionManager" interface="javax.transaction.TransactionManager" />
 	<reference id="recoverableTxManager" interface="org.apache.geronimo.transaction.manager.RecoverableTransactionManager" />
+	<reference id="datasource" interface="javax.sql.DataSource" filter="(osgi.jndi.service.name=jdbc/UUDS)" />
 
 	<!-- Setting up the amq:// components with a configuration that points to
 		the JcaPooledConnectionFactory and the global Spring PlatformTransactiongManager.
@@ -89,9 +94,17 @@
 		<property name="transactionManager" ref="platformTxManager" />
 	</bean>
 
-	<!-- JPA idempotent Camel component configured with Hibernate and JTA. -->
+	<!-- JPA idempotent Camel component configured with Hibernate and JTA - ->
 	<bean id="messageIdRepo" class="org.apache.camel.processor.idempotent.jpa.JpaMessageIdRepository">
 		<argument index="0" ref="entityManagerFactory"/>
+		<argument index="1" ref="jtaTransactionTemplate" />
+		<argument index="2" value="Identity"/>
+	</bean>
+	-->
+
+	<!-- Idempotent Camel component configured with JDVC and an XA datasource -->
+	<bean id="messageIdRepo" class="org.apache.camel.processor.idempotent.jdbc.JdbcMessageIdRepository">
+		<argument index="0" ref="datasource"/>
 		<argument index="1" ref="jtaTransactionTemplate" />
 		<argument index="2" value="Identity"/>
 	</bean>
@@ -216,10 +229,10 @@
 					<jaxb prettyPrint="true" contextPath="se.uu.its.integration.model.events" />
 				</marshal>
 
-				<!-- TODO: Här loggar vi just nu ingenting, bara skapar responsen.
-										Flytta till utility-paket.
-				-->
+				<!-- TODO: Här loggar vi just nu ingenting, bara skapar responsen. Flytta till utility-paket. -->
 				<to id="Log event" uri="bean:esbEventLogger?method=logEvent" />
+
+				<setHeader headerName="CamelHttpResponseCode"><simple>202</simple></setHeader>
 
 				<stop id="Event processing finished" />
 
