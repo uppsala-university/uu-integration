@@ -38,7 +38,7 @@ public class ModelTransformTest {
 		
 		ModelUtils utily = new ModelUtils();
 		String transformedXml = utily.addIntegrationEventIdToEvent(xml);
-		
+
 		assertNotNull(transformedXml);
 		
 	}

@@ -55,12 +55,12 @@ public class ModelUtils {
 		InputStream stylesheet = this.getClass().getResourceAsStream(xsltResourcePath);
 
 		if (stylesheet == null) {
-			throw new Exception("ELENDESSKIT");
+			throw new Exception("No stylesheet found!");
 		}		
 		
 		// get the transformer
 		TransformerFactory tFactory = TransformerFactory.newInstance();
-		Transformer transformer = tFactory.newTransformer(new StreamSource(stylesheet));		
+		Transformer transformer = tFactory.newTransformer(new StreamSource(stylesheet));
 
 		// TODO: Should be moved to method signature as parameter.
 		String uid = UUID.randomUUID().toString();

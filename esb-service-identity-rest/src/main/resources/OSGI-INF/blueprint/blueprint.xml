@@ -86,7 +86,6 @@
 	</bean>
 
 	<bean id="modelUtils" class="se.uu.its.integration.model.common.ModelUtils" />
-	<bean id="esbEventLogger" class="se.uu.its.integration.esb.logger.ESBEventLogger" />
 
 	<!-- Apache Camel JPA Component configuration. -->
 	<bean id="jpa" class="org.apache.camel.component.jpa.JpaComponent">
@@ -156,13 +155,14 @@
 				<constant>true</constant>
 			</handled>
 
-			<inOnly uri="amq-dead-letter:queue:identity-event-deadletter" />
+			<inOnly id="Post to dead letter queue" uri="amq-dead-letter:queue:identity-event-deadletter" />
 
 			<convertBodyTo type="java.lang.String" />
 			<!-- 400 Producer error: 406 not acceptable otherwise 500
 						TODO: Flytta till utility-paket.
 			-->
-			<to id="Log event" uri="bean:esbEventLogger?method=getErrorResponse" />
+			<setHeader headerName="Content-Type"><simple>application/xml</simple></setHeader>
+			<setHeader headerName="CamelHttpResponseCode"><simple>500</simple></setHeader>
 
 			<rollback markRollbackOnly="true" />
 
@@ -229,9 +229,7 @@
 					<jaxb prettyPrint="true" contextPath="se.uu.its.integration.model.events" />
 				</marshal>
 
-				<!-- TODO: Här loggar vi just nu ingenting, bara skapar responsen. Flytta till utility-paket. -->
-				<to id="Log event" uri="bean:esbEventLogger?method=logEvent" />
-
+				<setHeader headerName="Content-Type"><simple>application/xml</simple></setHeader>
 				<setHeader headerName="CamelHttpResponseCode"><simple>202</simple></setHeader>
 
 				<stop id="Event processing finished" />
