@@ -15,12 +15,12 @@
 	<xsl:template match="@* | node()">
 		<xsl:param name="appendage"/>
 		<xsl:copy>
-			<xsl:apply-templates select="@* | node()"/>
+			<xsl:apply-templates select="@* | node()" />
 		</xsl:copy>
 	</xsl:template>
 
 	<!-- Add the id attribute to the root element. -->
-	<xsl:template match="/*" mode="copy-no-namespaces">
+	<xsl:template match="/*">
 		<xsl:element name="uuie:{local-name(.)}">
 		    <xsl:copy-of select="@*"/>
             <xsl:attribute name="identifier"><xsl:value-of select="$uid"/></xsl:attribute>
