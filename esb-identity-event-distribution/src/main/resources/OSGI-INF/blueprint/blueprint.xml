@@ -33,7 +33,9 @@
   		<property name="propagationBehaviorName" value="PROPAGATION_REQUIRED"/>
 	</bean>
 
-	<camelContext xmlns="http://camel.apache.org/schema/blueprint">
+	<camelContext xmlns="http://camel.apache.org/schema/blueprint" id="IdentityDistribution"
+		xmlns:uuie="http://www.uu.se/schemas/integration/2015/Events">
+
 		<!-- Distribute identity events to registered consumers -->
 		<route id="IdentityDistributionRoute">
 			<description>
@@ -42,6 +44,12 @@
 
 			<!-- Listen for events on distribution channel. -->
 			<from id="Event distribution consumer" uri="activemq:queue:identity-event-distribution" />
+
+			<!-- Message identifier extracted form message and put in header. -->
+			<setHeader headerName="MessageId">
+				<xpath resultType="java.lang.String">concat(/*/uuie:Producer/text(), "/" , /*/uuie:ProducerReferenceId/text())</xpath>
+			</setHeader>
+			<log message="Internal distribution of message $simple{header.MessageId}" loggingLevel="DEBUG" logName="se.uu.its.integration.service.identity.distribution"/>
 
 			<transacted ref="required"/>
 

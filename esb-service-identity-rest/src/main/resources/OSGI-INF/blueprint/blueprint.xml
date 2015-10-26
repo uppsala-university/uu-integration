@@ -191,6 +191,8 @@
 				<xpath resultType="java.lang.String">concat(/*/uuie:Producer/text(), "/" , /*/uuie:ProducerReferenceId/text())</xpath>
 			</setHeader>
 
+			<log message="Receiving message $simple{header.MessageId}" loggingLevel="DEBUG" logName="se.uu.its.integration.service.identity"/>
+
 			<!-- Add integration event id -->
 			<to id="Event id assignment" uri="bean:modelUtils?method=addIntegrationEventIdToEvent" />
 

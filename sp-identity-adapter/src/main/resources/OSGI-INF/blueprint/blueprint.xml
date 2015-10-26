@@ -73,6 +73,12 @@
 				<when>
 					<xpath>/uuie:PersonEvent/uuie:Producer = 'AKKA'</xpath>
 
+					<!-- Message identifier extracted form message and put in header. -->
+					<setHeader headerName="MessageId">
+						<xpath resultType="java.lang.String">concat(/*/uuie:Producer/text(), "/" , /*/uuie:ProducerReferenceId/text())</xpath>
+					</setHeader>
+					<log message="SP adapter processing message $simple{header.MessageId}" loggingLevel="DEBUG" logName="se.uu.its.integration.client.identity"/>
+
 					<setBody>
 						<xpath resultType="java.lang.String">/uuie:PersonEvent/uuii:Person/uuii:PersonNumber</xpath>
 					</setBody>
