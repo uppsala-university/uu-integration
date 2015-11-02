@@ -207,7 +207,7 @@
 			<!-- Don't process already processed events. -->
 			<idempotentConsumer messageIdRepositoryRef="messageIdRepo" skipDuplicate="false">
 
-				<!-- Identifier for idempotence. -->
+				<!-- Identifier for idempotency. -->
 				<header>MessageId</header>
 
 				<!-- Filter duplicate messages. -->
