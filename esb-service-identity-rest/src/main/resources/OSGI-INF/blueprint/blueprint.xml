@@ -79,7 +79,7 @@
 	<bean id="resourceManager-AMQ" class="org.apache.activemq.pool.ActiveMQResourceManager" init-method="recoverResource">
 		<property name="transactionManager" ref="recoverableTxManager" />
 		<!-- CF must be of type ActiveMQConnectionFactory, otherwise no recovery will occur -->
-		<property name="connectionFactory" ref="AmqXaCF" />
+		<property name="connectionFactory" ref="XAPooledCF" />
 		<property name="resourceName" value="activemq.default" />
 		<property name="userName" value="${amq.user}" />
 		<property name="password" value="${amq.pw}" />
