@@ -38,7 +38,7 @@
 	<reference id="platformTxManager" interface="org.springframework.transaction.PlatformTransactionManager" />
 	<reference id="transactionManager" interface="javax.transaction.TransactionManager" />
 	<reference id="recoverableTxManager" interface="org.apache.geronimo.transaction.manager.RecoverableTransactionManager" />
-	<reference id="datasource" interface="javax.sql.DataSource" filter="(osgi.jndi.service.name=jdbc/UUDS)" />
+	<reference id="messageIdRepoDs" interface="javax.sql.DataSource" filter="(osgi.jndi.service.name=jdbc/UUDS)" />
 
 	<!-- Setting up the amq:// components with a configuration that points to
 		the JcaPooledConnectionFactory and the global Spring PlatformTransactiongManager.
@@ -103,7 +103,7 @@
 
 	<!-- Idempotent Camel component configured with JDVC and an XA datasource -->
 	<bean id="messageIdRepo" class="org.apache.camel.processor.idempotent.jdbc.JdbcMessageIdRepository">
-		<argument index="0" ref="datasource"/>
+		<argument index="0" ref="messageIdRepoDs"/>
 		<argument index="1" ref="jtaTransactionTemplate" />
 		<argument index="2" value="Identity"/>
 	</bean>
