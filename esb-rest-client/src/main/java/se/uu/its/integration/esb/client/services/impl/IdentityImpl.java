@@ -17,6 +17,7 @@ import se.uu.its.integration.model.events.PersonEventData;
 import se.uu.its.integration.model.events.RoleCreatedEvent;
 import se.uu.its.integration.model.events.RoleDeletedEvent;
 import se.uu.its.integration.model.events.RoleEvent;
+import se.uu.its.integration.model.events.UUEvent;
 import se.uu.its.integration.model.identity.Employee;
 import se.uu.its.integration.model.identity.Organization;
 import se.uu.its.integration.model.identity.OrganizationDepartmentMapping;
@@ -67,7 +68,7 @@ public class IdentityImpl extends ServiceBase implements Identity {
 		Response response = webtarget.path(PATH_PERSON_EVENT).request().post(Entity.entity(event, "application/xml"));
 		log.info("Response status code: " + response.getStatus());
 		
-		PersonEvent eventResponse = response.readEntity(PersonEvent.class);
+		UUEvent eventResponse = response.readEntity(PersonEvent.class);
 		
 		return response.getStatus() == 202 ? eventResponse.getIdentifier() : null;    }
 
@@ -90,7 +91,7 @@ public class IdentityImpl extends ServiceBase implements Identity {
 		Response response = webtarget.path(PATH_PERSON_EVENT).request().post(Entity.entity(event, "application/xml"));
 		log.info("Response status code: " + response.getStatus());
 		
-		PersonEvent eventResponse = response.readEntity(PersonEvent.class);
+		UUEvent eventResponse = response.readEntity(PersonEvent.class);
 		
 		return response.getStatus() == 202 ? eventResponse.getIdentifier() : null;	}
 
@@ -113,7 +114,7 @@ public class IdentityImpl extends ServiceBase implements Identity {
 		Response response = webtarget.path(PATH_PERSON_EVENT).request().post(Entity.entity(event, "application/xml"));
 		log.info("Response status code: " + response.getStatus());
 		
-		PersonEvent eventResponse = response.readEntity(PersonEvent.class);
+		UUEvent eventResponse = response.readEntity(PersonEvent.class);
 		
 		return response.getStatus() == 202 ? eventResponse.getIdentifier() : null;
 	}
@@ -143,7 +144,7 @@ public class IdentityImpl extends ServiceBase implements Identity {
 		Response response = webtarget.path(PATH_PERSON_EVENT).request().post(Entity.entity(event, "application/xml"));
 		log.info("Response status code: " + response.getStatus());
 		
-		PersonEvent eventResponse = response.readEntity(PersonEvent.class);
+		UUEvent eventResponse = response.readEntity(PersonEvent.class);
 		
 		return response.getStatus() == 202 ? eventResponse.getIdentifier() : null;
 	}
