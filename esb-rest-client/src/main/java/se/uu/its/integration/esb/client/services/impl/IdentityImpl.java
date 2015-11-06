@@ -23,7 +23,6 @@ import se.uu.its.integration.model.identity.Organization;
 import se.uu.its.integration.model.identity.OrganizationDepartmentMapping;
 import se.uu.its.integration.model.identity.Person;
 import se.uu.its.integration.model.identity.Role;
-import se.uu.its.integration.model.identity.Student;
 
 public class IdentityImpl extends ServiceBase implements Identity {
 
@@ -61,9 +60,6 @@ public class IdentityImpl extends ServiceBase implements Identity {
 				person);
 
 		log.info("Posting to path: " + PATH_PERSON_EVENT);
-//		PersonEvent eventResponse =
-//				webtarget.path(PATH_PERSON_EVENT).request().post(Entity.entity(event, "application/xml"), 
-//						PersonEvent.class);
 
 		Response response = webtarget.path(PATH_PERSON_EVENT).request().post(Entity.entity(event, "application/xml"));
 		log.info("Response status code: " + response.getStatus());
@@ -84,9 +80,6 @@ public class IdentityImpl extends ServiceBase implements Identity {
 				person);
 
 		log.info("Posting to path: " + PATH_PERSON_EVENT);
-//		PersonEvent eventResponse =
-//				webtarget.path(PATH_PERSON_EVENT).request().post(Entity.entity(event, "application/xml"), 
-//						PersonEvent.class);
 
 		Response response = webtarget.path(PATH_PERSON_EVENT).request().post(Entity.entity(event, "application/xml"));
 		log.info("Response status code: " + response.getStatus());
@@ -107,9 +100,6 @@ public class IdentityImpl extends ServiceBase implements Identity {
 				person);
 
 		log.info("Posting to path: " + PATH_PERSON_EVENT);
-//		PersonEvent eventResponse =
-//				webtarget.path(PATH_PERSON_EVENT).request().post(Entity.entity(event, "application/xml"), 
-//						PersonEvent.class);
 
 		Response response = webtarget.path(PATH_PERSON_EVENT).request().post(Entity.entity(event, "application/xml"));
 		log.info("Response status code: " + response.getStatus());
@@ -137,9 +127,6 @@ public class IdentityImpl extends ServiceBase implements Identity {
 				
 
 		log.info("Posting to path: " + PATH_PERSON_EVENT);
-//		PersonEvent eventResponse =
-//				webtarget.path(PATH_PERSON_EVENT).request().post(Entity.entity(event, "application/xml"), 
-//						PersonEvent.class);
 		
 		Response response = webtarget.path(PATH_PERSON_EVENT).request().post(Entity.entity(event, "application/xml"));
 		log.info("Response status code: " + response.getStatus());
@@ -164,9 +151,6 @@ public class IdentityImpl extends ServiceBase implements Identity {
 						));
 
 		log.info("Posting to path: " + PATH_ROLE_EVENT);
-//		RoleEvent eventResponse =
-//				webtarget.path(PATH_ROLE_EVENT).request().post(Entity.entity(event, "application/xml"), 
-//						RoleEvent.class);
 		
 		Response response = webtarget.path(PATH_ROLE_EVENT).request().post(Entity.entity(event, "application/xml"));
 		log.info("Response status code: " + response.getStatus());
@@ -191,9 +175,6 @@ public class IdentityImpl extends ServiceBase implements Identity {
 						));
 
 		log.info("Posting to path: " + PATH_ROLE_EVENT);
-//		RoleEvent eventResponse =
-//				webtarget.path(PATH_ROLE_EVENT).request().post(Entity.entity(event, "application/xml"), 
-//						RoleEvent.class);
 
 		Response response = webtarget.path(PATH_ROLE_EVENT).request().post(Entity.entity(event, "application/xml"));
 		log.info("Response status code: " + response.getStatus());
@@ -214,9 +195,6 @@ public class IdentityImpl extends ServiceBase implements Identity {
 				new OrganizationDepartmentMapping("X11", "CodeX"));	
 
 		log.info("Posting to path: " + PATH_ORGDEPMAP_EVENT);
-//		OrganizationDepartmentMappingEvent eventResponse =
-//				webtarget.path(PATH_ORGDEPMAP_EVENT).request().post(Entity.entity(event, "application/xml"), 
-//						OrganizationDepartmentMappingEvent.class);
 
 		Response response = webtarget.path(PATH_ORGDEPMAP_EVENT).request().post(Entity.entity(event, "application/xml"));
 		log.info("Response status code: " + response.getStatus());
@@ -237,9 +215,6 @@ public class IdentityImpl extends ServiceBase implements Identity {
 				new OrganizationDepartmentMapping("X11", "CodeX"));	
 
 		log.info("Posting to path: " + PATH_ORGDEPMAP_EVENT);
-//		OrganizationDepartmentMappingEvent eventResponse =
-//				webtarget.path(PATH_ORGDEPMAP_EVENT).request().post(Entity.entity(event, "application/xml"), 
-//						OrganizationDepartmentMappingEvent.class);
 
 		Response response = webtarget.path(PATH_ORGDEPMAP_EVENT).request().post(Entity.entity(event, "application/xml")); 
 		log.info("Response status code: " + response.getStatus());
