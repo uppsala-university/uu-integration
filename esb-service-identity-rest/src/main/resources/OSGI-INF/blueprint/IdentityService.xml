@@ -190,8 +190,18 @@
 			</marshal>
 
 			<!-- Message identifier extracted form message and put in header. -->
+
+			<setHeader headerName="Producer">
+				<xpath resultType="java.lang.String">/*/uuie:Producer/text()</xpath>
+			</setHeader>
+
+			<setHeader headerName="ProducerReferenceId">
+				<xpath resultType="java.lang.String">/*/uuie:ProducerReferenceId/text()</xpath>
+			</setHeader>
+
 			<setHeader headerName="MessageId">
-				<xpath resultType="java.lang.String">concat(/*/uuie:Producer/text(), "/" , /*/uuie:ProducerReferenceId/text())</xpath>
+				<simple>${headers.Producer}/${headers.ProducerReferenceId}</simple>
+				<!-- <xpath resultType="java.lang.String">concat(/*/uuie:Producer/text(), "/" , /*/uuie:ProducerReferenceId/text())</xpath> -->
 			</setHeader>
 
 			<log message="Test-2015-11-09: Receiving message $simple{header.MessageId}" loggingLevel="DEBUG" logName="se.uu.its.integration.service.identity"/>
@@ -217,9 +227,13 @@
 					<!-- property will be replaced with exchangeProperty in sxm 6:
 					<exchangeProperty>CamelDuplicateMessage</exchangeProperty>
 					-->
-					
-					<!-- TODO: Add matching internal id to message -->
-					
+
+					<!--
+					TODO: Add existing IntegrationEventId to event
+					<to uri="sql:select identifier from uuevent where producer = :?Producer and producerReferenceIdid = :?ProducerReferenceId)?dataSource=messageIdRepoDs&amp;outputType=SelectOne&amp;useHeadersAsParameters=true&amp;outputType=IntegrationEventId"/>
+					<to id="Existing event id assignment" uri="bean:modelUtils?method=addExistingIntegrationEventIdToEvent" />
+					-->
+
 					<inOnly id="Log duplicate event" uri="activemq:queue:identity-event-duplicate" />
 					<stop id="Duplicate message handling finished" />
 				</filter>
