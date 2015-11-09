@@ -54,7 +54,7 @@
 		serviceClass="se.uu.its.integration.client.identity.StudentportalProxy"
 		loggingFeatureEnabled="true"/>
 
-	<camelContext 	id="sp-identity-adapter-ctx"
+	<camelContext 	id="SpIdentityAdapter"
 					trace="false"
 					xmlns="http://camel.apache.org/schema/blueprint"
 					xmlns:uuie="http://www.uu.se/schemas/integration/2015/Events"
@@ -65,7 +65,7 @@
 			<redeliveryPolicy maximumRedeliveries="-1" redeliveryDelay="5000" logStackTrace="true"/>
 		</onException>
 
-		<route id="sp-identity-adapter" >
+		<route id="SpIdentityAdapterRoute" >
 			<from uri="activemq:queue:identity-event-distribution-sp" />
 			<transacted ref="required"/>
 

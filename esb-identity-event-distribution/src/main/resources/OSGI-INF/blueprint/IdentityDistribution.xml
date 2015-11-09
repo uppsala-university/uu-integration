@@ -37,7 +37,7 @@
 		xmlns:uuie="http://www.uu.se/schemas/integration/2015/Events">
 
 		<!-- Distribute identity events to registered consumers -->
-		<route id="IdentityDistributionRoute">
+		<route id="IdentityDistribution">
 			<description>
 				This is the distribution route for messages in the identity event domain.
 			</description>
