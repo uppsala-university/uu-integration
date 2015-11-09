@@ -37,7 +37,7 @@
 		xmlns:uuie="http://www.uu.se/schemas/integration/2015/Events">
 
 		<!-- Distribute identity events to registered consumers -->
-		<route id="IdentityDistributionRoute">
+		<route id="IdentityDistribution">
 			<description>
 				This is the distribution route for messages in the identity event domain.
 			</description>
@@ -49,6 +49,7 @@
 			<setHeader headerName="MessageId">
 				<xpath resultType="java.lang.String">concat(/*/uuie:Producer/text(), "/" , /*/uuie:ProducerReferenceId/text())</xpath>
 			</setHeader>
+			
 			<log message="Internal distribution of message $simple{header.MessageId}" loggingLevel="DEBUG" logName="se.uu.its.integration.service.identity.distribution"/>
 
 			<transacted ref="required"/>
