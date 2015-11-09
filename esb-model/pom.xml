@@ -22,12 +22,14 @@
       <artifactId>geronimo-jpa_2.0_spec</artifactId>
       <version>1.1</version>
     </dependency>
+    <!--
     <dependency>
         <groupId>org.apache.openjpa</groupId>
         <artifactId>openjpa</artifactId>
         <version>2.4.0</version>
         <scope>provided</scope>
     </dependency>
+    -->
     <dependency>
       <groupId>commons-logging</groupId>
       <artifactId>commons-logging</artifactId>

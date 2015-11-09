@@ -49,7 +49,8 @@
 			<setHeader headerName="MessageId">
 				<xpath resultType="java.lang.String">concat(/*/uuie:Producer/text(), "/" , /*/uuie:ProducerReferenceId/text())</xpath>
 			</setHeader>
-			<log message="Internal distribution of message $simple{header.MessageId}" loggingLevel="DEBUG" logName="se.uu.its.integration.service.identity.distribution"/>
+
+			<log message="Test-2015-11-09: Internal distribution of message $simple{header.MessageId}" loggingLevel="DEBUG" logName="se.uu.its.integration.service.identity.distribution"/>
 
 			<transacted ref="required"/>
 

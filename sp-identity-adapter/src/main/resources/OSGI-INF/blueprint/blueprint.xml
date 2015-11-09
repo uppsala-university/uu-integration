@@ -77,7 +77,8 @@
 					<setHeader headerName="MessageId">
 						<xpath resultType="java.lang.String">concat(/*/uuie:Producer/text(), "/" , /*/uuie:ProducerReferenceId/text())</xpath>
 					</setHeader>
-					<log message="SP adapter processing message $simple{header.MessageId}" loggingLevel="DEBUG" logName="se.uu.its.integration.client.identity"/>
+
+					<log message="Test-2015-11-09: SP adapter processing message $simple{header.MessageId}" loggingLevel="DEBUG" logName="se.uu.its.integration.client.identity"/>
 
 					<setBody>
 						<xpath resultType="java.lang.String">/uuie:PersonEvent/uuii:Person/uuii:PersonNumber</xpath>

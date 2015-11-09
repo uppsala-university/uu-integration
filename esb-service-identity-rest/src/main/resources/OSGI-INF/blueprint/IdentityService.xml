@@ -129,6 +129,7 @@
 
 	<!-- Used for testing: <throwException ref="forced" />
 	<bean id="forced" class="java.lang.RuntimeException" />
+	<bean id="nullException" class="java.lang.NullPointerException" />
 	-->
 
 	<!--
@@ -154,6 +155,8 @@
 			<handled>
 				<constant>true</constant>
 			</handled>
+
+			<log message="Test-2015-11-09: Failed handling message '$simple{body}' due to $simple{exception} $simple{exception.message}" loggingLevel="ERROR" logName="se.uu.its.integration.service.identity"/>
 
 			<inOnly id="Post to dead letter queue" uri="amq-dead-letter:queue:identity-event-deadletter" />
 
@@ -191,7 +194,7 @@
 				<xpath resultType="java.lang.String">concat(/*/uuie:Producer/text(), "/" , /*/uuie:ProducerReferenceId/text())</xpath>
 			</setHeader>
 
-			<log message="Receiving message $simple{header.MessageId}" loggingLevel="DEBUG" logName="se.uu.its.integration.service.identity"/>
+			<log message="Test-2015-11-09: Receiving message $simple{header.MessageId}" loggingLevel="DEBUG" logName="se.uu.its.integration.service.identity"/>
 
 			<!-- Add integration event id -->
 			<to id="Event id assignment" uri="bean:modelUtils?method=addIntegrationEventIdToEvent" />
