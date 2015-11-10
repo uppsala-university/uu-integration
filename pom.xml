@@ -11,12 +11,13 @@
 	<modules>
 		<module>ladok-event-distribution</module>
 		<module>ladokevent-logdb-adapter</module>
+		<module>esb-datasource-logdb</module>
+		<module>esb-amq</module>
 		<module>esb-model</module>
 		<module>esb-service-identity-rest</module>
-		<module>esb-rest-client</module>
-		<module>esb-datasource-logdb</module>
 		<module>esb-identity-event-distribution</module>
 		<module>sp-identity-adapter</module>
+		<module>esb-rest-client</module>
 	</modules>
 
 	<properties>

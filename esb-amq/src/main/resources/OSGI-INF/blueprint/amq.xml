@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<blueprint default-activation="eager"
+	xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.0.0"
+	xmlns:cxf="http://camel.apache.org/schema/blueprint/cxf"
+	xmlns:jpa="http://aries.apache.org/xmlns/jpa/v1.1.0"
+        xmlns:tx="http://aries.apache.org/xmlns/transactions/v1.0.0"
+	xsi:schemaLocation="http://www.osgi.org/xmlns/blueprint/v1.0.0
+			    http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
+			    http://aries.apache.org/xmlns/jpa/v1.1.0
+			    http://aries.apache.org/schemas/jpa/jpa_110.xsd">
+
+	<cm:property-placeholder persistent-id="se.uu.its.integration.amq">
+		<cm:default-properties>
+			<cm:property name="amq.url" value="tcp://localhost:61616" />
+			<cm:property name="amq.deadletterUrl" value="tcp://localhost:61617" />
+			<cm:property name="amq.user" value="smx" />
+			<cm:property name="amq.pw" value="smx" />
+		</cm:default-properties>
+	</cm:property-placeholder>
+
+	<!-- References must be assigned local identifiers. -->
+	<reference id="platformTxManager" interface="org.springframework.transaction.PlatformTransactionManager" />
+	<reference id="transactionManager" interface="javax.transaction.TransactionManager" />
+	<reference id="recoverableTxManager" interface="org.apache.geronimo.transaction.manager.RecoverableTransactionManager" />
+
+	<!-- Setting up the amq:// components with a configuration that points to
+		the JcaPooledConnectionFactory and the global Spring PlatformTransactiongManager.
+		Note that transacted is set to 'false' because it's the JTA TransactionManager
+		that manages the transactions and not the JMS component itself. -->
+	<bean id="amq" class="org.apache.camel.component.jms.JmsComponent">
+		<property name="configuration" ref="AMQConfig" />
+	</bean>
+
+	<bean id="AMQConfig" class="org.apache.camel.component.jms.JmsConfiguration">
+		<property name="connectionFactory" ref="XAPooledCF" />
+		<property name="transacted" value="false" />
+		<property name="transactionManager" ref="platformTxManager" />
+		<property name="maxConcurrentConsumers" value="1" />
+		<property name="cacheLevelName" value="CACHE_NONE" />
+	</bean>
+
+	<!-- The JcaPooledConnectionFactory ensures that the JMS Sessions get enlisted
+		in the global transaction manager -->
+	<bean id="XAPooledCF" class="org.apache.activemq.pool.JcaPooledConnectionFactory" init-method="start" destroy-method="stop">
+		<property name="name" value="activemq.default" />
+		<property name="maxConnections" value="1" />
+		<property name="connectionFactory" ref="AmqXaCF" />
+		<property name="transactionManager" ref="transactionManager" />
+	</bean>
+
+	<!-- Defines an ActiveMQ XA-aware ConnectionFactory -->
+	<bean id="AmqXaCF" class="org.apache.activemq.ActiveMQXAConnectionFactory">
+		<property name="brokerURL" value="failover:(${amq.url})?jms.prefetchPolicy.all=1" />
+		<property name="userName" value="${amq.user}" />
+		<property name="password" value="${amq.pw}" />
+	</bean>
+
+	<!-- A ResourceManager is needed for every transactional resource in order
+		to recover any outstanding transactions after a crash. It will register with
+		the Aries transaction manager, which then calls recoverResource() on the
+		transactional resource itself. -->
+	<bean id="resourceManager-AMQ" class="org.apache.activemq.pool.ActiveMQResourceManager" init-method="recoverResource">
+		<property name="transactionManager" ref="recoverableTxManager" />
+		<!-- CF must be of type ActiveMQConnectionFactory, otherwise no recovery will occur -->
+		<property name="connectionFactory" ref="XAPooledCF" />
+		<property name="resourceName" value="activemq.default" />
+		<property name="userName" value="${amq.user}" />
+		<property name="password" value="${amq.pw}" />
+	</bean>
+
+	<!-- Transaction template for JTA. -->
+	<bean id="jtaTransactionTemplate" class="org.springframework.transaction.support.TransactionTemplate">
+		<property name="transactionManager" ref="platformTxManager" />
+		<property name="propagationBehavior" value="0" />
+	</bean>
+
+	<!-- We us a separate broker for dead letters since we need to exclude queue from XA-transactions. -->
+	<bean id="amq-dead-letter" class="org.apache.activemq.camel.component.ActiveMQComponent">
+		<property name="brokerURL" value="${amq.deadletterUrl}" />
+		<property name="userName" value="${amq.user}" />
+		<property name="password" value="${amq.pw}" />
+ 	</bean>
+
+	<service ref="amq" auto-export="all-classes" > <!-- interface="org.apache.camel.component.jms.JmsComponent" -->
+		<service-properties>
+			<entry key="osgi.jndi.service.name" value="amq/XA" />
+		</service-properties>
+	</service>
+
+	<service ref="amq-dead-letter" auto-export="all-classes" >
+		<service-properties>
+			<entry key="osgi.jndi.service.name" value="amq/DLQ" />
+		</service-properties>
+	</service>
+
+</blueprint>
