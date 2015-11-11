@@ -181,7 +181,7 @@
 				<!-- Add integration event id -->
 				<to id="Event id assignment" uri="bean:modelUtils?method=addIntegrationEventIdToEvent" />
 
- 				<inOnly id="Event distribution" uri="amqxa:queue:identity-event-distribution" />
+ 				<inOnly id="Event distribution" uri="amqxa:queue:identity-distribution" />
 
 				<unmarshal id="Object translation again">
 					<jaxb prettyPrint="true" contextPath="se.uu.its.integration.model.events" />

@@ -43,7 +43,7 @@
 			</description>
 
 			<!-- Listen for events on distribution channel. -->
-			<from id="Event distribution consumer" uri="activemq:queue:identity-event-distribution" />
+			<from id="Event distribution consumer" uri="activemq:queue:identity-distribution" />
 
 			<!-- Message identifier extracted form message and put in header. -->
 			<setHeader headerName="MessageId">
@@ -55,7 +55,7 @@
 			<transacted ref="required"/>
 
 			<multicast stopOnException="true">
-				<to id="Event distribution for SP" uri="activemq:queue:identity-event-distribution-sp" />
+				<to id="Event distribution for SP" uri="activemq:queue:identity-sp" />
 			</multicast>
 		</route>
 	</camelContext>

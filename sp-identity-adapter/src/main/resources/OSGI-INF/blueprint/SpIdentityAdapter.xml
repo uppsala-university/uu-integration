@@ -66,7 +66,7 @@
 		</onException>
 
 		<route id="SpIdentityAdapterRoute" >
-			<from uri="activemq:queue:identity-event-distribution-sp" />
+			<from uri="activemq:queue:identity-sp" />
 			<transacted ref="required"/>
 
 			<choice>
