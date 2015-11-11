@@ -1,13 +1,11 @@
 package se.uu.its.integration.model.events;
 
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
 import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import se.uu.its.integration.model.group.Group;
-import se.uu.its.integration.model.identity.Person;
+import se.uu.its.integration.model.identity.Affiliation;
 
 //@Entity
 //@DiscriminatorValue("PersonEvent")
@@ -17,12 +15,12 @@ public class GroupEvent extends UUEvent {
 	private static final long serialVersionUID = -5522728677632277563L;
 
 	@Transient
-	@XmlElementRef(type = Group.class)
-	private Group group;	
+	@XmlElementRef(type = Group.class, namespace = "http://www.uu.se/schemas/integration/2015/Group")
+	protected Group group;	
 	
 	@Transient
-	@XmlElementRef(type = GroupEventData.class)
-	private GroupEventData groupEventData;
+	@XmlElementRef(type = GroupEventData.class, namespace = "http://www.uu.se/schemas/integration/2015/Events")
+	protected GroupEventData groupEventData;
 
 	protected GroupEvent() {
 	}

@@ -3,7 +3,6 @@ package se.uu.its.integration.model.events;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import se.uu.its.integration.model.group.Group;
-import se.uu.its.integration.model.identity.Person;
 
 @XmlRootElement(name = "GroupEvent")
 public class GroupCreateRequestEvent extends GroupEvent {
