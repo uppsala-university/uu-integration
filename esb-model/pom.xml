@@ -6,7 +6,7 @@
   <parent>
     <artifactId>uu-integration</artifactId>
     <groupId>se.uu.its.integration</groupId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
   </parent>
 
   <groupId>se.uu.its.integration</groupId>
