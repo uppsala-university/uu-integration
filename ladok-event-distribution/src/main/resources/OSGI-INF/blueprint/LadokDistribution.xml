@@ -10,7 +10,7 @@
     				xmlns:sd="http://schemas.ladok.se/studiedeltagande"
     				xmlns:atom="http://www.w3.org/2005/Atom">
 
-        <route>
+        <route id="LadokDistribution">
         
         	<!-- Get the event as raw transport packed events from the distribution queue. -->
             <from uri="activemq:queue:ladok3-event-distribution" />
