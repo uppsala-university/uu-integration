@@ -12,3 +12,6 @@ RoleCreatedEvent
 RoleDeletedEvent
 RoleEvent
 UUEvent
+GroupEvent
+GroupEventData
+GroupCreateRequestEvent
