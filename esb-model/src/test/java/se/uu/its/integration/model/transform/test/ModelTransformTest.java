@@ -31,6 +31,50 @@ public class ModelTransformTest {
 	private Log log = LogFactory.getLog(this.getClass());
 	
 	@Test
+	public void testGroupCreateRequestEventToGouperCreateXmlPayload() throws Exception {
+		
+		log.info("TEST");
+		
+		String grouperCrateXmlPayload =
+				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+				"<WsRestGroupSaveRequest>" +
+				  "<wsGroupToSaves>" +
+				    "<WsGroupToSave>" +
+				      "<wsGroupLookup>" +
+				        "<groupName>hkslab:g1</groupName>" +
+				      "</wsGroupLookup>" +
+				      "<wsGroup>" +
+				        "<displayExtension>Group 1</displayExtension>" + 
+				        "<description>This is the first Group</description>" +
+				        "<name>hkslab:g1</name>" + 
+				      "</wsGroup>" +
+				    "</WsGroupToSave>" +
+				  "</wsGroupToSaves>" +
+				"</WsRestGroupSaveRequest>";
+		
+		log.info(grouperCrateXmlPayload);
+		
+		String groupCreateRequestEventXml = new GroupCreateRequestEvent(
+				"test", 
+				"testid", 
+				new StudentGroup(
+						"hkslab:g1",
+						"This is the first Group",
+						"Group 1")
+				).toString();
+		
+		log.info(groupCreateRequestEventXml);
+		
+		ModelUtils utily = new ModelUtils();
+		String transformedXml = utily.xsltTransform(groupCreateRequestEventXml, "/se/uu/its/integration/model/transform/groupCreateRequestEventToGouperCreateXmlPayload.xml");
+
+		log.debug(transformedXml);
+		
+		assertFalse(!transformedXml.equalsIgnoreCase(grouperCrateXmlPayload));
+		
+	}	
+	
+	@Test
 	public void testKurstillfalleStatusHandelseToGroupCreateRequestEvent() throws Exception {
 		
 		String kurstillfalleStatusHandelseXml = "";
