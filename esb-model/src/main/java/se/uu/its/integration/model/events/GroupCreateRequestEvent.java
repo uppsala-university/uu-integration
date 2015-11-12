@@ -19,8 +19,8 @@ public class GroupCreateRequestEvent extends GroupEvent {
 	public GroupCreateRequestEvent(String producer, 
 			String producerReferenceId, 
 			Group group, 
-			GroupEventData personEventData) {
-		super(producer, producerReferenceId, group, personEventData);
+			GroupEventData groupEventData) {
+		super(producer, producerReferenceId, group, groupEventData);
 	}
 
 	public GroupCreateRequestEvent(String producer, 
