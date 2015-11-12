@@ -17,7 +17,7 @@ public abstract class Group extends UUIntegrationObject {
 
 	private static final long serialVersionUID = -6510744307597252176L;
 
-	@XmlElement(name = "Group", namespace = "http://www.uu.se/schemas/integration/2015/Group")
+	@XmlElement(name = "Name", namespace = "http://www.uu.se/schemas/integration/2015/Group")
 	protected String _name;
 	
 	@XmlElement(name = "Description", namespace = "http://www.uu.se/schemas/integration/2015/Group")
