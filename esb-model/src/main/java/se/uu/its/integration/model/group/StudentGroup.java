@@ -13,6 +13,10 @@ public class StudentGroup extends Group {
 	
 	public StudentGroup(String name, String description) {
 		super(name, description);
-	}	
+	}
+	
+	public StudentGroup(String name, String description, String displayName) {
+		super(name, description, displayName);
+	}
 
 }
