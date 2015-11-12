@@ -22,11 +22,33 @@ import org.junit.Test;
 import se.uu.its.integration.model.common.ModelUtils;
 import se.uu.its.integration.model.events.AffiliationCreatedEvent;
 import se.uu.its.integration.model.events.AffiliationEvent;
+import se.uu.its.integration.model.events.GroupCreateRequestEvent;
+import se.uu.its.integration.model.group.StudentGroup;
 import se.uu.its.integration.model.identity.Affiliation;
 
 public class ModelTransformTest {
 
 	private Log log = LogFactory.getLog(this.getClass());
+	
+	@Test
+	public void testKurstillfalleStatusHandelseToGroupCreateRequestEvent() throws Exception {
+		
+		String kurstillfalleStatusHandelseXml = "";
+		
+		String answerXml = new GroupCreateRequestEvent(
+				"test", 
+				"testid", 
+				new StudentGroup(
+						"Studentgrupp",
+						"Studentgrupp beskrivning")
+				).toString();
+		
+		ModelUtils utily = new ModelUtils();
+		String transformedXml = utily.xsltTransform(kurstillfalleStatusHandelseXml, "/se/uu/its/integration/model/transform/kurstillfalleStatusHandelseToGroupCreateRequestEvent.xsl");
+
+		assertFalse(!transformedXml.equalsIgnoreCase(answerXml));
+		
+	}	
 	
 	@Test
 	public void testAddIntegrationEventIdToEventByMethod() throws Exception {
