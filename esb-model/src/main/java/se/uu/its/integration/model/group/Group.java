@@ -21,7 +21,10 @@ public abstract class Group extends UUIntegrationObject {
 	protected String _name;
 	
 	@XmlElement(name = "Description", namespace = "http://www.uu.se/schemas/integration/2015/Group")
-	protected String _description;	
+	protected String _description;
+	
+	@XmlElement(name = "DisplayName", namespace = "http://www.uu.se/schemas/integration/2015/Group")
+	protected String _displayName;	
 
 	@XmlAttribute(name = "type")
 	String _type;	
@@ -37,6 +40,11 @@ public abstract class Group extends UUIntegrationObject {
 		this._name = name;
 		this._description = description;
 		this._type = this.getClass().getSimpleName();
-	}	
+	}
+	
+	protected Group(String name, String description, String displayName) {
+		this(name, description);
+		this._displayName = displayName;
+	}
 	
 }
