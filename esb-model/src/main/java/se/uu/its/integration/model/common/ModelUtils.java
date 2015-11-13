@@ -4,6 +4,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringReader;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.xml.bind.JAXBContext;
@@ -46,10 +48,17 @@ public class ModelUtils {
 		
 		log.debug("Adding new integration event id.");
 		
-		return xsltTransform(xml, "/se/uu/its/integration/model/transform/addIntegrationEventIdToEvent.xsl");
+		Map<String, String> parameters = new HashMap<String, String>();
+		parameters.put("uid", UUID.randomUUID().toString());
+		
+		return xsltTransform(xml, "/se/uu/its/integration/model/transform/addIntegrationEventIdToEvent.xsl", parameters);
 	}
 	
 	public String xsltTransform(String xml, String xsltResourcePath) throws Exception {
+		return xsltTransform(xml, xsltResourcePath, null);
+	}
+	
+	public String xsltTransform(String xml, String xsltResourcePath, Map<String, String> parameters) throws Exception {
 		
 		// get the stylesheet as an inputstream
 		InputStream stylesheet = this.getClass().getResourceAsStream(xsltResourcePath);
@@ -62,10 +71,13 @@ public class ModelUtils {
 		TransformerFactory tFactory = TransformerFactory.newInstance();
 		Transformer transformer = tFactory.newTransformer(new StreamSource(stylesheet));
 
-		// TODO: Should be moved to method signature as parameter.
-		String uid = UUID.randomUUID().toString();
-		log.info("Setting parameter uid: " + uid);
-		transformer.setParameter("uid", uid);
+		if (parameters != null)
+			for (Map.Entry<String, String> parameter : parameters.entrySet()) {
+				log.info("Setting parameter + '" + parameter.getKey() + "': "
+						+ parameter.getValue());
+				transformer.setParameter(parameter.getKey(),
+						parameter.getValue());
+			}
 		
 		// the source and the target
 		StringReader reader = new StringReader(xml);

@@ -68,7 +68,7 @@ public class ModelTransformTest {
 		ModelUtils utily = new ModelUtils();
 		String transformedXml = utily.xsltTransform(groupCreateRequestEventXml, "/se/uu/its/integration/model/transform/groupCreateRequestEventToGouperCreateXmlPayload.xml");
 
-		log.debug(transformedXml);
+		log.info(transformedXml);
 		
 		assertFalse(!transformedXml.equalsIgnoreCase(grouperCrateXmlPayload));
 		
@@ -105,6 +105,10 @@ public class ModelTransformTest {
 		ModelUtils utily = new ModelUtils();
 		String transformedXml = utily.addIntegrationEventIdToEvent(xml);
 
+		AffiliationEvent objectFromXml = (AffiliationEvent) ModelUtils.getUnmarchalledObject(AffiliationEvent.class, transformedXml);	
+
+		log.info("Generated id: " + objectFromXml.getIdentifier());		
+		
 		assertNotNull(transformedXml);
 		
 	}
