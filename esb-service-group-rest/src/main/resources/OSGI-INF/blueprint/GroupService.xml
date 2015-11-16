@@ -15,7 +15,7 @@
 
 	<cm:property-placeholder persistent-id="se.uu.its.integration.esb-service-rest-rest" placeholder-prefix="$(" placeholder-suffix=")">
 		<cm:default-properties>
-			<cm:property name="group.CXFserver" value="http://0.0.0.0:8989/" />
+			<cm:property name="group.CXFserver" value="http://0.0.0.0:8990/" />
 			<cm:property name="group.service" value="esb/rest" />
 		</cm:default-properties>
 	</cm:property-placeholder>
@@ -44,7 +44,7 @@
 	<bean id="messageIdRepo" class="org.apache.camel.processor.idempotent.jpa.JpaMessageIdRepository">
 		<argument index="0" ref="entityManagerFactory"/>
 		<argument index="1" ref="jtaTransactionTemplate" />
-		<argument index="2" value="Identity"/>
+		<argument index="2" value="Group"/>
 	</bean>
 	-->
 
@@ -52,7 +52,7 @@
 	<bean id="messageIdRepo" class="org.apache.camel.processor.idempotent.jdbc.JdbcMessageIdRepository">
 		<argument index="0" ref="messageIdRepoDs"/>
 		<argument index="1" ref="jtaTransactionTemplate" />
-		<argument index="2" value="Identity"/>
+		<argument index="2" value="Group"/>
 	</bean>
 
 	<!-- Transaction used in route. -->
@@ -87,7 +87,7 @@
 		allowUseOriginalMessage="false"
 		xmlns="http://camel.apache.org/schema/blueprint"
 		xmlns:uuie="http://www.uu.se/schemas/integration/2015/Events">
-<!-- 
+
 		<onException id="GeneralRouteException" useOriginalMessage="true">
 
 			<exception>java.lang.RuntimeException</exception>
@@ -101,9 +101,9 @@
 			<inOnly id="Post to dead letter queue" uri="amqdlq:queue:group-event-deadletter" />
 
 			<convertBodyTo type="java.lang.String" />
-			<!- - 400 Producer error: 406 not acceptable otherwise 500
+			<!-- 400 Producer error: 406 not acceptable otherwise 500
 						TODO: Flytta till utility-paket.
-			- ->
+			-->
 			<setHeader headerName="Content-Type"><simple>application/xml</simple></setHeader>
 			<setHeader headerName="CamelHttpResponseCode"><simple>500</simple></setHeader>
 
@@ -112,7 +112,7 @@
 			<stop id="Error handling finished" />
 
 		</onException>
- -->
+
 		<route id="GroupServiceRoute">
 
 			<description>
@@ -121,6 +121,8 @@
 
 			<!-- Listen for calls from REST-binded CXF-service. -->
 			<from id="Group REST endpoint" uri="cxfrs:bean:rsServer?bindingStyle=SimpleConsumer" />
+
+			<log message="Test-2015-11-09: Receiving message " loggingLevel="INFO" logName="se.uu.its.integration.service.group"/>
 
 			<transacted ref="PROPAGATION_REQUIRED" />
 
