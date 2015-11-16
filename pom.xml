@@ -15,6 +15,7 @@
 		<module>esb-amq</module>
 		<module>esb-model</module>
 		<module>esb-service-identity-rest</module>
+		<module>esb-service-group-rest</module>
 		<module>esb-identity-event-distribution</module>
 		<module>sp-identity-adapter</module>
 		<module>esb-rest-client</module>
