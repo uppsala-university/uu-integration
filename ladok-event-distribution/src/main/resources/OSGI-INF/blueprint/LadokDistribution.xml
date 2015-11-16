@@ -13,7 +13,9 @@
         <route id="LadokDistribution">
         
         	<!-- Get the event as raw transport packed events from the distribution queue. -->
-            <from uri="activemq:queue:ladok3-event-distribution" />
+            <from uri="activemq:queue:ladok-distribution" />
+
+	    <!-- TODO: transacted -->
             
             <!-- Remove all transport related XML. -->
             <to uri="xslt:se/uu/its/ladok3/atom/atomwash.xsl"/>
