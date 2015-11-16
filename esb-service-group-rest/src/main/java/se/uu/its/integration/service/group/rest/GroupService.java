@@ -7,7 +7,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import se.uu.its.integration.model.events.GroupCreateRequestEvent;
+import se.uu.its.integration.model.events.GroupEvent;
 
 @Path("/group")
 public class GroupService {
@@ -16,7 +16,7 @@ public class GroupService {
     @Path("/")
     @Consumes(MediaType.APPLICATION_XML)
     @Produces(MediaType.APPLICATION_XML)
-    public Response putCreateGroup(GroupCreateRequestEvent event) {
+    public Response putCreateGroup(GroupEvent event) {
         return null;
     }
 
