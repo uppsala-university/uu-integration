@@ -8,7 +8,7 @@
 	</parent>
 
    	<groupId>se.uu.its.integration</groupId>
-	<artifactId>esb-identity-event-distribution</artifactId>
+	<artifactId>esb-identity-distribution</artifactId>
 	<version>1.0-SNAPSHOT</version>
 	<packaging>bundle</packaging>
 	<name>ESB Identity Event Distribution</name>
