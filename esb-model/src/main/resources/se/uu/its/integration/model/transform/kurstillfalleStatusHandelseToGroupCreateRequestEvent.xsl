@@ -1,31 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0"
-	xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
-	xmlns:uuid="java://java.util.UUID"
-	xmlns:uuie="http://www.uu.se/schemas/integration/2015/Events">
+	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+	xmlns:uuig="http://www.uu.se/schemas/integration/2015/Group"
+	xmlns:uuie="http://www.uu.se/schemas/integration/2015/Events"
+	xmlns:ui="http://schemas.ladok.se/utbildningsinformation"
+	xmlns:events="http://schemas.ladok.se/events"
+	xmlns:base="http://schemas.ladok.se"
+	exclude-result-prefixes="uuig uuie base events ui">
 
-<!-- Does not work with default SMX Camel (xalan) or changed to Saxon (HE). Needs Saxon EE.
-	<xsl:variable name="uid" select="uuid:randomUUID()"/>
-	Moved to camel blueprint definition which pass new uuid as uid parameter.
--->
+	<xsl:output method="xml" omit-xml-declaration="no" indent="yes" standalone="yes"/>
 
-	<xsl:param name="uid" />
+	<xsl:template match="/">
 
-	<!-- Identity transform. -->
-	<xsl:template match="@* | node()">
-		<xsl:param name="appendage"/>
-		<xsl:copy>
-			<xsl:apply-templates select="@* | node()" />
-		</xsl:copy>
+		<uuie:GroupEvent xmlns:uuig="http://www.uu.se/schemas/integration/2015/Group" xmlns:uuie="http://www.uu.se/schemas/integration/2015/Events" xmlns:uuii="http://www.uu.se/schemas/integration/2015/Identity" type="GroupCreateRequestEvent">
+		<uuie:IssuedTime><xsl:value-of select="ui:KurstillfalleTillStatusHandelse/events:Handelsetid"/></uuie:IssuedTime>
+		<uuie:Producer>Ladok</uuie:Producer>
+		<uuie:ProducerReferenceId><xsl:value-of select="ui:KurstillfalleTillStatusHandelse/events:SelfRef/base:Uid"/></uuie:ProducerReferenceId>
+		<uuig:Group type="StudentGroup">
+			<uuig:Name>hkslab:<xsl:value-of select="ui:KurstillfalleTillStatusHandelse/ui:Utbildningstillfalleskod"/></uuig:Name>
+			<uuig:Description>Det här är en automatiskt genererad deltagarlista för ett kurstillfälle.</uuig:Description>
+			<uuig:DisplayName><xsl:value-of select="ui:KurstillfalleTillStatusHandelse/ui:Utbildningstillfalleskod"/></uuig:DisplayName>
+			</uuig:Group>
+		</uuie:GroupEvent>
+
 	</xsl:template>
-
-	<!-- Add the id attribute to the root element. -->
-	<xsl:template match="/*">
-		<xsl:element name="uuie:{local-name(.)}">
-		    <xsl:copy-of select="@*"/>
-            <xsl:attribute name="identifier"><xsl:value-of select="$uid"/></xsl:attribute>
-            <xsl:apply-templates/>
-        </xsl:element>
-    </xsl:template>
 
 </xsl:stylesheet>
