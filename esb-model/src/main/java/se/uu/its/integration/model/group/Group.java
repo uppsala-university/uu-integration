@@ -13,7 +13,7 @@ import se.uu.its.integration.model.events.RoleEvent;
 
 @XmlSeeAlso({AffiliationEvent.class, PersonEvent.class, RoleEvent.class, OrganizationDepartmentMappingEvent.class})
 @XmlRootElement(name = "Group", namespace = "http://www.uu.se/schemas/integration/2015/Group")
-public abstract class Group extends UUIntegrationObject {
+public class Group extends UUIntegrationObject {
 
 	private static final long serialVersionUID = -6510744307597252176L;
 
