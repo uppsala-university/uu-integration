@@ -12,13 +12,10 @@
 
         <route id="LadokDistribution">
 
-        	<!-- Get the event as raw transport packed events from the distribution queue. -->
+            <!-- Get the event as raw transport packed events from the distribution queue. -->
             <from uri="activemq:queue:ladok-distribution" />
 
             <!-- TODO: transacted -->
-
-            <!-- Log washed event XML. -->
- 	          <to uri="activemq:queue:ladok3event-logdb" />
 
             <!-- Filter and distribute the messages to the subscribers. -->
             <multicast stopOnException="true">
@@ -38,11 +35,6 @@
  	            		<to uri="activemq:queue:ladok3event-test-sd" />
             		</filter>
             	</pipeline>
-
-            	<!-- Pipeline for log DB. -->
-            	<pipeline>
- 	            	<to uri="activemq:queue:ladok3event-logdb" />
- 	            </pipeline>
 
             </multicast>
 
