@@ -8,7 +8,7 @@
 	</parent>
 
    	<groupId>se.uu.its.integration</groupId>
-	<artifactId>sp-identity-adapter</artifactId>
+	<artifactId>identity-sp-adapter</artifactId>
 	<version>1.0-SNAPSHOT</version>
 	<packaging>bundle</packaging>
 	<name>SP Identity Adapter</name>
