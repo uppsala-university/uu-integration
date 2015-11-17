@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+	xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd">
+	
+	<cm:property-placeholder persistent-id="se.uu.its.integration.amq">
+		<cm:default-properties>
+			<cm:property name="amq.url" value="tcp://localhost:61616" />
+			<cm:property name="amq.user" value="smx" />
+			<cm:property name="amq.pw" value="smx" />
+		</cm:default-properties>
+	</cm:property-placeholder>
+
+	<bean id="jmsTransactionManager"
+		class="org.springframework.jms.connection.JmsTransactionManager">
+		<property name="connectionFactory" ref="jmsConnectionFactory" />
+	</bean>
+
+	<bean id="jmsConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+		<property name="brokerURL" value="${amq.url}" />
+        <property name="userName" value="${amq.user}" />
+        <property name="password" value="${amq.pw}" />
+	</bean>
+
+	<bean id="activemq" class="org.apache.activemq.camel.component.ActiveMQComponent">
+		<property name="connectionFactory" ref="jmsConnectionFactory" />
+		<property name="transacted" value="true" />
+	</bean>
+
+	<bean id="required" class="org.apache.camel.spring.spi.SpringTransactionPolicy">
+  		<property name="transactionManager" ref="jmsTransactionManager"/>
+  		<property name="propagationBehaviorName" value="PROPAGATION_REQUIRED"/>
+	</bean>
+
+	<camelContext id="GroupDistribution"
+		      xmlns="http://camel.apache.org/schema/blueprint" 
+                      xmlns:uuie="http://www.uu.se/schemas/integration/2015/Events">
+
+		<!-- Distribute identity events to registered consumers -->
+		<route id="GroupDistribution">
+			<description>
+				This is the distribution route for messages in the group event domain.
+			</description>
+
+			<!-- Listen for events on distribution channel. -->
+			<from id="Event distribution consumer" uri="activemq:queue:group-distribution" />
+
+			<!-- Message identifier extracted form message and put in header. -->
+			<setHeader headerName="MessageId">
+				<xpath resultType="java.lang.String">concat(/*/uuie:Producer/text(), "/" , /*/uuie:ProducerReferenceId/text())</xpath>
+			</setHeader>
+
+			<log message="Internal distribution of message $simple{header.MessageId}" loggingLevel="DEBUG" logName="se.uu.its.integration.service.group.distribution"/>
+
+			<transacted ref="required"/>
+
+			<multicast stopOnException="true">
+				<to id="Event distribution for SP" uri="activemq:queue:group-grouper" />
+			</multicast>
+		</route>
+	</camelContext>
+
+</blueprint>
