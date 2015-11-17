@@ -122,9 +122,9 @@
 			<!-- Listen for calls from REST-binded CXF-service. -->
 			<from id="Group REST endpoint" uri="cxfrs:bean:rsServer?bindingStyle=SimpleConsumer" />
 
-			<log message="Test-2015-11-09: Receiving message " loggingLevel="INFO" logName="se.uu.its.integration.service.group"/>
-
 			<transacted ref="PROPAGATION_REQUIRED" />
+
+			<log message="Receiving message " loggingLevel="INFO" logName="se.uu.its.integration.service.group"/>
 
 			<!-- We use XML as internal integration language. -->
 			<marshal id="XML translation">
@@ -146,7 +146,7 @@
 				<!-- <xpath resultType="java.lang.String">concat(/*/uuie:Producer/text(), "/" , /*/uuie:ProducerReferenceId/text())</xpath> -->
 			</setHeader>
 
-			<log message="Test-2015-11-09: Receiving message $simple{header.MessageId}" loggingLevel="DEBUG" logName="se.uu.its.integration.service.group"/>
+			<log message="Receiving message $simple{header.MessageId}" loggingLevel="DEBUG" logName="se.uu.its.integration.service.group"/>
 
 			<!-- Moved to bean cause camel cant load resource from other bundle.
 			TODO: Fix. <Export-Package> in pom?

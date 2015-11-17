@@ -16,7 +16,7 @@ public class GroupService {
     @Path("/")
     @Consumes(MediaType.APPLICATION_XML)
     @Produces(MediaType.APPLICATION_XML)
-    public Response putCreateGroup(GroupEvent event) {
+    public Response createGroup(GroupEvent event) {
         return null;
     }
 
