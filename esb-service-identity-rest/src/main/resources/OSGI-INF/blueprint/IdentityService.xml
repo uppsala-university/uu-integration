@@ -144,7 +144,7 @@
 				<!-- <xpath resultType="java.lang.String">concat(/*/uuie:Producer/text(), "/" , /*/uuie:ProducerReferenceId/text())</xpath> -->
 			</setHeader>
 
-			<log message="Test-2015-11-09: Receiving message $simple{header.MessageId}" loggingLevel="DEBUG" logName="se.uu.its.integration.service.identity"/>
+			<log message="Receiving message $simple{header.MessageId}" loggingLevel="DEBUG" logName="se.uu.its.integration.service.identity"/>
 
 			<!-- Moved to bean cause camel cant load resource from other bundle.
 			TODO: Fix. <Export-Package> in pom?
