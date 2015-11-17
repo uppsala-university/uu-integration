@@ -17,7 +17,7 @@
 		<module>esb-service-group-rest</module>
 		<module>esb-identity-distribution</module>
 		<module>esb-group-distribution</module>
-		<module>grouper-group-adapter</module>
+		<module>group-grouper-adapter</module>
 		<module>sp-identity-adapter</module>
 		<module>esb-rest-client</module>
 	</modules>
