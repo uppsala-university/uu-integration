@@ -9,7 +9,7 @@
 	<name>UU Integration Components</name>
 
 	<modules>
-		<module>ladok-event-distribution</module>
+		<module>esb-ladok-distribution</module>
 		<module>esb-datasource-logdb</module>
 		<module>esb-amq</module>
 		<module>esb-model</module>
