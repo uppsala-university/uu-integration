@@ -96,7 +96,7 @@
 				<constant>true</constant>
 			</handled>
 
-			<log message="Test-2015-11-09: Failed handling message '$simple{body}' due to $simple{exception} $simple{exception.message}" loggingLevel="ERROR" logName="se.uu.its.integration.service.identity"/>
+			<log message="Failed handling message '$simple{body}' due to $simple{exception} $simple{exception.message}" loggingLevel="ERROR" logName="se.uu.its.integration.service.identity"/>
 
 			<inOnly id="Post to dead letter queue" uri="amqdlq:queue:identity-event-deadletter" />
 
@@ -129,7 +129,7 @@
 				<jaxb prettyPrint="true" contextPath="se.uu.its.integration.model.events" />
 			</marshal>
 
-			<!-- Message identifier extracted form message and put in header. -->
+			<!-- Message identifier extracted from message and put in header. -->
 
 			<setHeader headerName="Producer">
 				<xpath resultType="java.lang.String">/*/uuie:Producer/text()</xpath>
