@@ -8,6 +8,7 @@
     <camelContext xmlns="http://camel.apache.org/schema/blueprint"
     				xmlns:ki="http://schemas.ladok.se/kataloginformation"
     				xmlns:sd="http://schemas.ladok.se/studiedeltagande"
+    				xmlns:ui="http://schemas.ladok.se/utbildningsinformation"
     				xmlns:atom="http://www.w3.org/2005/Atom">
 
         <route id="LadokDistribution">
@@ -23,16 +24,8 @@
             	<!-- Pipeline for "system" test KI. -->
             	<pipeline>
             		<filter>
-            			<xpath logNamespaces="true">/ki:UtlandskOrtHandelse</xpath>
- 	            		<to uri="activemq:queue:ladok3event-test-ki" />
-            		</filter>
-            	</pipeline>
-
-				      <!-- Pipeline for "system" test SD. -->
-            	<pipeline>
-             		<filter>
-            			<xpath logNamespaces="true">/sd:AvbrottHandelse</xpath>
- 	            		<to uri="activemq:queue:ladok3event-test-sd" />
+            			<xpath logNamespaces="true">/ui:KurstillfalleTillStatusHandelse and /ui:KurstillfalleTillStatusHandelse/ui:Status/text() = '3'</xpath>
+ 	            		<to uri="activemq:queue:group-distribution" />
             		</filter>
             	</pipeline>
 
