@@ -51,7 +51,7 @@
     <cxf:rsClient id="rsClient"
         address="${grouper.rest.host}/grouper-ws/servicesRest/v2_2_000"
         serviceClass="se.uu.its.integration.grouper.group.GrouperProxy"
-	username="${grouper.rest.user}"
+		username="${grouper.rest.user}"
         password="${grouper.rest.pw}"
         loggingFeatureEnabled="true"/>
 
@@ -68,7 +68,9 @@
 
         <route id="GrouperGroupAdapterRoute" >
 
-            <from uri="amq:queue:group-grouper" />
+			<description>This route pushes group messages to Grouper.</description>
+
+            <from id="Retrieves messages from Grouper outgoing queue" uri="amq:queue:group-grouper" />
 
             <transacted ref="required"/>
 
@@ -83,17 +85,17 @@
 
                     <log message="Grouper adapter processing message $simple{header.MessageId}" loggingLevel="DEBUG" logName="se.uu.its.integration.grouper.group"/>
 
-		    <to uri="xslt:se/uu/its/integration/model/transform/groupCreateRequestEventToGouperCreateXmlPayload.xsl"/>
+		    		<to id="Transforming into ESB internal format" uri="xslt:se/uu/its/integration/model/transform/groupCreateRequestEventToGouperCreateXmlPayload.xsl"/>
 
-		    <setHeader headerName="Content-Type">
-		        <constant>text/xml; charset=UTF-8</constant>
-		    </setHeader>
+				    <setHeader headerName="Content-Type">
+				        <constant>text/xml; charset=UTF-8</constant>
+				    </setHeader>
+		
+				    <setHeader headerName="CamelHttpPath">
+				        <constant>/groups</constant>
+				    </setHeader>
 
-		    <setHeader headerName="CamelHttpPath">
-		        <constant>/groups</constant>
-		    </setHeader>
-
-                    <to uri="cxfrs://bean://rsClient" />
+                    <to id="Pushing request to Grouper" uri="cxfrs://bean://rsClient" />
                 </when>
                 <otherwise>
                     <to uri="amq:queue:grouper-unknown-events?transacted=true" />
