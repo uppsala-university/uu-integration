@@ -23,6 +23,7 @@ import se.uu.its.integration.model.common.ModelUtils;
 import se.uu.its.integration.model.events.AffiliationCreatedEvent;
 import se.uu.its.integration.model.events.AffiliationEvent;
 import se.uu.its.integration.model.events.GroupCreateRequestEvent;
+import se.uu.its.integration.model.events.GroupEvent;
 import se.uu.its.integration.model.group.StudentGroup;
 import se.uu.its.integration.model.identity.Affiliation;
 
@@ -124,28 +125,22 @@ public class ModelTransformTest {
 						"</ui:Kurstillfallesperioder>" +
 					"</ui:KurstillfalleTillStatusHandelse>";
 		
-		log.info(kurstillfalleStatusHandelseXml);
-		
-		String answerXml = new GroupCreateRequestEvent(
+		GroupCreateRequestEvent answer = new GroupCreateRequestEvent(
 				"Ladok", 
 				"4f410159-8d23-11e5-ab9a-fa1faa7b41b5", 
 				new StudentGroup(
 						"hkslab:KT401",
 						"Det här är en automatiskt genererad deltagarlista för ett kurstillfälle.")
-				).toString();
+				);		
 		
 		ModelUtils utily = new ModelUtils();
 		String transformedXml = utily.xsltTransform(kurstillfalleStatusHandelseXml, "/se/uu/its/integration/model/transform/kurstillfalleStatusHandelseToGroupCreateRequestEvent.xsl");
 
-		log.info("Transformed raw XML: " + transformedXml);
-		log.info("Expekted raw XML: " + answerXml);
+		log.info("Transformed XML: " + transformedXml);
 		
-		log.info("Transformed XML: " + transformedXml.replaceAll("\\W+", " "));
-		log.info("Expekted XML " + answerXml.replaceAll("\\W+", " "));
+		GroupEvent transformedEvent = (GroupEvent) ModelUtils.getUnmarchalledObject(GroupEvent.class, transformedXml);
 		
-		assertFalse(!true);
-		// TODO: attribute order differs, must evaluate on other criteria. 
-//		assertFalse(!transformedXml.replaceAll("\\W+", " ").equalsIgnoreCase(answerXml.replaceAll("\\W+", " ")));
+		assertFalse(transformedEvent.getProducerReferenceId() == answer.getProducerReferenceId());
 		
 	}	
 	
