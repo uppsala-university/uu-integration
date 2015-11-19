@@ -13,6 +13,8 @@
 
         <route id="LadokDistribution">
 
+			<description>This route distribute Ladok events to target queues.</description>
+
             <!-- Get the event as raw transport packed events from the distribution queue. -->
             <from uri="activemq:queue:ladok-distribution" />
 
@@ -25,6 +27,9 @@
             	<pipeline>
             		<filter>
             			<xpath logNamespaces="true">/ui:KurstillfalleTillStatusHandelse and /ui:KurstillfalleTillStatusHandelse/ui:Status/text() = '3'</xpath>
+ 	            		
+						<to id="Transforming into ESB internal format" uri="xslt:se/uu/its/integration/model/transform/kurstillfalleStatusHandelseToGroupCreateRequestEvent.xsl"/> 	            		
+ 	            		
  	            		<to uri="activemq:queue:group-distribution" />
             		</filter>
             	</pipeline>
