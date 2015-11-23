@@ -16,6 +16,9 @@ import se.uu.its.integration.model.events.AffiliationDeletedEvent;
 import se.uu.its.integration.model.events.AffiliationEvent;
 import se.uu.its.integration.model.events.AffiliationEventData;
 import se.uu.its.integration.model.events.GroupCreateRequestEvent;
+import se.uu.its.integration.model.events.GroupEvent;
+import se.uu.its.integration.model.events.GroupEventData;
+import se.uu.its.integration.model.events.GroupMembershipCreateRequestEvent;
 import se.uu.its.integration.model.events.OrganizationDepartmentMappingCreatedEvent;
 import se.uu.its.integration.model.events.OrganizationDepartmentMappingDeletedEvent;
 import se.uu.its.integration.model.events.OrganizationDepartmentMappingEvent;
@@ -99,7 +102,7 @@ public class ModelEventsTest {
 		
 		assertTrue("Unmarchalled value of producer is not the same as marchalled object property value.", objectFromXml.getProducer().equalsIgnoreCase(SYSTEM_MESSAGE_PRODUCER_IDENTITY));
 	}	
-	
+
 	@Test 
 	public void testPersonChangedEventFullXml() throws JAXBException {
 		
@@ -406,5 +409,22 @@ public class ModelEventsTest {
 		assertTrue("Unmarchalled value of producer is not the same as marchalled object property value.", objectFromXml.getProducer().equalsIgnoreCase(SYSTEM_MESSAGE_PRODUCER_IDENTITY));
 		
 	}
+
+	@Test
+	public void testGroupMembershipCreateRequestEvent() throws JAXBException {
+
+		GroupMembershipCreateRequestEvent event = new GroupMembershipCreateRequestEvent(
+				SYSTEM_MESSAGE_PRODUCER_GROUP,
+				"Ev294",
+				new StudentGroup("Student group name", "Student group description."),
+				new GroupEventData(new Person("197001010000")));
+		
+		String xml = ModelUtils.getMarchalledObjectXml(GroupMembershipCreateRequestEvent.class, event);
+		System.out.println(xml);
+		
+		GroupEvent objectFromXml = (GroupEvent) ModelUtils.getUnmarchalledObject(GroupEvent.class, xml); 
+		
+		assertTrue("Unmarchalled value of producer is not the same as marchalled object property value.", objectFromXml.getProducer().equalsIgnoreCase(SYSTEM_MESSAGE_PRODUCER_GROUP));
+	}	
 	
 }
