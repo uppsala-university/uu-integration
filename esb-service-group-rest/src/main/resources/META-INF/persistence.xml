@@ -6,43 +6,15 @@
     <persistence-unit name="logDb" transaction-type="JTA">
 
         <provider>org.apache.openjpa.persistence.PersistenceProviderImpl</provider>
-        <!--
-        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-        -->
+
         <jta-data-source>osgi:service/jdbc/UUDS</jta-data-source>
 
         <class>se.uu.its.integration.model.events.UUEvent</class>
-	<!--
-        <class>org.apache.camel.processor.idempotent.jpa.MessageProcessed</class>
-        -->
 
 	<properties>
-          <!-- OpenJPA Properties - ->
-          <property name="openjpa.ConnectionDriverName" value="org.apache.derby.jdbc.ClientDriver.class"/>
-          <property name="openjpa.ConnectionURL" value="jdbc:derby://localhost:1527/demo;create=true"/>
-          <property name="openjpa.Multithreaded" value="true"/>
-          <property name="openjpa.TransactionMode" value="managed"/>
-          <property name="openjpa.ConnectionFactoryMode" value="managed"/>
-          <property name="openjpa.LockManager" value="pessimistic(VersionCheckOnReadLock=true,VersionUpdateOnWriteLock=true)"/>
-          <property name="openjpa.LockTimeout" value="30000"/>
-          <property name="openjpa.jdbc.MappingDefaults" value="ForeignKeyDeleteAction=restrict, JoinForeignKeyDeleteAction=restrict"/>
-          <property name="openjpa.LockManager" value="pessimistic(VersionCheckOnReadLock=true,VersionUpdateOnWriteLock=true)"/>
-          <property name="openjpa.Log" value="DefaultLevel=INFO, Runtime=INFO, Tool=INFO, SQL=INFO"/>
-          <property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema"/>
-          <property name="openjpa.jdbc.DBDictionary" value="derby"/>
-	  -->
           <property name="openjpa.jdbc.DBDictionary" value="mysql"/>
 	</properties>
         
-	<!-- Hibernate Properties - ->
-        <properties>
-            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect" />
-            <property name="hibernate.show_sql" value="true" />
-            <property name="hibernate.format_sql" value="true" />
-            <property name="hibernate.hbm2ddl.auto" value="validate" />
-        </properties>
-        -->
-
     </persistence-unit>
     
 </persistence>
