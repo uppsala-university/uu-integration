@@ -97,6 +97,28 @@
 
                     <to id="Pushing request to Grouper" uri="cxfrs://bean://rsClient" />
                 </when>
+                <when>
+                    <xpath>/uuie:GroupEvent and uuie:GroupEvent/@type = 'GroupMembershipCreateRequestEvent'</xpath>
+
+                    <!-- Message identifier extracted form message and put in header. -->
+                    <setHeader headerName="MessageId">
+                        <xpath resultType="java.lang.String">concat(/*/uuie:Producer/text(), "/" , /*/uuie:ProducerReferenceId/text())</xpath>
+                    </setHeader>
+
+                    <log message="Grouper adapter processing message $simple{header.MessageId}" loggingLevel="DEBUG" logName="se.uu.its.integration.grouper.group"/>
+
+		    		<to id="Transforming into ESB internal format" uri="xslt:se/uu/its/integration/model/transform/groupMembershipCreateRequestEventToGouperCreateXmlPayload.xsl"/>
+
+				    <setHeader headerName="Content-Type">
+				        <constant>text/xml; charset=UTF-8</constant>
+				    </setHeader>
+		
+				    <setHeader headerName="CamelHttpPath">
+				        <constant>/groups</constant>
+				    </setHeader>
+
+                    <to id="Pushing request to Grouper" uri="cxfrs://bean://rsClient" />
+                </when>                
                 <otherwise>
                     <to uri="amq:queue:grouper-unknown-events?transacted=true" />
                 </otherwise>
