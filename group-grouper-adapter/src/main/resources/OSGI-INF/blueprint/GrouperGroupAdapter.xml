@@ -76,7 +76,7 @@
 
             <choice>
                 <when>
-                    <xpath>/uuie:GroupEvent</xpath>
+                    <xpath>/uuie:GroupEvent and uuie:GroupEvent/@type = 'GroupCreateRequestEvent'</xpath>
 
                     <!-- Message identifier extracted form message and put in header. -->
                     <setHeader headerName="MessageId">
