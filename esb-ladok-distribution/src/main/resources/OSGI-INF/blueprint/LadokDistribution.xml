@@ -5,14 +5,14 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd">
 
+	<bean id="ladokUiClient" class="se.sunet.ati.ladok.rest.services.impl.UtbildningsinformationImpl.UtbildningsinformationImpl" />
+
     <camelContext id="LadokDistribution"
     				xmlns="http://camel.apache.org/schema/blueprint"
     				xmlns:ki="http://schemas.ladok.se/kataloginformation"
     				xmlns:sd="http://schemas.ladok.se/studiedeltagande"
     				xmlns:ui="http://schemas.ladok.se/utbildningsinformation"
     				xmlns:atom="http://www.w3.org/2005/Atom">
-
-		<bean id="ladokUiClient" class="se.sunet.ati.ladok.rest.services.impl.UtbildningsinformationImpl.UtbildningsinformationImpl" />
 
         <route id="LadokDistribution">
 
