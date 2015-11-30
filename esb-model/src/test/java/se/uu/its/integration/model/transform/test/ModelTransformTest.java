@@ -6,6 +6,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.xml.bind.JAXBException;
@@ -24,17 +26,71 @@ import se.uu.its.integration.model.events.AffiliationCreatedEvent;
 import se.uu.its.integration.model.events.AffiliationEvent;
 import se.uu.its.integration.model.events.GroupCreateRequestEvent;
 import se.uu.its.integration.model.events.GroupEvent;
+import se.uu.its.integration.model.events.GroupEventData;
+import se.uu.its.integration.model.events.GroupMembershipCreateRequestEvent;
 import se.uu.its.integration.model.group.StudentGroup;
 import se.uu.its.integration.model.identity.Affiliation;
+import se.uu.its.integration.model.identity.Person;
 
 public class ModelTransformTest {
 
 	private Log log = LogFactory.getLog(this.getClass());
+	static final String STUDENT_LOCAL_ID = "stud1234";
+	static final String STUDENT_PERSON_NUMBER = "197001011234";
+	static final String KURSTILFALLESKOD = "KT001";
+	static final String MESSAGE_PRODUCER_LADOK = "Ladok";
+	static final String LADOK_MESSAGE_ID = "9bf85736-975b-11e5-b128-543fc12c43e6";
+	
+	
+	@Test
+	public void testForvantatDeltagandeSkapadHandelseToGroupMembershipCreateRequest() throws Exception {
+
+		String ladokForvantatDeltagandeSkapadHandelseXml = 
+				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+			    "<sd:ForvantatDeltagandeSkapadHandelse xmlns:sd=\"http://schemas.ladok.se/studiedeltagande\" xmlns:dap=\"http://schemas.ladok.se/dap\" xmlns:service=\"http://schemas.ladok.se/service\" xmlns:events=\"http://schemas.ladok.se/events\" xmlns:base=\"http://schemas.ladok.se\">" +
+			    		"<events:EventContext>" + 
+			    			"<events:DoldForExternaSystem>false</events:DoldForExternaSystem>" +
+			    			"<events:LarosateID>43</events:LarosateID>" +
+			    		"</events:EventContext>" +
+			    		"<events:Handelsetid>2015-11-30T13:12:21.923</events:Handelsetid>" +
+			    		"<events:HandelseUID>" + LADOK_MESSAGE_ID + "</events:HandelseUID>" +
+			    		"<sd:Senaredelmarkering>false</sd:Senaredelmarkering>" +
+			    		"<sd:StudentUID>bdcdda52-12e5-4f73-b21a-9b5a49ca987a</sd:StudentUID>" +
+			    		"<sd:Studieavgiftsbetalning>studiedeltagande.domain.studieavgiftsbetalningsvarde.ej_aktuell</sd:Studieavgiftsbetalning>" +
+			    		"<sd:TillfallesantagningUID>9bf6a985-975b-11e5-b128-543fc12c43e6</sd:TillfallesantagningUID>" +
+			    		"<sd:UtbildningstillfalleUID>2cdf0716-975b-11e5-bc73-c14909054451</sd:UtbildningstillfalleUID>" +
+			    "</sd:ForvantatDeltagandeSkapadHandelse>";
+
+		Map<String, String> parameters = new HashMap<String, String>();
+		parameters.put("studentId", STUDENT_LOCAL_ID);
+		parameters.put("kurstillfalleKod", KURSTILFALLESKOD);
+		parameters.put("personNumber", STUDENT_PERSON_NUMBER);
+	
+		ModelUtils utily = new ModelUtils();
+		String transformedXml = utily.xsltTransform(ladokForvantatDeltagandeSkapadHandelseXml, "/se/uu/its/integration/model/transform/forvantatDeltagandeSkapadHandelseToGroupMembershipCreateRequestEvent.xsl", parameters);
+		GroupEvent transformedEvent = (GroupEvent) ModelUtils.getUnmarchalledObject(GroupEvent.class, transformedXml);
+		
+		GroupMembershipCreateRequestEvent groupMembershipCreateRequestEvent = new GroupMembershipCreateRequestEvent(
+				"Ladok", 
+				LADOK_MESSAGE_ID, 
+				new StudentGroup(
+						"hkslab:g1",
+						"This is the first Group",
+						"Group 1"),
+				new GroupEventData(
+						new Person(STUDENT_LOCAL_ID, STUDENT_PERSON_NUMBER))
+				);
+		String groupMembershipCreateRequestEventXml = groupMembershipCreateRequestEvent.toString();
+
+		log.info("Transformed XML: " + transformedXml);
+		log.info("Expekted XML: " + groupMembershipCreateRequestEventXml);
+		
+		assertTrue(transformedEvent.getProducerReferenceId().equalsIgnoreCase(groupMembershipCreateRequestEvent.getProducerReferenceId()));
+	
+	}
 	
 	@Test
 	public void testGroupCreateRequestEventToGouperCreateXmlPayload() throws Exception {
-		
-		log.info("TEST");
 		
 		String grouperCrateXmlPayload =
 				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
