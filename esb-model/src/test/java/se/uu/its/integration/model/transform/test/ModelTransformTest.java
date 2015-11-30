@@ -40,7 +40,7 @@ public class ModelTransformTest {
 	static final String KURSTILFALLESKOD = "KT001";
 	static final String MESSAGE_PRODUCER_LADOK = "Ladok";
 	static final String LADOK_MESSAGE_ID = "9bf85736-975b-11e5-b128-543fc12c43e6";
-	
+	static final String GROUPER_GROUP_IDENTIFIER = "hkslab:g1"; 
 	
 	@Test
 	public void testForvantatDeltagandeSkapadHandelseToGroupMembershipCreateRequest() throws Exception {
@@ -88,11 +88,46 @@ public class ModelTransformTest {
 		assertTrue(transformedEvent.getProducerReferenceId().equalsIgnoreCase(groupMembershipCreateRequestEvent.getProducerReferenceId()));
 	
 	}
+
+	@Test 
+	public void testGroupMembershipCreateRequestToGrouperXmlPayload() throws Exception {
+		
+		String grouperCreateXmlPayload =
+				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+				"<WsRestAddMemberRequest>" +
+						"<wsGroupLookup>" +
+							"<groupName>" + GROUPER_GROUP_IDENTIFIER + "</groupName>" +
+						"</wsGroupLookup>" +
+						"<subjectLookups>" +
+							"<WsSubjectLookup>" +
+								"<subjectId>" + STUDENT_LOCAL_ID + "</subjectId>" +
+							"</WsSubjectLookup>" +
+						"</subjectLookups>" +
+				"</WsRestAddMemberRequest>";				
+		
+		String groupMembershipCreateRequestEventXml = new GroupMembershipCreateRequestEvent(
+				"Ladok", 
+				LADOK_MESSAGE_ID, 
+				new StudentGroup(
+						"hkslab:g1",
+						"This is the first Group",
+						"Group 1"),
+				new GroupEventData(
+						new Person(STUDENT_LOCAL_ID, STUDENT_PERSON_NUMBER))
+				).toString();
+		
+		ModelUtils utily = new ModelUtils();
+		String transformedXml = utily.xsltTransform(groupMembershipCreateRequestEventXml, "/se/uu/its/integration/model/transform/groupMembershipCreateRequestEventToGouperCreateXmlPayload.xml");		
+				
+		log.info("Transformed XML: " + transformedXml);
+		
+		assertTrue(transformedXml.equalsIgnoreCase(grouperCreateXmlPayload));
+	}
 	
 	@Test
 	public void testGroupCreateRequestEventToGouperCreateXmlPayload() throws Exception {
 		
-		String grouperCrateXmlPayload =
+		String grouperCreateXmlPayload =
 				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
 				"<WsRestGroupSaveRequest>" +
 				  "<wsGroupToSaves>" +
@@ -109,7 +144,7 @@ public class ModelTransformTest {
 				  "</wsGroupToSaves>" +
 				"</WsRestGroupSaveRequest>";
 		
-		log.info(grouperCrateXmlPayload);
+		log.info(grouperCreateXmlPayload);
 		
 		String groupCreateRequestEventXml = new GroupCreateRequestEvent(
 				"test", 
@@ -127,7 +162,7 @@ public class ModelTransformTest {
 
 		log.info(transformedXml);
 		
-		assertFalse(!transformedXml.equalsIgnoreCase(grouperCrateXmlPayload));
+		assertFalse(!transformedXml.equalsIgnoreCase(grouperCreateXmlPayload));
 		
 	}	
 	
