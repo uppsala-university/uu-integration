@@ -49,6 +49,11 @@ public class Person extends UUIntegrationObject {
 		this.lastname = lastname;
 	}
 	
+	public Person(String identifier, String personNumber) {
+		this.identifier = identifier;
+		this.personNumber = personNumber;
+	}
+	
 	public Person(String personNumber) {
 		this.identifier = personNumber;
 		this.personNumber = personNumber;
