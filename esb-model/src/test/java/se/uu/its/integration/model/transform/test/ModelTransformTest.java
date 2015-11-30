@@ -118,7 +118,9 @@ public class ModelTransformTest {
 		
 		ModelUtils utily = new ModelUtils();
 		String transformedXml = utily.xsltTransform(groupMembershipCreateRequestEventXml, "/se/uu/its/integration/model/transform/groupMembershipCreateRequestEventToGouperCreateXmlPayload.xml");		
-				
+		
+		log.info("Source XML: " + groupMembershipCreateRequestEventXml);
+		
 		log.info("Transformed XML: " + transformedXml);
 		
 		assertTrue(transformedXml.equalsIgnoreCase(grouperCreateXmlPayload));
