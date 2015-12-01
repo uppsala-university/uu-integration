@@ -1,79 +1,88 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<blueprint
-    xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
-    xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd">
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+	xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd">
 
-	<bean id="ladokUiClient" class="se.sunet.ati.ladok.rest.services.impl.UtbildningsinformationImpl.UtbildningsinformationImpl" />
+	<reference id="ladokUiClient"
+		interface="se.sunet.ati.ladok.rest.services.Utbildningsinformation"
+		filter="(osgi.jndi.service.name=ladok/UI)" />
 
-    <camelContext id="LadokDistribution"
-    				xmlns="http://camel.apache.org/schema/blueprint"
-    				xmlns:ki="http://schemas.ladok.se/kataloginformation"
-    				xmlns:sd="http://schemas.ladok.se/studiedeltagande"
-    				xmlns:ui="http://schemas.ladok.se/utbildningsinformation"
-    				xmlns:atom="http://www.w3.org/2005/Atom">
+	<camelContext id="LadokDistribution"
+		xmlns="http://camel.apache.org/schema/blueprint" xmlns:ki="http://schemas.ladok.se/kataloginformation"
+		xmlns:sd="http://schemas.ladok.se/studiedeltagande" xmlns:ui="http://schemas.ladok.se/utbildningsinformation"
+		xmlns:atom="http://www.w3.org/2005/Atom">
 
-        <route id="LadokDistribution">
+		<route id="LadokDistribution">
 
-			<description>This route distribute Ladok events to target queues.</description>
+			<description>This route distribute Ladok events to target queues.
+			</description>
 
-            <!-- Get the event as raw transport packed events from the distribution queue. -->
-            <from uri="activemq:queue:ladok-distribution" />
+			<!-- Get the event as raw transport packed events from the distribution 
+				queue. -->
+			<from uri="activemq:queue:ladok-distribution" />
 
-            <!-- TODO: transacted -->
+			<!-- TODO: transacted -->
 
-            <!-- Filter and distribute the messages to the subscribers. -->
-            <multicast stopOnException="true">
+			<!-- Filter and distribute the messages to the subscribers. -->
+			<multicast stopOnException="true">
 
-            	<!-- Pipeline for KurstillfalleTillStatusHandelse where status = 3 ("Komplett") to new group request. -->
-            	<pipeline>
-            		<filter>
-            			<xpath logNamespaces="true">/ui:KurstillfalleTillStatusHandelse and /ui:KurstillfalleTillStatusHandelse/ui:Status/text() = '3'</xpath>
- 	            		
-						<to id="Transforming into ESB internal format" uri="xslt:se/uu/its/integration/model/transform/kurstillfalleStatusHandelseToGroupCreateRequestEvent.xsl"/> 	            		
- 	            		
- 	            		<to uri="activemq:queue:group-distribution" />
-            		</filter>
-            	</pipeline>
+				<!-- Pipeline for KurstillfalleTillStatusHandelse where status = 3 ("Komplett") 
+					to new group request. -->
+				<pipeline>
+					<filter>
+						<xpath logNamespaces="true">/ui:KurstillfalleTillStatusHandelse and
+							/ui:KurstillfalleTillStatusHandelse/ui:Status/text() = '3'
+						</xpath>
 
-            	<!-- Pipeline for ForvantatDeltagandeSkapadHandelse to new group membership request. ). -->
-            	<pipeline>
-            		<filter>
-            			<xpath logNamespaces="true">/sd:ForvantatDeltagandeSkapadHandelse</xpath>
- 	            		
- 	            		<!-- Extract UID for use of selection of code. -->
-	                    <setHeader headerName="utbildningsfillfalleUID">
-	                    	<xpath logNamespaces="true">/sd:ForvantatDeltagandeSkapadHandelse/sd:UtbildningstillfalleUID</xpath>
-	                    </setHeader>
+						<to id="Transforming into ESB internal format"
+							uri="xslt:se/uu/its/integration/model/transform/kurstillfalleStatusHandelseToGroupCreateRequestEvent.xsl" />
 
- 	            		<!-- We need more information. Enriching through transformation. -->
-	                    <setHeader headerName="kurstillfalleKod">
-	                        <to uri="bean:ladokUiClient?method=hamtaUtbildningstillfalleViaUtbildningsUtbildningstillfalleUID(${header.utbildningsfillfalleUID})"/> 
-	                        <simple>${body.tillfalleskod}</simple>
-	                    </setHeader> 	            		
+						<to uri="activemq:queue:group-distribution" />
+					</filter>
+				</pipeline>
 
- 	            		<!-- Extract student UID for use of selection of code. -->
-	                    <setHeader headerName="studentUID">
-	                    	<xpath logNamespaces="true">/sd:ForvantatDeltagandeSkapadHandelse/sd:StudentUID</xpath>
-	                    </setHeader>
+				<!-- Pipeline for ForvantatDeltagandeSkapadHandelse to new group membership 
+					request. ). -->
+				<pipeline>
+					<filter>
+						<xpath logNamespaces="true">/sd:ForvantatDeltagandeSkapadHandelse
+						</xpath>
 
- 	            		<!-- Extract student identifier for use of selection of code. -->
-	                    <setHeader headerName="studentId">
-	                    	<!-- TODO: Get local UU-identifier from AKKA. -->
-	                    	<constant>marja992</constant>
-	                    </setHeader>
- 	            		
-						<to id="Transforming into ESB internal format" uri="xslt:se/uu/its/integration/model/transform/forvantatDeltagandeSkapadHandelseToGroupMembershipCreateRequestEvent.xsl"/> 	            		
- 	            		
- 	            		<to uri="activemq:queue:group-distribution" />
-            		</filter>
-            	</pipeline>
+						<!-- Extract UID for use of selection of code. -->
+						<setHeader headerName="utbildningsfillfalleUID">
+							<xpath logNamespaces="true">/sd:ForvantatDeltagandeSkapadHandelse/sd:UtbildningstillfalleUID
+							</xpath>
+						</setHeader>
 
-            </multicast>
+						<!-- We need more information. Enriching through transformation. -->
+						<setHeader headerName="kurstillfalleKod">
+							<simple>${bean:ladokUiClient?method=hamtaUtbildningstillfalleViaUtbildningsUtbildningstillfalleUID(${header.utbildningsfillfalleUID}).tillfalleskod}</simple>
+						</setHeader>
 
-        </route>
+						<!-- Extract student UID for use of selection of code. -->
+						<setHeader headerName="studentUID">
+							<xpath logNamespaces="true">/sd:ForvantatDeltagandeSkapadHandelse/sd:StudentUID
+							</xpath>
+						</setHeader>
 
-    </camelContext>
+						<!-- Extract student identifier for use of selection of code. -->
+						<setHeader headerName="studentId">
+							<!-- TODO: Get local UU-identifier from AKKA. -->
+							<constant>marja992</constant>
+						</setHeader>
+
+						<to id="Transforming into ESB internal format"
+							uri="xslt:se/uu/its/integration/model/transform/forvantatDeltagandeSkapadHandelseToGroupMembershipCreateRequestEvent.xsl" />
+
+						<to uri="activemq:queue:group-distribution" />
+					</filter>
+				</pipeline>
+
+			</multicast>
+
+		</route>
+
+	</camelContext>
 
 </blueprint>
