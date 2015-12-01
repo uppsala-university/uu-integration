@@ -31,9 +31,7 @@
 					to new group request. -->
 				<pipeline>
 					<filter>
-						<xpath logNamespaces="true">/ui:KurstillfalleTillStatusHandelse and
-							/ui:KurstillfalleTillStatusHandelse/ui:Status/text() = '3'
-						</xpath>
+						<xpath>/ui:KurstillfalleTillStatusHandelse and /ui:KurstillfalleTillStatusHandelse/ui:Status/text() = '3'</xpath>
 
 						<to id="Transforming into ESB internal format"
 							uri="xslt:se/uu/its/integration/model/transform/kurstillfalleStatusHandelseToGroupCreateRequestEvent.xsl" />
@@ -42,18 +40,17 @@
 					</filter>
 				</pipeline>
 
-				<!-- Pipeline for ForvantatDeltagandeSkapadHandelse to new group membership 
-					request. ). -->
+				<!-- Pipeline for ForvantatDeltagandeSkapadHandelse to new group membership request. ). -->
 				<pipeline>
 					<filter>
-						<xpath logNamespaces="true">/sd:ForvantatDeltagandeSkapadHandelse
-						</xpath>
+						<xpath>/sd:ForvantatDeltagandeSkapadHandelse</xpath>
 
 						<!-- Extract UID for use of selection of code. -->
 						<setHeader headerName="utbildningsfillfalleUID">
-							<xpath logNamespaces="true">/sd:ForvantatDeltagandeSkapadHandelse/sd:UtbildningstillfalleUID
-							</xpath>
+							<xpath>/sd:ForvantatDeltagandeSkapadHandelse/sd:UtbildningstillfalleUID/text()</xpath>
 						</setHeader>
+
+						<log message="Kurstillfalleskod $simple{header.utbildningsfillfalleUID}" loggingLevel="INFO" logName="se.uu.its.integration.ladok.distribution"/>
 
 						<!-- We need more information. Enriching through transformation. -->
 						<setHeader headerName="kurstillfalleKod">
@@ -62,8 +59,7 @@
 
 						<!-- Extract student UID for use of selection of code. -->
 						<setHeader headerName="studentUID">
-							<xpath logNamespaces="true">/sd:ForvantatDeltagandeSkapadHandelse/sd:StudentUID
-							</xpath>
+							<xpath>/sd:ForvantatDeltagandeSkapadHandelse/sd:StudentUID/text()</xpath>
 						</setHeader>
 
 						<!-- Extract student identifier for use of selection of code. -->
