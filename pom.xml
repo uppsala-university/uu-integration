@@ -20,6 +20,7 @@
 		<module>group-grouper-adapter</module>
 		<module>identity-sp-adapter</module>
 		<module>esb-rest-client</module>
+		<module>uu-integration-packaging-karaf</module>
 	</modules>
 
 	<properties>
