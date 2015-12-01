@@ -11,7 +11,7 @@
 	<artifactId>identity-sp-adapter</artifactId>
 	<version>1.0-SNAPSHOT</version>
 	<packaging>bundle</packaging>
-	<name>SP Identity Adapter</name>
+	<name>Identity SP Adapter</name>
 
     <dependencies>
          <dependency>
