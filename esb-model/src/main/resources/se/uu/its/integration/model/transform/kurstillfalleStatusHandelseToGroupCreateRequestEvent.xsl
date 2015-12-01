@@ -11,12 +11,19 @@
 	<xsl:output method="xml" omit-xml-declaration="no" indent="yes" standalone="yes"/>
 
 	<xsl:template match="/">
-
+<!--  
 		<uuie:GroupEvent xmlns:uuig="http://www.uu.se/schemas/integration/2015/Group" xmlns:uuie="http://www.uu.se/schemas/integration/2015/Events" xmlns:uuii="http://www.uu.se/schemas/integration/2015/Identity" type="GroupCreateRequestEvent">
+-->
+		<uuie:GroupEvent xmlns:uuig="http://www.uu.se/schemas/integration/2015/Group" xmlns:uuie="http://www.uu.se/schemas/integration/2015/Events" xmlns:uuii="http://www.uu.se/schemas/integration/2015/Identity">
+		<xsl:attribute name="type">GroupCreateRequestEvent</xsl:attribute>
 		<uuie:IssuedTime><xsl:value-of select="ui:KurstillfalleTillStatusHandelse/events:Handelsetid"/></uuie:IssuedTime>
 		<uuie:Producer>Ladok</uuie:Producer>
 		<uuie:ProducerReferenceId><xsl:value-of select="ui:KurstillfalleTillStatusHandelse/events:SelfRef/base:Uid"/></uuie:ProducerReferenceId>
+<!--  
 		<uuig:Group type="StudentGroup">
+-->
+		<uuig:Group>
+			<xsl:attribute name="type">StudentGroup</xsl:attribute>
 			<uuig:Name>hkslab:<xsl:value-of select="ui:KurstillfalleTillStatusHandelse/ui:Utbildningstillfalleskod"/></uuig:Name>
 			<uuig:Description>Det här är en automatiskt genererad deltagarlista för ett kurstillfälle.</uuig:Description>
 			<uuig:DisplayName><xsl:value-of select="ui:KurstillfalleTillStatusHandelse/ui:Utbildningstillfalleskod"/></uuig:DisplayName>
