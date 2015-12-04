@@ -15,23 +15,25 @@
 
 		<route id="LadokDistribution">
 
-			<description>This route distribute Ladok events to target queues.
-			</description>
+			<description>This route distribute Ladok events to target queues.</description>
 
 			<!-- Get the event as raw transport packed events from the distribution 
 				queue. -->
 			<from uri="activemq:queue:ladok-distribution" />
 
+			<log message="Distributing messages from new Ladok." loggingLevel="INFO" logName="se.uu.its.integration.ladok.distribution"/>
+
 			<!-- TODO: transacted -->
 
 			<!-- Filter and distribute the messages to the subscribers. -->
-			<multicast stopOnException="true">
+			<multicast id="Process all messages everywhere" stopOnException="true">
 
 				<!-- Pipeline for KurstillfalleTillStatusHandelse where status = 3 ("Komplett") 
 					to new group request. -->
-				<pipeline>
-					<filter>
+				<pipeline id="New group request">
+					<filter id="New group based on published course occation">
 						<xpath>/ui:KurstillfalleTillStatusHandelse and /ui:KurstillfalleTillStatusHandelse/ui:Status/text() = '3'</xpath>
+						<log message="New group based on published course occation." loggingLevel="INFO" logName="se.uu.its.integration.ladok.distribution"/>
 
 						<to id="Transforming into ESB internal format"
 							uri="xslt:se/uu/its/integration/model/transform/kurstillfalleStatusHandelseToGroupCreateRequestEvent.xsl" />
@@ -41,8 +43,8 @@
 				</pipeline>
 
 				<!-- Pipeline for ForvantatDeltagandeSkapadHandelse to new group membership request. ). -->
-				<pipeline>
-					<filter>
+				<pipeline id="New group membership request">
+					<filter id="New group membershiop based on admission">
 						<xpath>/sd:ForvantatDeltagandeSkapadHandelse</xpath>
 
 						<!-- Extract UID for use of selection of code. -->
@@ -54,8 +56,10 @@
 
 						<!-- We need more information. Enriching through transformation. -->
 						<setHeader headerName="kurstillfalleKod">
-							<simple>${bean:ladokUiClient?method=hamtaUtbildningstillfalleViaUtbildningsUtbildningstillfalleUID(${header.utbildningsfillfalleUID}).tillfalleskod}</simple>
+							<simple>${bean:ladokUiClient?method=hamtaUtbildningstillfalleViaUtbildningsUtbildningstillfalleUID(${header.utbildningsfillfalleUID}).getTillfalleskod()}</simple>
 						</setHeader>
+
+						<log message="kurstillfalleKod: $simple{header.kurstillfalleKod}" loggingLevel="INFO" logName="se.uu.its.integration.ladok.distribution"/>
 
 						<!-- Extract student UID for use of selection of code. -->
 						<setHeader headerName="studentUID">
@@ -67,6 +71,10 @@
 							<!-- TODO: Get local UU-identifier from AKKA. -->
 							<constant>marja992</constant>
 						</setHeader>
+
+						<log message="studentId: $simple{header.studentId}" loggingLevel="INFO" logName="se.uu.its.integration.ladok.distribution"/>
+
+<setHeader headerName="myParam"><constant>42</constant></setHeader>
 
 						<to id="Transforming into ESB internal format"
 							uri="xslt:se/uu/its/integration/model/transform/forvantatDeltagandeSkapadHandelseToGroupMembershipCreateRequestEvent.xsl" />
