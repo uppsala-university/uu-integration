@@ -10,12 +10,11 @@
 
 	<xsl:output method="xml" omit-xml-declaration="no" indent="yes" standalone="yes"/>
 
-	<xsl:template match="/">
+	<xsl:param name="studentId" />
+	<xsl:param name="kurstillfalleKod" />
+	<xsl:param name="personNumber" />
 
-		<xsl:param name="studentId" />
-		<xsl:param name="kurstillfalleKod" />
-		<xsl:param name="personNumber" />
-		
+	<xsl:template match="/">
 
 		<!-- TODO: identifierare på kurs och student måste först slås upp och skickas in till transformationen som parametrar. -->
 		<uuie:GroupEvent xmlns:uuig="http://www.uu.se/schemas/integration/2015/Group" xmlns:uuie="http://www.uu.se/schemas/integration/2015/Events" xmlns:uuii="http://www.uu.se/schemas/integration/2015/Identity" type="GroupMembershipCreateRequestEvent">
