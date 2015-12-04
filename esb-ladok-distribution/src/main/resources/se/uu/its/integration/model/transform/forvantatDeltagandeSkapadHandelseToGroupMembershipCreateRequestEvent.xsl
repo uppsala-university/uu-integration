@@ -24,7 +24,7 @@
 		    <uuie:ProducerReferenceId><xsl:value-of select="sd:ForvantatDeltagandeSkapadHandelse/events:HandelseUID"/></uuie:ProducerReferenceId>
 		    <uuig:Group>
 		    	<xsl:attribute name="type">StudentGroup</xsl:attribute>
-		        <uuig:Name>hkslab:<xsl:value-of select="$studentId" /></uuig:Name>
+		        <uuig:Name>hkslab:<xsl:value-of select="$kurstillfalleKod" /></uuig:Name>
 		        <uuig:Description>This is the first Group</uuig:Description>
 		    </uuig:Group>
 		    <uuie:GroupEventData>
