@@ -36,11 +36,13 @@
 
   <feature name="esb-service-group-rest" version="1.0.0-SNAPSHOT" description="ESB Group REST Service">
     <feature version="1.0.0-SNAPSHOT">esb-rest-common</feature>
+    <bundle>mvn:se.uu.its.integration/esb-model/1.1.0-SNAPSHOT</bundle>
     <bundle>mvn:se.uu.its.integration/esb-service-group-rest/1.0-SNAPSHOT</bundle>
   </feature>
 
   <feature name="esb-service-identity-rest" version="1.0.0-SNAPSHOT" description="ESB Identity REST Service">
     <feature version="1.0.0-SNAPSHOT">esb-rest-common</feature>
+    <bundle>mvn:se.uu.its.integration/esb-model/1.1.0-SNAPSHOT</bundle>
     <bundle>mvn:se.uu.its.integration/esb-service-identity-rest/1.0-SNAPSHOT</bundle>
   </feature>
 
@@ -56,7 +58,6 @@
     <bundle>mvn:org.osgi/org.osgi.enterprise/4.2.0</bundle>
     -->
     <bundle>mvn:org.apache.geronimo.specs/geronimo-j2ee-connector_1.5_spec/2.0.0</bundle>
-    <bundle>mvn:se.uu.its.integration/esb-model/1.1.0-SNAPSHOT</bundle>
   </feature>
 
   <feature name="esb-identity-distribution" version="1.0.0-SNAPSHOT" description="ESB Identity Event Distribution">
