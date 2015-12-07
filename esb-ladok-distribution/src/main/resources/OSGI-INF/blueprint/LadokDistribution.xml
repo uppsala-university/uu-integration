@@ -74,8 +74,6 @@
 
 						<log message="studentId: $simple{header.studentId}" loggingLevel="INFO" logName="se.uu.its.integration.ladok.distribution"/>
 
-<setHeader headerName="myParam"><constant>42</constant></setHeader>
-
 						<to id="Transforming into ESB internal format"
 							uri="xslt:se/uu/its/integration/model/transform/forvantatDeltagandeSkapadHandelseToGroupMembershipCreateRequestEvent.xsl" />
 
