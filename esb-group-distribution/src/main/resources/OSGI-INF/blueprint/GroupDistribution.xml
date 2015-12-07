@@ -56,7 +56,7 @@
 			<transacted ref="required"/>
 
 			<multicast stopOnException="true">
-				<to id="Event distribution for SP" uri="activemq:queue:group-grouper" />
+				<to id="Event distribution to Grouper" uri="activemq:queue:group-grouper" />
 			</multicast>
 		</route>
 	</camelContext>
