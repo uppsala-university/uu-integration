@@ -18,7 +18,7 @@ sudo rm /opt/servicemix/apache-servicemix-*/deploy; sudo mkdir /opt/servicemix/a
 sudo cp /vagrant/smx/mariadb-java-client-1.1.7.ja /opt/servicemix/apache-servicemix-*/deploy/
 
 sudo cp /vagrant/smx/esb-model-1.0-SNAPSHOT.jar /opt/servicemix/apache-servicemix-*/deploy/
-sudo cp /vagrant/smx/esb-event-logger-0.0.1-SNAPSHOT.jar /opt/servicemix/apache-servicemix-*/deploy/
+sudo cp /vagrant/smx/esb-event-logger-1.0.0-SNAPSHOT.jar /opt/servicemix/apache-servicemix-*/deploy/
 sudo cp /vagrant/smx/esb-service-identity-rest-1.0-SNAPSHOT.jar /opt/servicemix/apache-servicemix-*/deploy/
 
 less +F /var/lib/servicemix/log/servicemix.log

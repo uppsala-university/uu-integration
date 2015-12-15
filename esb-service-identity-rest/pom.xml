@@ -6,12 +6,12 @@
     <parent>
     	<artifactId>uu-integration</artifactId>
     	<groupId>se.uu.its.integration</groupId>
-    	<version>0.0.1-SNAPSHOT</version>
+    	<version>1.0.0-SNAPSHOT</version>
     </parent>
 
     <groupId>se.uu.its.integration</groupId>
     <artifactId>esb-service-identity-rest</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>bundle</packaging>
     <name>ESB Identity REST Service</name>
     <description>ESB Identity REST Service OSGi bundle project.</description>
@@ -20,7 +20,7 @@
         <dependency>
             <groupId>se.uu.its.integration</groupId>
             <artifactId>esb-model</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1.1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.camel</groupId>
