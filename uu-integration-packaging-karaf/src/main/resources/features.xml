@@ -58,6 +58,7 @@
   </feature>
 
   <feature name="esb-ladok-distribution" version="1.0.0-SNAPSHOT" description="Ladok Event Distribution">
+    <bundle>mvn:se.sunet.ati.ladok/ladok3rest-client/0.0.1-SNAPSHOT</bundle>
     <bundle>mvn:se.uu.its.integration/esb-ladok-distribution/1.0-SNAPSHOT</bundle>
   </feature>
 
