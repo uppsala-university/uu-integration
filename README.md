@@ -4,8 +4,18 @@ UU Integration
 Uppsala University integration components.
 
 
+Dependencies
+------------
+
+UU integration depends on common-integration, ladok, and ladok-integration. They are all available on github:
+
+https://github.com/uppsala-university
+
+
 Build
 -----
+
+Build the respective projects (common-integration, ladok, ladok-integration, and uu-integration) using maven:
 
     mvn install
 
