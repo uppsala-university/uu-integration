@@ -20,10 +20,16 @@ Build the respective projects (common-integration, ladok, ladok-integration, and
     mvn install
 
 
-Deploy
-------
+Deploy in Karaf/Servicemix
+--------------------------
 
-In Karaf/Servicemix shell:
+Karaf has the ability to load features and OSGi bundles either by dropping them in the deploy folder or by
+logging in to the Karaf shell and deploying them by a set of deploy commands.
+
+Karaf will look for bundles and features referenced by a 'mvn:'-url in the local maven repository and in any
+additional repositories specified in $SERVICEMIX_HOME/etc/org.ops4j.pax.url.mvn.cfg.
+
+To deploy all of the UU Integration features and bundles, In Karaf/Servicemix shell type the following commands:
 
     features:addurl mvn:se.uu.its.integration/uu-integration-packaging-karaf/1.0.0-SNAPSHOT/xml/features
     features:install uu-integration-all
