@@ -29,7 +29,7 @@ logging in to the Karaf shell and deploying them by a set of deploy commands.
 Karaf will look for bundles and features referenced by a 'mvn:'-url in the local maven repository and in any
 additional repositories specified in $SERVICEMIX_HOME/etc/org.ops4j.pax.url.mvn.cfg.
 
-To deploy all of the UU Integration features and bundles, In Karaf/Servicemix shell type the following commands:
+To deploy all of the UU Integration features and bundles, in Karaf/Servicemix shell type the following commands:
 
     features:addurl mvn:se.uu.its.integration/uu-integration-packaging-karaf/1.0.0-SNAPSHOT/xml/features
     features:install uu-integration-all
@@ -57,5 +57,4 @@ And after building with maven on the host system, do
 (assuming /opt/servicemix is configured as guest system home of ServiceMix, otherwise you can configure
 wich directory to use in $SERVICEMIX_HOME/etc/org.ops4j.pax.url.mvn.cfg)
 
-After that you should be able to follow the instructions in section 'Deploy'.
-
+After that you should be able to follow the instructions in section 'Deploy in Karaf/Servicemix'.
