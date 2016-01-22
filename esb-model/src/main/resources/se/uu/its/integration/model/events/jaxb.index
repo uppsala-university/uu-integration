@@ -8,6 +8,9 @@ OrganizationDepartmentMappingDeletedEvent
 OrganizationDepartmentMappingEvent
 PersonEvent
 PersonEventData
+PersonDeletedEvent
+PersonCreatedEvent
+PersonChangedEvent
 RoleCreatedEvent
 RoleDeletedEvent
 RoleEvent
