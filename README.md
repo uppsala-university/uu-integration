@@ -17,11 +17,13 @@ Build
 
 Build the respective projects (common-integration, ladok, ladok-integration, and uu-integration) using maven:
 
-    mvn install
+    mvn install -Dmaven.test.skip=true
 
 
 Deploy in Karaf/Servicemix
 --------------------------
+
+(IF you are running in a Vagrant environment see "Vagrant" section below)
 
 Karaf has the ability to load features and OSGi bundles either by dropping them in the deploy folder or by
 logging in to the Karaf shell and deploying them by a set of deploy commands.
