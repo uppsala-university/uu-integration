@@ -78,7 +78,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
-                        <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+                        <Bundle-SymbolicName>${project.artifactId}; blueprint.timeout:=5000</Bundle-SymbolicName>
                         <Bundle-Version>${project.version}</Bundle-Version>
                         <Import-Package>
                         	*,
