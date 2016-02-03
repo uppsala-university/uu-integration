@@ -15,6 +15,5 @@ Deploy
 
 In Karaf/Servicemix shell:
 
-    # features:repo-add mvn:se.uu.its.integration/uu-integration-packaging-karaf/1.0.0-SNAPSHOT/xml/features
-    features:addurl mvn:se.uu.its.integration/uu-integration-packaging-karaf/1.0.0-SNAPSHOT/xml/features
-    features:install uu-integration-all
+    feature:repo-add mvn:se.uu.its.integration/uu-integration-packaging-karaf/1.0.0-SNAPSHOT/xml/features
+    feature:install uu-integration-all
