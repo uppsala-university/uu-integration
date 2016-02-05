@@ -52,6 +52,7 @@
   <feature name="esb-common" version="1.0.0-SNAPSHOT" description="Common ESB dependencies">
     <feature>activemq-camel</feature>
     <bundle>wrap:mvn:xalan/xalan/2.7.2</bundle>
+    <bundle>wrap:mvn:xalan/serializer/2.7.2</bundle>
   </feature>
 
   <feature name="esb-identity-distribution" version="1.0.0-SNAPSHOT" description="ESB Identity Event Distribution">
