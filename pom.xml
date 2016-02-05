@@ -10,8 +10,6 @@
 
 	<modules>
 		<module>esb-ladok-distribution</module>
-		<module>esb-datasource-logdb</module>
-		<module>esb-amq</module>
 		<module>esb-model</module>
 		<module>esb-service-identity-rest</module>
 		<module>esb-service-group-rest</module>
