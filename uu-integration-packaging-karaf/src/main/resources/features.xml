@@ -3,8 +3,8 @@
 
   <repository>mvn:se.sunet.ati.integration/common-integration-packaging-karaf/1.0.0-SNAPSHOT/xml/features</repository>
   <repository>mvn:se.sunet.ati.integration.ladok/ladok-integration-packaging-karaf/1.0.0-SNAPSHOT/xml/features</repository>
-  <repository>mvn:org.apache.camel.karaf/apache-camel/2.16.2/xml/features</repository>
-  <repository>mvn:org.apache.activemq/activemq-karaf/5.13.0/xml/features</repository>
+  <repository>mvn:org.apache.camel.karaf/apache-camel/2.16.0/xml/features</repository>
+  <repository>mvn:org.apache.activemq/activemq-karaf/5.12.1/xml/features</repository>
 
   <!-- To automatically install a feature in ServiceMix >= 6.0.0: install="auto" -->
   <feature name="uu-integration-all" version="1.0.0-SNAPSHOT" description="All UU integration features">
@@ -42,7 +42,7 @@
     <feature>camel-sql</feature>
     <feature>camel-jaxb</feature>
     <feature>jndi</feature>
-    <feature>connector</feature>
+    <feature>activemq</feature>
     <!-- Not available?:
     <bundle>mvn:org.osgi/org.osgi.enterprise/4.2.0</bundle>
     -->
@@ -50,13 +50,12 @@
   </feature>
 
   <feature name="esb-common" version="1.0.0-SNAPSHOT" description="Common ESB dependencies">
-    <feature>activemq-camel</feature>
     <bundle>wrap:mvn:xalan/xalan/2.7.2</bundle>
-    <bundle>wrap:mvn:xalan/serializer/2.7.2</bundle>
   </feature>
 
   <feature name="esb-identity-distribution" version="1.0.0-SNAPSHOT" description="ESB Identity Event Distribution">
     <feature>esb-common</feature>
+    <feature>activemq</feature>
     <bundle>mvn:se.uu.its.integration/esb-identity-distribution/1.0.0-SNAPSHOT</bundle>
   </feature>
 
@@ -67,6 +66,10 @@
 
   <feature name="esb-ladok-distribution" version="1.0.0-SNAPSHOT" description="Ladok Event Distribution">
     <feature>esb-common</feature>
+    <feature>camel-cxf</feature>
+    <feature>camel-blueprint</feature>
+    <feature>activemq-client</feature>
+    <feature>camel-jms</feature>
     <bundle>mvn:se.sunet.ati.ladok/ladok3rest-client/1.0.0-SNAPSHOT</bundle>
     <bundle>mvn:se.uu.its.integration/esb-ladok-distribution/1.0.0-SNAPSHOT</bundle>
   </feature>
