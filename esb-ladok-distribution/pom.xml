@@ -6,13 +6,11 @@
 		<artifactId>uu-integration</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
-	
-    <groupId>se.uu.its.integration</groupId>
+  <groupId>se.uu.its.integration</groupId>
 	<artifactId>esb-ladok-distribution</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 	<packaging>bundle</packaging>
 	<name>Ladok Event Distribution</name>
-
 	<build>
 		<plugins>
 			<plugin>
@@ -25,8 +23,11 @@
             			<Bundle-Description>${project.description}</Bundle-Description>
             			<Import-Package>
             				se.sunet.ati.ladok.rest.dto.utbildningsinformation,
-            				se.sunet.ati.ladok.rest.services
-						</Import-Package>
+            				se.sunet.ati.ladok.rest.services,
+										org.springframework.jms.connection,
+										org.apache.activemq,
+										org/apache/activemq/camel/component
+									</Import-Package>
           			</instructions>
         		</configuration>
 			</plugin>
