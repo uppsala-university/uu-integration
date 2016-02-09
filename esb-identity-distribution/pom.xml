@@ -7,7 +7,7 @@
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 
-   	<groupId>se.uu.its.integration</groupId>
+	<groupId>se.uu.its.integration</groupId>
 	<artifactId>esb-identity-distribution</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 	<packaging>bundle</packaging>
@@ -22,6 +22,5 @@
 			</plugin>
 		</plugins>
 	</build>
-
 
 </project>
