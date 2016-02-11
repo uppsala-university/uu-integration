@@ -16,6 +16,11 @@
     <name>ESB Identity REST Service</name>
     <description>ESB Identity REST Service OSGi bundle project.</description>
 
+    <properties>
+      <camel.version>2.16.0</camel.version>
+      <openjpa.version>2.2.0</openjpa.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>se.uu.its.integration</groupId>
@@ -25,7 +30,7 @@
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-cxf</artifactId>
-            <version>2.15.0</version>
+            <version>${camel.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.geronimo.specs</groupId>
@@ -35,18 +40,18 @@
         <dependency>
             <groupId>org.apache.openjpa</groupId>
             <artifactId>openjpa</artifactId>
-            <version>2.3.0</version>
+            <version>${openjpa.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-jpa</artifactId>
-            <version>2.15.0</version>
+            <version>${camel.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-sql</artifactId>
-            <version>2.15.0</version>
+            <version>${camel.version}</version>
         </dependency>
         <dependency>
             <groupId>org.mariadb.jdbc</groupId>
@@ -73,32 +78,34 @@
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Version>${project.version}</Bundle-Version>
                         <Import-Package>
-                        	*,
-                        	com.mysql.jdbc,
-				org.apache.openjpa.persistence
+                          javax.sql,
+                          javax.ws.rs,
+                          javax.ws.rs.core,
+                          javax.persistence,
+                          javax.transaction,
+                          org.osgi.service.jdbc,
+                          org.osgi.service.blueprint,
+                          org.springframework.transaction,
+                          org.springframework.transaction.support,
+                          org.springframework.transaction.jta,
+                          com.mysql.jdbc,
+                          org.apache.camel.component.jms,
+                          org.apache.camel.component.jpa,
+                          org.apache.camel.processor.idempotent.jdbc,
+                          org.apache.camel.spring.spi,
+                          org.apache.openjpa.persistence,
+                          org.apache.openjpa.enhance,
+                          org.apache.openjpa.util,
+                          se.uu.its.integration.model.common,
+                          se.uu.its.integration.model.events
                         </Import-Package>
-                        <!--
-                        <Import-Package>
-                        	*,
-                        	com.mysql.jdbc,
-                        	org.hibernate,
-                        	org.hibernate.ejb,
-                        	javax.sql,
-                        	javax.persistence,
-                        	javax.persistence.criteria,
-                        	org.hibernate.proxy,
-                        	javassist.util.proxy,
-                        	org.apache.activemq,
-                        	javax.transaction;version="[1.1,2)"
-                        </Import-Package>
-                        -->
                         <!--
                         <Include-Resource>
                         	../esb-model/src/main/resources/se/uu/its/integration/model/transform/addIntegrationEventIdToEvent.xsl,
                         	{maven-resources}
                         </Include-Resource>
                         -->
-			<Meta-Persistence>META-INF/persistence.xml</Meta-Persistence>
+                        <Meta-Persistence>META-INF/persistence.xml</Meta-Persistence>
                     </instructions>
                 </configuration>
             </plugin>
