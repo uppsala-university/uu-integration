@@ -193,8 +193,9 @@
 				    <body><simple>${bean:modelUtils?method=convertToUUEvent}</simple></body>
 				</wireTap>
 				-->
-				
-				<to id="Save message to log db" uri="jpa:se.uu.its.integration.model.events.UUEvent?persistenceUnit=logDb" />
+
+				<to id="Convert to UUEvent" uri="bean:modelUtils?method=convertToUUEvent" />
+				<to id="Log processed events" uri="jpa:se.uu.its.integration.model.events.UUEvent?persistenceUnit=logDb" />
 
 				<marshal id="XML translation again">
 					<jaxb prettyPrint="true" contextPath="se.uu.its.integration.model.events" />
