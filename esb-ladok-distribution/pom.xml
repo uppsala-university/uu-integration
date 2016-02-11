@@ -6,18 +6,18 @@
 		<artifactId>uu-integration</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
-  <groupId>se.uu.its.integration</groupId>
+ 	<groupId>se.uu.its.integration</groupId>
 	<artifactId>esb-ladok-distribution</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 	<packaging>bundle</packaging>
-	<name>Ladok Event Distribution</name>
+	<name>ESB Ladok Event Distribution</name>
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.felix</groupId>
 				<artifactId>maven-bundle-plugin</artifactId>
 				<extensions>true</extensions>
-        		<configuration>
+       				<configuration>
           			<instructions>
             			<Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
             			<Bundle-Description>${project.description}</Bundle-Description>
