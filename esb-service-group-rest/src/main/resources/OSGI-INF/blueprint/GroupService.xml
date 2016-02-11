@@ -191,9 +191,12 @@
 					<jaxb prettyPrint="true" contextPath="se.uu.its.integration.model.events" />
 				</unmarshal>
 
+				<!-- Could not wiretap this since it will start a new transaction outside XA scope  
 				<wireTap id="Save message to log db" uri="jpa:se.uu.its.integration.model.events.UUEvent?persistenceUnit=logDb">
 				    <body><simple>${bean:modelUtils?method=convertToUUEvent}</simple></body>
 				</wireTap>
+				-->
+				<to id="Save message to log db" uri="jpa:se.uu.its.integration.model.events.UUEvent?persistenceUnit=logDb" />
 
 				<marshal id="XML translation again">
 					<jaxb prettyPrint="true" contextPath="se.uu.its.integration.model.events" />
