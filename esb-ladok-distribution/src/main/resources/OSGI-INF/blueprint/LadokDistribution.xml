@@ -9,29 +9,29 @@
 		interface="se.sunet.ati.ladok.rest.services.Utbildningsinformation"
 		filter="(osgi.jndi.service.name=ladok/UI)" />
 
-		<cm:property-placeholder persistent-id="se.uu.its.integration.amq">
-			<cm:default-properties>
-				<cm:property name="amq.url" value="tcp://localhost:61617" />
-				<cm:property name="amq.user" value="admin" />
-				<cm:property name="amq.pw" value="admin" />
-			</cm:default-properties>
-		</cm:property-placeholder>
+	<cm:property-placeholder persistent-id="se.uu.its.integration.amq">
+		<cm:default-properties>
+			<cm:property name="amq.url" value="tcp://localhost:61617" />
+			<cm:property name="amq.user" value="admin" />
+			<cm:property name="amq.pw" value="admin" />
+		</cm:default-properties>
+	</cm:property-placeholder>
 
-		<bean id="jmsTransactionManager"
-			class="org.springframework.jms.connection.JmsTransactionManager">
-			<property name="connectionFactory" ref="jmsConnectionFactory" />
-		</bean>
+	<bean id="jmsTransactionManager"
+		class="org.springframework.jms.connection.JmsTransactionManager">
+		<property name="connectionFactory" ref="jmsConnectionFactory" />
+	</bean>
 
-		<bean id="jmsConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
-			<property name="brokerURL" value="${amq.url}" />
+	<bean id="jmsConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+		<property name="brokerURL" value="${amq.url}" />
 	        <property name="userName" value="${amq.user}" />
 	        <property name="password" value="${amq.pw}" />
-		</bean>
+	</bean>
 
-		<bean id="activemq" class="org.apache.activemq.camel.component.ActiveMQComponent">
-			<property name="connectionFactory" ref="jmsConnectionFactory" />
-			<property name="transacted" value="true" />
-		</bean>
+	<bean id="activemq" class="org.apache.activemq.camel.component.ActiveMQComponent">
+		<property name="connectionFactory" ref="jmsConnectionFactory" />
+		<property name="transacted" value="true" />
+	</bean>
 
 	<camelContext id="LadokDistribution"
 		xmlns="http://camel.apache.org/schema/blueprint" xmlns:ki="http://schemas.ladok.se/kataloginformation"
