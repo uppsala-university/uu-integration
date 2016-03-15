@@ -12,7 +12,7 @@
 		http://camel.apache.org/schema/blueprint http://camel.apache.org/schema/blueprint/camel-blueprint.xsd
 		http://aries.apache.org/xmlns/jpa/v1.0.0 http://aries.apache.org/xmlns/jpa/v1.0.0" >
 
-	<cm:property-placeholder persistent-id="se.uu.its.integration.esb-service-identity-rest" placeholder-prefix="$(" placeholder-suffix=")">
+	<cm:property-placeholder persistent-id="se.uu.its.integration" placeholder-prefix="$(" placeholder-suffix=")">
 		<cm:default-properties>
 			<cm:property name="id.CXFserver" value="http://0.0.0.0:8989/" />
 			<cm:property name="id.service" value="esb/rest" />

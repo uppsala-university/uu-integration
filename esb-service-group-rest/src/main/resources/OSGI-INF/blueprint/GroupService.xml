@@ -12,10 +12,10 @@
 		http://camel.apache.org/schema/blueprint http://camel.apache.org/schema/blueprint/camel-blueprint.xsd
 		http://aries.apache.org/xmlns/jpa/v1.0.0 http://aries.apache.org/xmlns/jpa/v1.0.0" >
 
-	<cm:property-placeholder persistent-id="se.uu.its.integration.esb-service-rest-rest" placeholder-prefix="$(" placeholder-suffix=")">
+	<cm:property-placeholder persistent-id="se.uu.its.integration" placeholder-prefix="$(" placeholder-suffix=")">
 		<cm:default-properties>
 			<cm:property name="group.CXFserver" value="http://0.0.0.0:8990/" />
-			<cm:property name="group.service" value="esb/rest" />
+			<cm:property name="group.service"   value="esb/rest" />
 		</cm:default-properties>
 	</cm:property-placeholder>
 
@@ -40,7 +40,7 @@
 	<bean id="jpa" class="org.apache.camel.component.jpa.JpaComponent">
 		<property name="entityManagerFactory" ref="entityManagerFactory" />
 		<property name="transactionManager" ref="transactionManager" />
-  </bean>
+    </bean>
 
 	<!-- JPA idempotent Camel component configured with Hibernate and JTA - ->
 	<bean id="messageIdRepo" class="org.apache.camel.processor.idempotent.jpa.JpaMessageIdRepository">

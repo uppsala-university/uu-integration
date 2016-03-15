@@ -4,7 +4,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd">
 
-	<cm:property-placeholder persistent-id="se.uu.its.integration.amq">
+	<cm:property-placeholder persistent-id="se.sunet.ati.integration.common">
 		<cm:default-properties>
 			<cm:property name="amq.url" value="tcp://localhost:61617" />
 			<cm:property name="amq.user" value="admin" />
@@ -46,14 +46,14 @@
 			<!-- Listen for events on distribution channel. -->
 			<from id="Event distribution consumer" uri="activemq:queue:group-distribution" />
 
+			<transacted ref="required"/>
+
 			<!-- Message identifier extracted form message and put in header. -->
 			<setHeader headerName="MessageId">
 				<xpath resultType="java.lang.String">concat(/*/uuie:Producer/text(), "/" , /*/uuie:ProducerReferenceId/text())</xpath>
 			</setHeader>
 
 			<log message="Internal distribution of message $simple{header.MessageId}" loggingLevel="DEBUG" logName="se.uu.its.integration.service.group.distribution"/>
-
-			<transacted ref="required"/>
 
 			<multicast stopOnException="true">
 				<to id="Event distribution to Grouper" uri="activemq:queue:group-grouper" />

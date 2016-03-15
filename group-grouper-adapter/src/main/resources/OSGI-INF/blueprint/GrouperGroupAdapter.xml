@@ -5,21 +5,19 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd">
 
-    <!-- Properties from /opt/servicemix/apache-servicemix-5.4.0/etc/se.uu.its.integration.amq.cfg -->
-    <cm:property-placeholder persistent-id="se.uu.its.integration.amq" placeholder-prefix="$(" placeholder-suffix=")">
+    <cm:property-placeholder persistent-id="se.sunet.ati.integration.common" placeholder-prefix="$(" placeholder-suffix=")">
         <cm:default-properties>
-            <cm:property name="amq.url" value="tcp://localhost:61617" />
+            <cm:property name="amq.url"  value="tcp://localhost:61617" />
             <cm:property name="amq.user" value="smx" />
-            <cm:property name="amq.pw" value="smx" />
+            <cm:property name="amq.pw"   value="smx" />
         </cm:default-properties>
     </cm:property-placeholder>
 
-    <!-- Properties from /opt/servicemix/apache-servicemix-5.4.0/etc/se.uu.its.integration.uu-integration.cfg -->
-    <cm:property-placeholder persistent-id="se.uu.its.integration.group-grouper-adapter">
+    <cm:property-placeholder persistent-id="se.uu.its.integration">
         <cm:default-properties>
-            <cm:property name="grouper.rest.user" value="grouperuser"/>
-            <cm:property name="grouper.rest.pw" value="Testpass"/>
             <cm:property name="grouper.rest.host" value="https://grouper-utv.its.uu.se"/>
+            <cm:property name="grouper.rest.user" value="GROUPER_USER"/>
+            <cm:property name="grouper.rest.pw"   value="GROUPER_PASSWORD"/>
         </cm:default-properties>
     </cm:property-placeholder>
 
