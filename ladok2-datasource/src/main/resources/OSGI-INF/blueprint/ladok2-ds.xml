@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+           xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.0.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://www.osgi.org/xmlns/blueprint/v1.0.0
+                               http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
+                               http://aries.apache.org/xmlns/jpa/v1.1.0
+                               http://aries.apache.org/schemas/jpa/jpa_110.xsd">
+
+    <cm:property-placeholder persistent-id="se.uu.its.integration">
+        <cm:default-properties>
+            <cm:property name="ladok2.read.url"  value="LADOK2_READ_URL"/>
+            <cm:property name="ladok2.read.user" value="LADOK2_READ_USER"/>
+            <cm:property name="ladok2.read.pw"   value="LADOK2_READ_PW"/>
+        </cm:default-properties>
+    </cm:property-placeholder>
+
+    <bean id="dataSource" class="com.mysql.jdbc.jdbc2.optional.MysqlDataSource">
+        <property name="url"          value="${ladok2.read.url}"/>
+        <property name="user"         value="${ladok2.read.user}"/>
+        <property name="password"     value="${ladok2.read.pw}"/>
+    </bean>
+
+    <service interface="javax.sql.DataSource" ref="dataSource">
+         <service-properties>
+            <entry key="osgi.jndi.service.name" value="jdbc/ladok2ReadDs"/>
+        </service-properties>
+    </service>
+
+</blueprint>
