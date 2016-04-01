@@ -1,0 +1,2 @@
+esb.sql.test: |
+    select * from CAMEL_MESSAGEPROCESSED

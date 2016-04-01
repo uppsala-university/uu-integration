@@ -9,6 +9,9 @@
   <!-- We need a newer version of CXF since Camel 2.16.0 adds buggy 3.1.2 -->
   <repository>mvn:org.apache.cxf.karaf/apache-cxf/3.1.5/xml/features</repository>
 
+  <!-- Needed for ladok2-datasource feature -->
+  <repository>mvn:org.ops4j.pax.jdbc/pax-jdbc-features/0.7.0/xml/features</repository>
+
   <feature name="uu-integration-all" version="1.0.0-SNAPSHOT" description="All UU integration features">
      <feature version="1.0.0-SNAPSHOT">esb-service-group-rest</feature>
      <feature version="1.0.0-SNAPSHOT">esb-service-identity-rest</feature>
@@ -18,6 +21,9 @@
      <feature version="1.0.0-SNAPSHOT">group-grouper-adapter</feature>
      <feature version="1.0.0-SNAPSHOT">identity-sp-adapter</feature>
      <feature version="1.0.0-SNAPSHOT">ladok-atom-adapter</feature>
+     <!--
+     <feature version="1.0.0-SNAPSHOT">ladok2-groups</feature>
+     -->
   </feature>
 
   <feature name="esb-service-group-rest" version="1.0.0-SNAPSHOT" description="ESB Group REST Service">
@@ -84,6 +90,23 @@
     <feature>camel-cxf</feature>
     <bundle>mvn:se.uu.its.integration/esb-model/1.1.0-SNAPSHOT</bundle>
     <bundle>mvn:se.uu.its.integration/identity-sp-adapter/1.0.0-SNAPSHOT</bundle>
+  </feature>
+
+  <feature name="ladok2-groups" version="1.0.0-SNAPSHOT" description="Ladok 2 Groups">
+    <feature>camel-spring</feature>
+    <feature>camel-blueprint</feature>
+    <feature version="[3,4)">spring-jdbc</feature>
+    <feature version="1.0.0-SNAPSHOT">common-logdb-datasource</feature>
+    <feature version="1.0.0-SNAPSHOT">ladok2-datasource</feature>
+    <bundle>mvn:org.yaml/snakeyaml/1.16</bundle>
+    <bundle>mvn:se.uu.its.integration/ladok2-groups/1.0.0-SNAPSHOT</bundle>
+  </feature>
+
+  <feature name="ladok2-datasource" version="1.0.0-SNAPSHOT" description="Ladok 2 Datasource">
+    <feature>connector</feature>
+    <feature>pax-jdbc-spec</feature>
+    <bundle>mvn:mysql/mysql-connector-java/5.1.35</bundle>
+    <bundle>mvn:se.uu.its.integration/ladok2-datasource/1.0.0-SNAPSHOT</bundle>
   </feature>
 
 </features>

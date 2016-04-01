@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<blueprint default-activation="eager"
+    xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.0.0"
+    xmlns:cxf="http://camel.apache.org/schema/blueprint/cxf"
+    xmlns:jpa="http://aries.apache.org/xmlns/jpa/v1.0.0"
+    xmlns:ext="http://aries.apache.org/blueprint/xmlns/blueprint-ext/v1.2.0"
+    xsi:schemaLocation="
+        http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
+        http://camel.apache.org/schema/blueprint http://camel.apache.org/schema/blueprint/camel-blueprint.xsd
+        http://aries.apache.org/xmlns/jpa/v1.0.0 http://aries.apache.org/xmlns/jpa/v1.0.0" >
+
+    <!--
+    <cm:property-placeholder persistent-id="se.uu.its.integration" placeholder-prefix="$(" placeholder-suffix=")">
+        <cm:default-properties>
+            <cm:property name="host" value="http://0.0.0.0:8990/" />
+        </cm:default-properties>
+    </cm:property-placeholder>
+    -->
+
+    <reference id="esbDs" interface="javax.sql.DataSource" filter="(osgi.jndi.service.name=jdbc/UUDS)" />
+
+    <reference id="ladok2ReadDs" interface="javax.sql.DataSource" filter="(osgi.jndi.service.name=jdbc/ladok2ReadDs)" />
+    
+    <bean id="ladok2Groups" class="se.uu.its.integration.ladok2groups.Ladok2Groups">
+        <property name="esbDs" ref="esbDs" />
+        <property name="ladok2ReadDs" ref="ladok2ReadDs" />
+    </bean>
+
+    <camelContext id="Ladok2Groups"
+        allowUseOriginalMessage="false"
+        xmlns="http://camel.apache.org/schema/blueprint"
+        xmlns:uuie="http://www.uu.se/schemas/integration/2015/Events">
+
+        <onException id="GeneralRouteException" useOriginalMessage="true">
+
+            <exception>java.lang.RuntimeException</exception>
+
+            <handled>
+                <constant>true</constant>
+            </handled>
+
+            <log message="Failed handling message '$simple{body}' due to $simple{exception} $simple{exception.message}" loggingLevel="ERROR" logName="se.uu.its.integration.ladok2groups"/>
+
+            <stop id="Error handling finished" />
+
+        </onException>
+
+        <route id="Ladok2GroupsRoute">
+
+            <description>Update Ladok 2 group event table</description>
+
+            <from id="Ladok 2 Groups timer" uri="timer://ladok?fixedRate=true&amp;period=60000&amp;repeatCount=0" />
+
+            <to id="Ladok 2 Groups Event table update" uri="bean:ladok2Groups?method=updateGroupEvents" />
+
+            <log message="Ladok 2 Groups Events table updated: '$simple{body}' " loggingLevel="INFO" logName="se.uu.its.integration.ladok2groups"/>
+
+            <stop id="Handling finished" />
+
+        </route>
+
+    </camelContext>
+
+</blueprint>
