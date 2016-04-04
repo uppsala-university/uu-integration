@@ -16,9 +16,9 @@
     <description>Ladok 2 datasource</description>
 
     <dependencies>
-        <dependency>
+        <dependency> <!-- mysql-connector-java-uu-osgi has a modified OSGi manifest that accepts any version numbers for javax packages -->
             <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
+            <artifactId>mysql-connector-java-uu-osgi</artifactId>
             <version>5.1.35</version>
         </dependency>
     </dependencies>

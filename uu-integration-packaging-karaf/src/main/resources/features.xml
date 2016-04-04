@@ -105,7 +105,7 @@
   <feature name="ladok2-datasource" version="1.0.0-SNAPSHOT" description="Ladok 2 Datasource">
     <feature>connector</feature>
     <feature>pax-jdbc-spec</feature>
-    <bundle>mvn:mysql/mysql-connector-java/5.1.35</bundle>
+    <bundle>mvn:mysql/mysql-connector-java-uu-osgi/5.1.35</bundle>
     <bundle>mvn:se.uu.its.integration/ladok2-datasource/1.0.0-SNAPSHOT</bundle>
   </feature>
 
