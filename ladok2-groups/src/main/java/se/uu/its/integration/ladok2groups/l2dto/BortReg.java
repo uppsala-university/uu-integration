@@ -1,4 +1,5 @@
-package se.uu.its.integration.ladok2groups.dto;
+package se.uu.its.integration.ladok2groups.l2dto;
+
 
 
 public class BortReg extends PnrEvent {
@@ -6,7 +7,6 @@ public class BortReg extends PnrEvent {
 	String kurskod;
     String urtabell;
     String urpost;
-	String origin;
 
 	public String getKurskod() {
 		return kurskod;
@@ -26,18 +26,12 @@ public class BortReg extends PnrEvent {
 	public void setUrpost(String urpost) {
 		this.urpost = urpost;
 	}
-	public String getOrigin() {
-		return origin;
-	}
-	public void setOrigin(String origin) {
-		this.origin = origin;
-	}
 	
 	@Override
 	public String toString() {
 		return "BortReg [datum=" + datum + ", tid=" + tid + ", pnr=" + pnr
 				+ ", kurskod=" + kurskod + ", urtabell=" + urtabell
-				+ ", urpost=" + urpost + ", origin=" + origin + "]";
+				+ ", urpost=" + urpost + "]";
 	}
 	
 }

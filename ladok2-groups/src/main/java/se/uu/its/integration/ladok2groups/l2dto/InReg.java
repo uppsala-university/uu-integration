@@ -1,4 +1,5 @@
-package se.uu.its.integration.ladok2groups.dto;
+package se.uu.its.integration.ladok2groups.l2dto;
+
 
 public class InReg extends PnrEvent {
 	

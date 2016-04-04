@@ -6,6 +6,7 @@ public class GroupEvent {
 	
 	Long id;
 	Date date;
+	String pnr;
 	
 	// TODO
 }

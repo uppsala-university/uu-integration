@@ -9,10 +9,10 @@ import javax.sql.DataSource;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
-import se.uu.its.integration.ladok2groups.dto.Avliden;
-import se.uu.its.integration.ladok2groups.dto.BortReg;
-import se.uu.its.integration.ladok2groups.dto.InReg;
-import se.uu.its.integration.ladok2groups.dto.Reg;
+import se.uu.its.integration.ladok2groups.l2dto.Avliden;
+import se.uu.its.integration.ladok2groups.l2dto.BortReg;
+import se.uu.its.integration.ladok2groups.l2dto.InReg;
+import se.uu.its.integration.ladok2groups.l2dto.Reg;
 
 public class Ladok2Groups {
 	
@@ -37,12 +37,11 @@ public class Ladok2Groups {
 			List<InReg> inregs = query(l2Jdbc(), InReg.class, l2Sql.getInRegSql(), "datum", date, "tid", time);
 			List<Avliden> avlid = query(l2Jdbc(), Avliden.class, l2Sql.getAvlidenSql(), "datum", date);
 			// List<Tst> es = query(getEsbJdbc(), Tst.class, esbSql.getTest());
-			rs =  "Ladok 2 groups update : " 
-			        + "\n - - - - - - - - - - "
-			        + "\n ==> " + regs.size() + ", " + regs.get(0)
-			        + "\n ==> " + inregs.size() + ", " + inregs.get(0)
-			        + "\n ==> " + bortregs.size() + ", " + bortregs.get(0)
-			        + "\n ==> " + avlid.size() + ", " + avlid.get(0)
+			rs =  "- - - - - - - - - -" 
+			        + "\n - " + regs.size() + ", " + regs.get(0)
+			        + "\n - " + inregs.size() + ", " + inregs.get(0)
+			        + "\n - " + bortregs.size() + ", " + bortregs.get(0)
+			        + "\n - " + avlid.size() + ", " + avlid.get(0)
 			        + "\n - - - - - - - - - - ";
 		} catch (Exception e) {
 			rs = "Ladok 2 groups update : " +  e.getClass()  + " "  + e.getMessage();

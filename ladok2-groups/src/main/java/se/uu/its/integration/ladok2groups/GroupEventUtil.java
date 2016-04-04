@@ -1,4 +1,10 @@
-package se.uu.its.integration.ladok2groups.dto;
+package se.uu.its.integration.ladok2groups;
+
+import se.uu.its.integration.ladok2groups.dto.GroupEvent;
+import se.uu.its.integration.ladok2groups.l2dto.Avliden;
+import se.uu.its.integration.ladok2groups.l2dto.BortReg;
+import se.uu.its.integration.ladok2groups.l2dto.InReg;
+import se.uu.its.integration.ladok2groups.l2dto.Reg;
 
 
 public class GroupEventUtil {
