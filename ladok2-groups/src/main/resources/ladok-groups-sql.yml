@@ -13,7 +13,7 @@ ladok.sql.reg: |
         reg.idatum as datum,
         reg.itid as tid,
         reg.pnr,
-        'unambiguous:ffgkurs:ktill2' as origin
+        'ffgkurs:ktill2' as origin
     FROM
         uu.ffgkurs reg
              left outer join uu.godkkurs gk on gk.pnr = reg.pnr AND gk.kurs = reg.kurs
@@ -44,7 +44,7 @@ ladok.sql.reg: |
         reg.idatum as datum,
         reg.itid as tid,
         reg.pnr,
-        'unambiguous:fortkurs:ktfort2' as origin
+        'fortkurs:ktfort2' as origin
     FROM
         uu.fortkurs reg
             left outer join uu.godkkurs gk on gk.pnr = reg.pnr AND gk.kurs = reg.kurs
@@ -87,7 +87,7 @@ ladok.sql.reg: |
         reg.idatum as datum,
         reg.itid as tid,
         reg.pnr,
-        'unambiguous:omkurs:ktill2' as origin
+        'omkurs:ktill2' as origin
     FROM
         uu.omkurs reg
             left outer join uu.godkkurs gk on gk.pnr = reg.pnr AND gk.kurs = reg.kurs
@@ -127,7 +127,7 @@ ladok.sql.reg: |
         reg.idatum as datum,
         reg.itid as tid,
         reg.pnr,
-        'unambiguous:omkurs:ktfort2' as origin
+        'omkurs:ktfort2' as origin
     FROM
         uu.omkurs reg
             left outer join uu.godkkurs gk on gk.pnr = reg.pnr AND gk.kurs = reg.kurs
@@ -159,7 +159,7 @@ ladok.sql.reg: |
         reg.idatum as datum,
         reg.itid as tid,
         reg.pnr,
-        'unambiguous:ubindrg:ktill2' as origin
+        'ubindrg:ktill2' as origin
     FROM
         uu.ubindrg reg
            left outer join uu.godkkurs gk on gk.pnr = reg.pnr AND gk.kurs = reg.kurs
@@ -201,7 +201,7 @@ ladok.sql.reg: |
         reg.idatum as datum,
         reg.itid as tid,
         reg.pnr,
-        'unambiguous:ubindrg:ktfort2' as origin
+        'ubindrg:ktfort2' as origin
     FROM
         uu.ubindrg reg
             left outer join uu.godkkurs gk on gk.pnr = reg.pnr AND gk.kurs = reg.kurs
