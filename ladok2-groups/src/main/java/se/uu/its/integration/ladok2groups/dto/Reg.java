@@ -1,35 +1,14 @@
 package se.uu.its.integration.ladok2groups.dto;
 
 
-public class Reg {
+public class Reg extends PnrEvent {
     
-    String datum;
-    String tid;
-    String pnr;
 	String anmkod;
     String startter;
     String kurskod;
     String completed;
     String origin;
 
-    public String getDatum() {
-		return datum;
-	}
-	public void setDatum(String datum) {
-		this.datum = datum;
-	}
-	public String getTid() {
-		return tid;
-	}
-	public void setTid(String tid) {
-		this.tid = tid;
-	}
-	public String getPnr() {
-		return pnr;
-	}
-	public void setPnr(String pnr) {
-		this.pnr = pnr;
-	}
 	public String getAnmkod() {
 		return anmkod;
 	}

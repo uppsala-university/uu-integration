@@ -1,34 +1,13 @@
 package se.uu.its.integration.ladok2groups.dto;
 
 
-public class BortReg {
+public class BortReg extends PnrEvent {
 	
-	String datum;
-	String tid;
-	String pnr;
 	String kurskod;
     String urtabell;
     String urpost;
 	String origin;
 
-	public String getDatum() {
-		return datum;
-	}
-	public void setDatum(String datum) {
-		this.datum = datum;
-	}
-	public String getTid() {
-		return tid;
-	}
-	public void setTid(String tid) {
-		this.tid = tid;
-	}
-	public String getPnr() {
-		return pnr;
-	}
-	public void setPnr(String pnr) {
-		this.pnr = pnr;
-	}
 	public String getKurskod() {
 		return kurskod;
 	}
