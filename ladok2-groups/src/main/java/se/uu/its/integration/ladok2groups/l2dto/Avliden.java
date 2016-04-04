@@ -6,8 +6,7 @@ public class Avliden extends PnrEvent {
 
 	@Override
 	public String toString() {
-		return "Avliden [pnr=" + pnr + ", datum=" + datum + ", tid=" + tid
-				+ "]";
+		return "Avliden [pnr=" + pnr + ", datum=" + datum + "]";
 	}
 
 }
