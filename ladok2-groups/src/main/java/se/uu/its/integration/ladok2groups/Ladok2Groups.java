@@ -9,6 +9,7 @@ import javax.sql.DataSource;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
+import se.uu.its.integration.ladok2groups.dto.MembershipEvent;
 import se.uu.its.integration.ladok2groups.l2dto.Avliden;
 import se.uu.its.integration.ladok2groups.l2dto.BortReg;
 import se.uu.its.integration.ladok2groups.l2dto.InReg;
@@ -32,16 +33,18 @@ public class Ladok2Groups {
 	String updateGroupEvents(String date, String time) {
 		String rs = "";
 		try {
-			List<Reg> regs = query(l2Jdbc(), Reg.class, l2Sql.getRegSql(), "datum", date, "tid", time);
-			List<BortReg> bortregs = query(l2Jdbc(), BortReg.class, l2Sql.getBortRegSql(), "datum", date, "tid", time);
-			List<InReg> inregs = query(l2Jdbc(), InReg.class, l2Sql.getInRegSql(), "datum", date, "tid", time);
-			List<Avliden> avlid = query(l2Jdbc(), Avliden.class, l2Sql.getAvlidenSql(), "datum", date);
+			List<Reg> reg = query(l2Jdbc(), Reg.class, l2Sql.getRegSql(), "datum", date, "tid", time);
+			List<BortReg> bortreg = query(l2Jdbc(), BortReg.class, l2Sql.getBortRegSql(), "datum", date, "tid", time);
+			List<InReg> inreg = query(l2Jdbc(), InReg.class, l2Sql.getInRegSql(), "datum", date, "tid", time);
+			List<Avliden> avliden = query(l2Jdbc(), Avliden.class, l2Sql.getAvlidenSql(), "datum", date);
+			List<MembershipEvent> mes = MembershipEventUtil.toMemebershipEvents(bortreg);
 			// List<Tst> es = query(getEsbJdbc(), Tst.class, esbSql.getTest());
 			rs =  "- - - - - - - - - -" 
-			        + "\n - " + regs.size() + ", " + regs.get(0)
-			        + "\n - " + inregs.size() + ", " + inregs.get(0)
-			        + "\n - " + bortregs.size() + ", " + bortregs.get(0)
-			        + "\n - " + avlid.size() + ", " + avlid.get(0)
+			        + "\n - " + reg.size() + ", " + reg.get(0)
+			        + "\n - " + inreg.size() + ", " + inreg.get(0)
+			        + "\n - " + bortreg.size() + ", " + bortreg.get(0)
+			        + "\n - " + avliden.size() + ", " + avliden.get(0)
+			        + "\n - " + mes.size() + ", " + mes.get(0)
 			        + "\n - - - - - - - - - - ";
 		} catch (Exception e) {
 			rs = "Ladok 2 groups update : " +  e.getClass()  + " "  + e.getMessage();
