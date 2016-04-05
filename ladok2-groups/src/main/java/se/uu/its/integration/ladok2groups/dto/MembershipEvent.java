@@ -25,7 +25,7 @@ public class MembershipEvent {
 		this.id = id;
 	}
 	public String getFormattedDate() {
-		return MembershipEventUtil.dateAndTime.format(date);
+		return MembershipEventUtil.DATE_FORMAT.format(date);
 	}
 	public Date getDate() {
 		return date;

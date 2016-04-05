@@ -42,7 +42,7 @@
                 <constant>true</constant>
             </handled>
 
-            <log message="Failed handling message '$simple{body}' due to $simple{exception} $simple{exception.message}" loggingLevel="ERROR" logName="se.uu.its.integration.ladok2groups"/>
+            <log message="Failed handling message due to $simple{exception} $simple{exception.message}" loggingLevel="ERROR" logName="se.uu.its.integration.ladok2groups"/>
 
             <stop id="Error handling finished" />
 

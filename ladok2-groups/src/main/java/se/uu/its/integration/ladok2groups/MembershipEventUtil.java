@@ -3,6 +3,8 @@ package se.uu.its.integration.ladok2groups;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -18,9 +20,30 @@ import se.uu.its.integration.ladok2groups.l2dto.Reg;
 
 public class MembershipEventUtil {
 
-	public static final SimpleDateFormat dateAndTime = new SimpleDateFormat("yyyy-MM-dd HHmmss");
+	public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HHmmss");
+	
+	public static final Comparator<MembershipEvent> MEMBERSHIPEVENT_COMPARATOR = new Comparator<MembershipEvent>() {
+		@Override
+		public int compare(MembershipEvent me1, MembershipEvent me2) {
+			return me1.getDate().compareTo(me2.getDate());
+		}
+	};
+	
+	public static void sort(List<MembershipEvent> mes) {
+		Collections.sort(mes, MEMBERSHIPEVENT_COMPARATOR);
+	}
+	
+	public static List<MembershipEvent> filter(List<MembershipEvent> mes, Date from, Date to) {
+		List<MembershipEvent> fmes = new ArrayList<MembershipEvent>();
+		for (MembershipEvent me : mes) {
+			if (!from.after(me.getDate()) && me.getDate().before(to)) {
+				fmes.add(me);
+			}
+		}
+		return fmes;
+	}
 
-	public static List<MembershipEvent> toMemebershipEvents(List<?> os) {
+	public static List<MembershipEvent> toMembershipEvents(List<?> os) {
 		List<MembershipEvent> mes = new ArrayList<MembershipEvent>(os.size());
 		for (Object o : os) {
 			mes.add(toMembershipEvent(o));
@@ -91,7 +114,7 @@ public class MembershipEventUtil {
 			time = "000000";
 		}
 		try {
-			return dateAndTime.parse(date + " " + time);
+			return DATE_FORMAT.parse(date + " " + time);
 		} catch (ParseException e) {
 			throw new RuntimeException(e);
 		}
