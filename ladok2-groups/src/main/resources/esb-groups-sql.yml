@@ -1,2 +1,24 @@
-esb.sql.test: |
-    select * from CAMEL_MESSAGEPROCESSED
+esb.sql.mostRecentPotentialMembershipEvent: |
+    select
+       id, date, pnr, metype, courseCode, reportCode, semester, origin, origin2
+    from
+        POTENTIAL_MEMBERSHIP_EVENTS
+    where
+        id = (select max(id) from POTENTIAL_MEMBERSHIP_EVENTS)
+
+esb.sql.mostRecentMembershipEvent: |
+    select
+       id, date, pnr, metype, courseCode, reportCode, semester, origin, origin2
+    from
+        MEMBERSHIP_EVENTS
+    where
+        id = (select max(id) from MEMBERSHIP_EVENTS)
+
+esb.sql.saveNewPotentialMembershipEvents: |
+    insert into POTENTIAL_MEMBERSHIP_EVENTS (date, pnr, metype, courseCode, reportCode, semester, origin, origin2)
+    values (:date, :pnr, :typeAsString, :courseCode, :reportCode, :semester, :origin, :origin2)
+
+esb.sql.saveNewMembershipEvents: |
+    insert into MEMBERSHIP_EVENTS (date, pnr, metype, courseCode, reportCode, semester, origin, origin2)
+    values (:date, :pnr, :typeAsString, :courseCode, :reportCode, :semester, :origin, :origin2)
+

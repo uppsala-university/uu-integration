@@ -13,8 +13,8 @@ public class MembershipEvent {
 	String pnr;
 	Type type;
 	String courseCode;
-	String semester;
 	String reportCode;
+	String semester;
 	String origin;
 	String origin2;
 
@@ -41,6 +41,9 @@ public class MembershipEvent {
 	}
 	public Type getType() {
 		return type;
+	}
+	public String getTypeAsString() {
+		return type.toString();
 	}
 	public void setType(Type type) {
 		this.type = type;

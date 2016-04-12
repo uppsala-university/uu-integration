@@ -36,7 +36,7 @@ public class MembershipEventUtil {
 	public static List<MembershipEvent> filter(List<MembershipEvent> mes, Date from, Date to) {
 		List<MembershipEvent> fmes = new ArrayList<MembershipEvent>();
 		for (MembershipEvent me : mes) {
-			if (!from.after(me.getDate()) && me.getDate().before(to)) {
+			if (!from.after(me.getDate()) && me.getDate().before(to)) { // from: incl, to: excl
 				fmes.add(me);
 			}
 		}

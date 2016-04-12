@@ -52,7 +52,7 @@
                         <Bundle-SymbolicName>${project.artifactId}; blueprint.timeout:=5000</Bundle-SymbolicName>
                         <Bundle-Version>${project.version}</Bundle-Version>
                         <Import-Package>
-                        	*,
+                            *,
                             javax.sql,
                             javax.net.ssl,
                             javax.transaction,
@@ -61,7 +61,8 @@
                             org.osgi.service.jdbc,
                             org.springframework.transaction,
                             org.springframework.transaction.jta,
-                            org.springframework.transaction.support
+                            org.springframework.transaction.support,
+			    org.apache.commons.logging;version="[1.1,2)"
                         </Import-Package>
                         <Meta-Persistence>META-INF/persistence.xml</Meta-Persistence>
                     </instructions>

@@ -1,16 +1,16 @@
 package se.uu.its.integration.ladok2groups;
 
-import java.text.ParseException;
+import static se.uu.its.integration.ladok2groups.JdbcUtil.query;
+import static se.uu.its.integration.ladok2groups.JdbcUtil.update;
+
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.sql.DataSource;
 
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import se.uu.its.integration.ladok2groups.dto.MembershipEvent;
@@ -18,9 +18,13 @@ import se.uu.its.integration.ladok2groups.l2dto.Avliden;
 import se.uu.its.integration.ladok2groups.l2dto.BortReg;
 import se.uu.its.integration.ladok2groups.l2dto.InReg;
 import se.uu.its.integration.ladok2groups.l2dto.Reg;
+import se.uu.its.integration.ladok2groups.sql.EsbGroupSql;
+import se.uu.its.integration.ladok2groups.sql.Ladok2GroupSql;
 
 public class Ladok2Groups {
 	
+	static Log log = LogFactory.getLog(Ladok2Groups.class);
+
 	DataSource esbDs;
 	DataSource ladok2ReadDs;
 
@@ -30,53 +34,56 @@ public class Ladok2Groups {
 	NamedParameterJdbcTemplate esbJdbc;
 	NamedParameterJdbcTemplate l2Jdbc;
 
-	public String updateGroupEvents() {
-		try { // TODO: Catch errors or propagate upward? (Schedulers wait for a timeout)
-			Date from = getLastUpdate();
-			Date now = new Date();
-			Date to = new Date(now.getTime() - 1000);
-			return updateGroupEventsFromDate(from, to);
-		} catch (Exception e) {
-			return e.getCause() + " " + e.getMessage();
-		}
+	public String updateGroupEvents() throws Exception {
+		// Not interested in events older than this:
+		Date defaultFrom = MembershipEventUtil.DATE_FORMAT.parse("2015-11-01 000000");
+		MembershipEvent pme = getMostRecentPotentialMembershipEvent();
+		// Skip forward 1 second from most recent event to avoid duplicate events:
+		Date from = (pme == null) ? defaultFrom : new Date(pme.getDate().getTime() + 1000);
+		Date now = new Date();
+		// Skip most recent events to make sure all events have arrived at Ladok:
+		Date to = new Date(now.getTime() - 15000); 
+		return updateGroupEventsFromDate(from, to);
 	}
 	
 	public String updateGroupEventsFromDate(Date from, Date to) {
-		List<MembershipEvent> mes =  getLadokMembershipEvents(from, to);
-		updateMembershipEvents(mes);
-		String rs = "- - - - - - - - - -" + "\n - " + mes.size();
-		if (mes.size() > 0) {
-			rs += ", " + mes; // mes.get(0);
+		List<MembershipEvent> mes =  getNewLadokMembershipEvents(from, to); // TODO: max num
+		if (mes.size() > 10) {
+			mes =  mes.subList(0, 10);
 		}
-		rs += "\n - - - - - - - - - - ";
-		return rs;
-	}
-
-	public DataSource getEsbDs() {
-		return esbDs;
+		saveNewPotentialMembershipEvents(mes);
+		return "Number of new Ladok membership events: " + mes.size();
 	}
 
 	public void setEsbDs(DataSource esbDs) {
 		this.esbDs = esbDs;
 	}
 
-	public DataSource getLadok2ReadDs() {
-		return ladok2ReadDs;
-	}
-
 	public void setLadok2ReadDs(DataSource ladok2ReadDs) {
 		this.ladok2ReadDs = ladok2ReadDs;
 	}
 	
-	Date getLastUpdate() {
-		try { // TODO
-			return MembershipEventUtil.DATE_FORMAT.parse("2015-11-01 000000");
-		} catch (ParseException e) {
-			throw new RuntimeException(e);
+	NamedParameterJdbcTemplate esbJdbc() {
+		if (esbJdbc == null) {
+			esbJdbc = new NamedParameterJdbcTemplate(esbDs);
 		}
+		return esbJdbc;
+	}
+	
+	NamedParameterJdbcTemplate l2Jdbc() {
+		if (l2Jdbc == null) {
+			l2Jdbc = new NamedParameterJdbcTemplate(ladok2ReadDs);
+		}
+		return l2Jdbc;
 	}
 
-	List<MembershipEvent> getLadokMembershipEvents(Date from, Date to) {
+	MembershipEvent getMostRecentPotentialMembershipEvent() {
+		List<MembershipEvent> mes = query(esbJdbc(), MembershipEvent.class,
+				esbSql.getMostRecentPotentialMembershipEventSql());
+		return mes.isEmpty() ? null : mes.get(0);
+	}
+
+	List<MembershipEvent> getNewLadokMembershipEvents(Date from, Date to) {
 		String fd = MembershipEventUtil.DATE_FORMAT.format(from);
 		String[] dateAndTime = fd.split(" ");
 		String date = dateAndTime[0];
@@ -95,68 +102,12 @@ public class Ladok2Groups {
 		return mes;
 	}
 	
-	int updateMembershipEvents(List<MembershipEvent> membershipEvents) {
-		int numUpdated = 0;
-		// TODO
-		return numUpdated;
+	int[] saveNewPotentialMembershipEvents(List<MembershipEvent> membershipEvents) {
+		return update(esbJdbc(), esbSql.getSaveNewPotentialMembershipEventsSql(), membershipEvents);
 	}
 	
-	NamedParameterJdbcTemplate esbJdbc() {
-		if (esbJdbc == null) {
-			esbJdbc = new NamedParameterJdbcTemplate(getEsbDs());
-		}
-		return esbJdbc;
+	int[] saveNewMembershipEvents(List<MembershipEvent> membershipEvents) {
+		return update(esbJdbc(), esbSql.getSaveNewMembershipEventsSql(), membershipEvents);
 	}
-	
-	NamedParameterJdbcTemplate l2Jdbc() {
-		if (l2Jdbc == null) {
-			l2Jdbc = new NamedParameterJdbcTemplate(getLadok2ReadDs());
-		}
-		return l2Jdbc;
-	}
-
-	<T> List<T> query(NamedParameterJdbcTemplate t, Class<T> c, 
-			String sql, Object... params) {
-		Map<String, Object> m = new HashMap<String, Object>();
-		for (int i = 0; i < params.length; i+=2) {
-			m.put(params[i].toString(), params[i+1]);
-		}
-		return t.query(sql, m, BeanPropertyRowMapper.newInstance(c));
-	}
-		
-	int update(NamedParameterJdbcTemplate t, String sql, Object value) {
-	    return t.update(sql, new BeanPropertySqlParameterSource(value));
-	}
-		
-	/*
-	public List<AvReg> select() {
-		return jdbc.query(ladokSql.getBortreg(), params(
-				"idatum", "2015-11-01",
-				"itid", "000000"),
-				AVREG_RM);
-	}*/
-
-	/*
-	@Autowired
-	LadokSql ladokSql;
-	
-	@Autowired
-	@Qualifier("uppdokOpen")
-	NamedParameterJdbcTemplate jdbc;
-	
-	public void insert(Map<String, String> row) {
-		// TODO
-		// jdbc.update(ladokSql.getBortreg(), row);
-	}
-
-	public List<AvReg> select() {
-		return jdbc.query(ladokSql.getBortreg(), params(
-				"idatum", "2015-11-01",
-				"itid", "000000"),
-				AVREG_RM);
-	}
-
-    */
-	 
 	
 }

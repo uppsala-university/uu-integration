@@ -52,7 +52,7 @@
 
             <description>Update Ladok 2 group event table</description>
 
-            <from id="Ladok 2 Groups timer" uri="timer://ladok?fixedRate=true&amp;period=60000&amp;repeatCount=0" />
+            <from id="Ladok 2 Groups timer" uri="timer://ladok?fixedRate=true&amp;period=5000&amp;repeatCount=0" />
 
             <to id="Ladok 2 Groups Event table update" uri="bean:ladok2Groups?method=updateGroupEvents" />
 

@@ -1,4 +1,4 @@
-package se.uu.its.integration.ladok2groups;
+package se.uu.its.integration.ladok2groups.sql;
 
 import java.util.Map;
 
