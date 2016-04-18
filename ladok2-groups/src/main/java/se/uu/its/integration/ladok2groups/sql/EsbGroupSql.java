@@ -26,4 +26,15 @@ public class EsbGroupSql {
 		return sql.get("esb.sql.saveNewMembershipEvents");
 	}
 
+	public String getDeleteMembershipsSql() {
+		return sql.get("esb.sql.deleteMemberships");
+	}
+
+	public String getSaveNewMembershipsSql() {
+		return sql.get("esb.sql.saveNewMemberships");
+	}
+
+	public String getFindMembershipsSql() {
+		return sql.get("esb.sql.findMemberships");
+	}
 }

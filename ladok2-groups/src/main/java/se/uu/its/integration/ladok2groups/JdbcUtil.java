@@ -19,6 +19,12 @@ public class JdbcUtil {
 		return t.query(sql, m, BeanPropertyRowMapper.newInstance(c));
 	}
 		
+	public static <T> List<T> queryByObj(NamedParameterJdbcTemplate t, Class<T> c, 
+			String sql, Object queryObj) {
+		BeanPropertySqlParameterSource bpsps = new BeanPropertySqlParameterSource(queryObj);
+		return t.query(sql, bpsps, BeanPropertyRowMapper.newInstance(c));
+	}
+		
 	public static int[] update(NamedParameterJdbcTemplate t, String sql, List<?> values) {
 		BeanPropertySqlParameterSource[] bpsps = new BeanPropertySqlParameterSource[values.size()];
 		int idx = 0;

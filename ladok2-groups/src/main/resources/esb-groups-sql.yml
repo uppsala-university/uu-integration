@@ -22,3 +22,26 @@ esb.sql.saveNewMembershipEvents: |
     insert into MEMBERSHIP_EVENTS (date, pnr, metype, courseCode, reportCode, semester, origin, origin2)
     values (:date, :pnr, :typeAsString, :courseCode, :reportCode, :semester, :origin, :origin2)
 
+esb.sql.saveNewMemberships: |
+    insert into MEMBERSHIPS (date, pnr, courseCode, reportCode, semester, origin, origin2)
+    values (:date, :pnr, :courseCode, :reportCode, :semester, :origin, :origin2)
+
+esb.sql.deleteMemberships: |
+    delete from
+        MEMBERSHIPS
+    where
+        pnr = :pnr
+        and courseCode = :courseCode
+        and reportCode = :reportCode
+        and semester = :semester
+
+esb.sql.findMemberships: |
+    select
+        id, date, pnr, courseCode, reportCode, semester, origin, origin2
+    from
+        MEMBERSHIPS
+    where
+        pnr = :pnr
+        and courseCode = :courseCode
+        and semester = :semester
+

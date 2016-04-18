@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import se.uu.its.integration.ladok2groups.dto.Membership;
 import se.uu.its.integration.ladok2groups.dto.MembershipEvent;
 import se.uu.its.integration.ladok2groups.dto.MembershipEvent.Type;
 import se.uu.its.integration.ladok2groups.l2dto.Avliden;
@@ -86,6 +87,22 @@ public class MembershipEventUtil {
 		ge.setType(Type.REMOVE);
 		ge.setOrigin("avliden");
 		return ge;
+	}
+	
+	public static List<Membership> toMemberships(List<MembershipEvent> mes) {
+		List<Membership> ms = new ArrayList<Membership>(mes.size());
+		for (MembershipEvent me : mes) {
+			Membership m = new Membership();
+			m.setDate(me.getDate());
+			m.setPnr(me.getPnr());
+			m.setCourseCode(me.getCourseCode());
+			m.setReportCode(me.getReportCode());
+			m.setSemester(me.getSemester());
+			m.setOrigin(me.getOrigin());
+			m.setOrigin2(me.getOrigin2());
+			ms.add(m);
+		}
+		return ms;
 	}
 
 	private static MembershipEvent toMembershipEvent(Object o) {

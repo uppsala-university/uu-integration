@@ -1,9 +1,12 @@
 package se.uu.its.integration.ladok2groups.dto;
 
+import java.util.Date;
+
 
 public class Membership {
 	
 	Long id;
+	Date date;
 	String pnr;
 	String courseCode;
 	String reportCode;
@@ -16,6 +19,12 @@ public class Membership {
 	}
 	public void setId(Long id) {
 		this.id = id;
+	}
+	public Date getDate() {
+		return date;
+	}
+	public void setDate(Date date) {
+		this.date = date;
 	}
 	public String getPnr() {
 		return pnr;
