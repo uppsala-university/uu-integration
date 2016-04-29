@@ -9,7 +9,15 @@ public class EsbGroupSql {
 	public EsbGroupSql() {
 		sql = YamlUtil.loadSql(this.getClass().getClassLoader(), "esb-groups-sql.yml");
 	}
+
+    public String getAllPotentialMembershipEventsSql() {
+		return sql.get("esb.sql.allPotentialMembershipEvents");
+	}
 	
+	public String getPotentialMembershipEventsNewerThanSql() {
+		return sql.get("esb.sql.potentialMembershipEventsNewerThan");
+	}
+
 	public String getMostRecentPotentialMembershipEventSql() {
 		return sql.get("esb.sql.mostRecentPotentialMembershipEvent");
 	}
@@ -18,20 +26,24 @@ public class EsbGroupSql {
 		return sql.get("esb.sql.mostRecentMembershipEvent");
 	}
 
-	public String getSaveNewPotentialMembershipEventsSql() {
-		return sql.get("esb.sql.saveNewPotentialMembershipEvents");
+	public String getSaveNewPotentialMembershipEventSql() {
+		return sql.get("esb.sql.saveNewPotentialMembershipEvent");
 	}
 
-	public String getSaveNewMembershipEventsSql() {
-		return sql.get("esb.sql.saveNewMembershipEvents");
+	public String getSaveNewMembershipEventSql() {
+		return sql.get("esb.sql.saveNewMembershipEvent");
+	}
+	
+	public String getUpdateMembershipSql() {
+		return sql.get("esb.sql.updateMembership");
 	}
 
-	public String getDeleteMembershipsSql() {
-		return sql.get("esb.sql.deleteMemberships");
+	public String getDeleteMembershipSql() {
+		return sql.get("esb.sql.deleteMembership");
 	}
 
-	public String getSaveNewMembershipsSql() {
-		return sql.get("esb.sql.saveNewMemberships");
+	public String getSaveNewMembershipSql() {
+		return sql.get("esb.sql.saveNewMembership");
 	}
 
 	public String getFindMembershipsSql() {
