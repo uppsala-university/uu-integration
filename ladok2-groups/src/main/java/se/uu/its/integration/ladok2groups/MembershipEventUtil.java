@@ -54,7 +54,7 @@ public class MembershipEventUtil {
 
 	public static MembershipEvent toMembershipEvent(Reg r) {
 		MembershipEvent ge = newMembershipEvent(r);
-		ge.setType(Type.ADD);
+		ge.setMeType(Type.ADD);
 		ge.setCourseCode(r.getKurskod());
 		ge.setReportCode(r.getAnmkod());
 		ge.setSemester(r.getStartter());
@@ -64,7 +64,7 @@ public class MembershipEventUtil {
 
 	public static MembershipEvent toMembershipEvent(BortReg r) {
 		MembershipEvent ge = newMembershipEvent(r);
-		ge.setType(Type.REMOVE);
+		ge.setMeType(Type.REMOVE);
 		Map<String, String> urPost = parseUrPost(r.getUrpost());
 		ge.setSemester(urPost.get("TERMIN"));
 		ge.setCourseCode(r.getKurskod());
@@ -75,7 +75,7 @@ public class MembershipEventUtil {
 
 	public static MembershipEvent toMembershipEvent(InReg r) {
 		MembershipEvent ge = newMembershipEvent(r);
-		ge.setType(Type.REMOVE);
+		ge.setMeType(Type.REMOVE);
 		ge.setOrigin(r.getOrigin());
 		ge.setCourseCode(r.getKurskod());
 		ge.setSemester(r.getTermin());
@@ -84,7 +84,7 @@ public class MembershipEventUtil {
 
 	public static MembershipEvent toMembershipEvent(Avliden a) {
 		MembershipEvent ge = newMembershipEvent(a);
-		ge.setType(Type.REMOVE);
+		ge.setMeType(Type.REMOVE);
 		ge.setOrigin("avliden");
 		return ge;
 	}
@@ -92,17 +92,29 @@ public class MembershipEventUtil {
 	public static List<Membership> toMemberships(List<MembershipEvent> mes) {
 		List<Membership> ms = new ArrayList<Membership>(mes.size());
 		for (MembershipEvent me : mes) {
-			Membership m = new Membership();
-			m.setDate(me.getDate());
-			m.setPnr(me.getPnr());
-			m.setCourseCode(me.getCourseCode());
-			m.setReportCode(me.getReportCode());
-			m.setSemester(me.getSemester());
-			m.setOrigin(me.getOrigin());
-			m.setOrigin2(me.getOrigin2());
-			ms.add(m);
+			ms.add(toMembership(me));
 		}
 		return ms;
+	}
+	
+	public static Membership toMembership(MembershipEvent me) {
+		Membership m = new Membership();
+		m.setDate(me.getDate());
+		m.setPnr(me.getPnr());
+		m.setCourseCode(me.getCourseCode());
+		m.setReportCode(me.getReportCode());
+		m.setSemester(me.getSemester());
+		m.setOrigin(me.getOrigin());
+		m.setOrigin2(me.getOrigin2());
+		return m;
+	}
+	
+	public static Date getDate(String formattedDate) {
+		try {
+			return DATE_FORMAT.parse(formattedDate);
+		} catch (ParseException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	private static MembershipEvent toMembershipEvent(Object o) {

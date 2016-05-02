@@ -11,7 +11,7 @@ public class MembershipEvent {
 	Long id;
 	Date date;
 	String pnr;
-	Type type;
+	Type meType;
 	String courseCode;
 	String reportCode;
 	String semester;
@@ -39,17 +39,17 @@ public class MembershipEvent {
 	public void setPnr(String pnr) {
 		this.pnr = pnr;
 	}
-	public Type getType() {
-		return type;
+	public Type getMeType() {
+		return meType;
 	}
-	public String getTypeAsString() {
-		return type.toString();
+	public String getMeTypeAsString() {
+		return meType.toString();
 	}
-	public void setType(Type type) {
-		this.type = type;
+	public void setMeType(Type type) {
+		this.meType = type;
 	}
-	public void setType(String type) {
-		this.type = Type.valueOf(type);
+	public void setMeType(String type) {
+		this.meType = Type.valueOf(type);
 	}
 	public String getCourseCode() {
 		return courseCode;
@@ -85,7 +85,7 @@ public class MembershipEvent {
 	@Override
 	public String toString() {
 		return "MembershipEvent [id=" + id + ", date=" + getFormattedDate() + ", pnr=" + pnr
-				+ ", type=" + type + ", courseCode=" + courseCode
+				+ ", meType=" + meType + ", courseCode=" + courseCode
 				+ ", semester=" + semester + ", reportCode=" + reportCode
 				+ ", origin=" + origin + ", origin2=" + origin2 + "]";
 	}
