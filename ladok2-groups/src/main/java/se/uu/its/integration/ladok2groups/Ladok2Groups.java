@@ -6,7 +6,6 @@ import static se.uu.its.integration.ladok2groups.JdbcUtil.update;
 import static se.uu.its.integration.ladok2groups.JdbcUtil.update2;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -46,29 +45,25 @@ public class Ladok2Groups {
 		this.ladok2ReadDs = ladok2ReadDs;
 	}
 	
+	void init() {
+		if (esbJdbc == null) { esbJdbc = new NamedParameterJdbcTemplate(esbDs); }
+		if (l2Jdbc == null) { l2Jdbc = new NamedParameterJdbcTemplate(ladok2ReadDs); }
+	}
+	
 	public String updateGroupEvents() throws Exception {
 		init(); // delayed init to let the ds resources have time to be injected
 		// Not interested in events older than this:
 		Date defaultFrom = MembershipEventUtil.DATE_FORMAT.parse("2015-11-01 000000"); // TODO: 2007-01-01
-		MembershipEvent pme = getMostRecentPotentialMembershipEvent();
+		List<MembershipEvent> pmes = query(esbJdbc, MembershipEvent.class,
+				esbSql.getMostRecentPotentialMembershipEventSql());
 		// Skip forward 1 second from most recent event to avoid duplicate events:
-		Date from = (pme == null) ? defaultFrom : new Date(pme.getDate().getTime() + 1000);
+		Date from = pmes.isEmpty() ? defaultFrom : new Date(pmes.get(0).getDate().getTime() + 1000);
 		Date now = new Date();
 		// Skip most recent events to make sure all events for that time have arrived at Ladok:
 		Date to = new Date(now.getTime() - 15000); 
-		return updateGroupEventsFromDate(from, to);
-	}
-	
-	public String updateGroupEventsFromDate(Date from, Date to) {
-		init(); // delayed init to let the ds resources have time to be injected
 		int numMEs = updatePotentialMembershipEvents(from, to);
 		updateMembershipEvents();
 		return "Number of new Ladok membership events: " + numMEs;
-	}
-	
-	void init() {
-		if (esbJdbc == null) { esbJdbc = new NamedParameterJdbcTemplate(esbDs); }
-		if (l2Jdbc == null) { l2Jdbc = new NamedParameterJdbcTemplate(ladok2ReadDs); }
 	}
 	
 	int updatePotentialMembershipEvents(Date from, Date to) {
@@ -76,7 +71,7 @@ public class Ladok2Groups {
 		if (mes.size() > 10) {
 			mes =  mes.subList(0, 10);
 		}
-		saveNewPotentialMembershipEvents(mes);
+		update(esbJdbc, esbSql.getSaveNewPotentialMembershipEventSql(), mes);
 		return mes.size();
 	}
 	
@@ -87,13 +82,16 @@ public class Ladok2Groups {
 		for (MembershipEvent me : potentialMembershipEvents) {
 			if (me.getMeType() == MembershipEvent.Type.ADD) {
 				// TODO: fortsattningsreg -> update membership ?
-				saveMembershipEventAndNewMembership(me);
+				update2(esbDs, 
+						esbSql.getSaveNewMembershipEventSql(), me,
+						esbSql.getSaveNewMembershipSql(), MembershipEventUtil.toMembership(me), 
+						log);
 				log.info("Adding new membership add event: " + me);
 			} else {
-				List<Membership> ms = findMemberships(me);
+				List<Membership> ms = queryByObj(esbJdbc, Membership.class, esbSql.getFindMembershipsSql(), me);
 				if (ms.size() == 1) {
 					me.setReportCode(ms.get(0).getReportCode());
-					saveNewMembershipEvents(Arrays.asList(me));
+					update(esbJdbc, esbSql.getSaveNewMembershipEventSql(), me);
 					// TODO: Delete memberships in the same transaction
 					log.info("Adding new membership remove event: " + me);
 				} else if (ms.size() == 0) {
@@ -105,10 +103,6 @@ public class Ladok2Groups {
 			}
 		}
 		return potentialMembershipEvents.size();
-	}
-	
-	void updateMemberships(List<MembershipEvent> mes) {
-		update(esbJdbc, esbSql.getSaveNewMembershipSql(), MembershipEventUtil.toMemberships(mes));
 	}
 	
 	List<MembershipEvent> getNewLadokMembershipEvents(Date from, Date to) {
@@ -130,57 +124,19 @@ public class Ladok2Groups {
 		return mes;
 	}
 	
-	MembershipEvent getMostRecentPotentialMembershipEvent() {
-		List<MembershipEvent> mes = query(esbJdbc, MembershipEvent.class,
-				esbSql.getMostRecentPotentialMembershipEventSql());
-		return mes.isEmpty() ? null : mes.get(0);
-	}
-
 	List<MembershipEvent> getUnprocessedPotentialMembershipEvents() {
 		List<MembershipEvent> unprocessed;
 		List<MembershipEvent> mes = query(esbJdbc, MembershipEvent.class,
 				esbSql.getMostRecentMembershipEventSql());
 		if (mes.isEmpty()) {
-			unprocessed = getAllPotentialMembershipEvents();
+			unprocessed = query(esbJdbc, MembershipEvent.class, 
+					esbSql.getAllPotentialMembershipEventsSql());
 		} else {
-			unprocessed = getPotentialMembershipEventsNewerThan(mes.get(0).getId());
+			unprocessed = query(esbJdbc, MembershipEvent.class,
+					esbSql.getPotentialMembershipEventsNewerThanSql(), 
+					"id", mes.get(0).getId());
 		}
 		return unprocessed;
 	}
 	
-	List<MembershipEvent> getAllPotentialMembershipEvents() {
-		return query(esbJdbc, MembershipEvent.class, esbSql.getAllPotentialMembershipEventsSql());
-	}
-	
-	List<MembershipEvent> getPotentialMembershipEventsNewerThan(Long id) {
-		return query(esbJdbc, MembershipEvent.class, esbSql.getPotentialMembershipEventsNewerThanSql(), "id", id);
-	}
-
-	List<Membership> findMemberships(MembershipEvent potentialMembershipEvent) {
-		return queryByObj(esbJdbc, Membership.class, esbSql.getFindMembershipsSql(), potentialMembershipEvent);
-	}
-
-	int[] saveNewPotentialMembershipEvents(List<MembershipEvent> membershipEvents) {
-		return update(esbJdbc, esbSql.getSaveNewPotentialMembershipEventSql(), membershipEvents);
-	}
-	
-	int[] saveNewMembershipEvents(List<MembershipEvent> membershipEvents) {
-		return update(esbJdbc, esbSql.getSaveNewMembershipEventSql(), membershipEvents);
-	}
-	
-	int saveNewMembershipEvent(MembershipEvent membershipEvent) {
-		return update(esbJdbc, esbSql.getSaveNewMembershipEventSql(), membershipEvent);
-	}
-	
-	int[] saveNewMemberships(List<Membership> memberships) {
-		return update(esbJdbc, esbSql.getSaveNewMembershipSql(), memberships);
-	}
-
-	void saveMembershipEventAndNewMembership(MembershipEvent me) {
-		update2(esbDs, 
-				esbSql.getSaveNewMembershipEventSql(), me,
-				esbSql.getSaveNewMembershipSql(), MembershipEventUtil.toMembership(me), 
-				log);
-	}
-
 }
