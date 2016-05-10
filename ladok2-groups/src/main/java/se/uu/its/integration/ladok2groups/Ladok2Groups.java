@@ -4,9 +4,13 @@ import static se.uu.its.integration.ladok2groups.JdbcUtil.query;
 import static se.uu.its.integration.ladok2groups.JdbcUtil.queryByObj;
 import static se.uu.its.integration.ladok2groups.JdbcUtil.update;
 import static se.uu.its.integration.ladok2groups.JdbcUtil.update2;
+import static se.uu.its.integration.ladok2groups.MembershipEventUtil.DATE_FORMAT;
 
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -27,6 +31,8 @@ import se.uu.its.integration.ladok2groups.sql.Ladok2GroupSql;
 public class Ladok2Groups {
 	
 	static Log log = LogFactory.getLog(Ladok2Groups.class);
+	
+	Date ladok2GroupEventStart;
 
 	DataSource esbDs;
 	DataSource ladok2ReadDs;
@@ -36,6 +42,35 @@ public class Ladok2Groups {
 	
 	NamedParameterJdbcTemplate esbJdbc;
 	NamedParameterJdbcTemplate l2Jdbc;
+	
+	public Date getLadok2GroupEventStartTime() {
+		return ladok2GroupEventStart;
+	}
+	
+	public static void main(String[] args) throws ParseException {
+		Date d = new Date();
+		d = DATE_FORMAT.parse("2016-01-01 080105");
+		Calendar c = new GregorianCalendar();
+		c.clear();
+		c.setTimeInMillis(d.getTime() + 86400000L);
+		c.set(Calendar.MILLISECOND, 0);
+		int ms = c.get(Calendar.MILLISECOND);
+		int ss = c.get(Calendar.SECOND);
+		System.out.println(DATE_FORMAT.format(d) + ", ms=" + ms + ", ss=" + ss
+				+ ", t=" + d.getTime() + ", c=" + c.getTimeInMillis() + ", cf=" + DATE_FORMAT.format(c.getTime()));
+	}
+	
+	public String getLadok2GroupEventStart() {
+		return DATE_FORMAT.format(ladok2GroupEventStart);
+	}
+	
+	public void setLadok2GroupEventStart(String time) {
+		try {
+			ladok2GroupEventStart = MembershipEventUtil.DATE_FORMAT.parse(time);
+		} catch (ParseException e) {
+			throw new RuntimeException(e);
+		}
+	}
 
 	public void setEsbDs(DataSource esbDs) {
 		this.esbDs = esbDs;
@@ -52,21 +87,30 @@ public class Ladok2Groups {
 	
 	public String updateGroupEvents() throws Exception {
 		init(); // delayed init to let the ds resources have time to be injected
-		// Not interested in events older than this:
-		Date defaultFrom = MembershipEventUtil.DATE_FORMAT.parse("2015-11-01 000000"); // TODO: 2007-01-01
 		List<MembershipEvent> pmes = query(esbJdbc, MembershipEvent.class,
 				esbSql.getMostRecentPotentialMembershipEventSql());
 		// Skip forward 1 second from most recent event to avoid duplicate events:
-		Date from = pmes.isEmpty() ? defaultFrom : new Date(pmes.get(0).getDate().getTime() + 1000);
-		Date now = new Date();
-		// Skip most recent events to make sure all events for that time have arrived at Ladok:
-		Date to = new Date(now.getTime() - 15000); 
+		Date from = pmes.isEmpty() ? getLadok2GroupEventStartTime() : new Date(
+				pmes.get(0).getDate().getTime() + 1000);
+		// Skip most recent events to make sure all events for this interval have arrived at Ladok:
+		Date to = new Date(new Date().getTime() - 15000);
 		int numMEs = updatePotentialMembershipEvents(from, to);
 		updateMembershipEvents();
 		return "Number of new Ladok membership events: " + numMEs;
 	}
 	
 	int updatePotentialMembershipEvents(Date from, Date to) {
+		// TODO: Iterate over days between from/to?
+		long time = from.getTime(), end = to.getTime(), dayMS = 86400000L;
+		Calendar c = new GregorianCalendar();
+		c.clear();
+		c.setTimeInMillis(time);
+		c.set(Calendar.MILLISECOND, 0);
+		time = c.getTimeInMillis();
+		// while (time < to) {
+		    // TODO
+		//}
+		
 		List<MembershipEvent> mes =  getNewLadokMembershipEvents(from, to); // TODO: max num
 		if (mes.size() > 10) {
 			mes =  mes.subList(0, 10);

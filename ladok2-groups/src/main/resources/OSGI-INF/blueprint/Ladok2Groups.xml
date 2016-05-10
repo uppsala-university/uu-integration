@@ -12,13 +12,11 @@
         http://camel.apache.org/schema/blueprint http://camel.apache.org/schema/blueprint/camel-blueprint.xsd
         http://aries.apache.org/xmlns/jpa/v1.0.0 http://aries.apache.org/xmlns/jpa/v1.0.0" >
 
-    <!--
-    <cm:property-placeholder persistent-id="se.uu.its.integration" placeholder-prefix="$(" placeholder-suffix=")">
+    <cm:property-placeholder persistent-id="se.uu.its.integration">
         <cm:default-properties>
-            <cm:property name="host" value="http://0.0.0.0:8990/" />
+            <cm:property name="ladok2groups.start" value="2015-11-01 000000" />
         </cm:default-properties>
     </cm:property-placeholder>
-    -->
 
     <reference id="esbDs" interface="javax.sql.DataSource" filter="(osgi.jndi.service.name=jdbc/UUDS)" />
 
@@ -27,6 +25,7 @@
     <bean id="ladok2Groups" class="se.uu.its.integration.ladok2groups.Ladok2Groups">
         <property name="esbDs" ref="esbDs" />
         <property name="ladok2ReadDs" ref="ladok2ReadDs" />
+        <property name="ladok2GroupEventStart" value="${ladok2groups.start}" />
     </bean>
 
     <camelContext id="Ladok2Groups"
