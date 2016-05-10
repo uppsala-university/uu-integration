@@ -244,8 +244,10 @@ ladok.sql.reg: |
                    )
            )
         -- Check that it doesn't exist a real ffgkurs registration that overrides this ubindrg registration:
-        AND NOT EXISTS (SELECT * FROM uu.ffgkurs ffg WHERE ffg.pnr = reg.pnr AND ffg.kurs = reg.kurs)
-        ORDER BY anmkod, startter
+        AND NOT EXISTS
+            (SELECT * FROM uu.ffgkurs ffg WHERE ffg.pnr = reg.pnr AND ffg.kurs = reg.kurs)
+        ORDER BY
+            datum asc, tid asc
 
 
 # Avregistreringar i bortregk
@@ -262,6 +264,8 @@ ladok.sql.bortreg: |
     where
         b.idatum >= :datum
         and b.itid >= :tid
+    order by 
+        datum asc, tid asc
 
 
 # Avregistreringar i inregffg, inregfo och inregom
@@ -315,6 +319,8 @@ ladok.sql.inreg: |
     where
         i.idatum >= :datum
         and i.itid >= :tid
+    order by 
+        datum asc, tid asc
 
 
 # Avlidna
@@ -327,4 +333,6 @@ ladok.sql.avliden: |
     where 
         n.avliden = 'J' 
         and n.inldat >= :datum
+    order by 
+        datum asc
 

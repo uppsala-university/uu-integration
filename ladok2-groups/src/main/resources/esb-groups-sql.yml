@@ -62,10 +62,10 @@ esb.sql.deleteMembership: |
     delete from
         MEMBERSHIPS
     where
-        pnr = :pnr
+        pnr            = :pnr
         and courseCode = :courseCode
         and reportCode = :reportCode
-        and semester = :semester
+        and semester   = :semester
 
 esb.sql.findMemberships: |
     select
@@ -75,7 +75,7 @@ esb.sql.findMemberships: |
     where
         pnr = :pnr
         and courseCode = :courseCode
-        and semester = :semester
+        and semester   = :semester
     order by 
         id asc
 
