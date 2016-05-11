@@ -139,9 +139,6 @@ public class MembershipEventUtil {
 	}
 	
 	private static Date getDate(String date, String time) {
-		if (time == null) {
-			time = "000000";
-		}
 		try {
 			return DATE_FORMAT.parse(date + " " + time);
 		} catch (ParseException e) {
