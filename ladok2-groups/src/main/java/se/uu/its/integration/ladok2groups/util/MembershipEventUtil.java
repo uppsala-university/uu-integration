@@ -1,4 +1,4 @@
-package se.uu.its.integration.ladok2groups;
+package se.uu.its.integration.ladok2groups.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

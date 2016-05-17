@@ -2,7 +2,7 @@ package se.uu.its.integration.ladok2groups.dto;
 
 import java.util.Date;
 
-import se.uu.its.integration.ladok2groups.MembershipEventUtil;
+import se.uu.its.integration.ladok2groups.util.MembershipEventUtil;
 
 public class MembershipEvent {
 	

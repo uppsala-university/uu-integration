@@ -1,9 +1,9 @@
 package se.uu.its.integration.ladok2groups;
 
-import static se.uu.its.integration.ladok2groups.JdbcUtil.query;
-import static se.uu.its.integration.ladok2groups.JdbcUtil.queryByObj;
-import static se.uu.its.integration.ladok2groups.JdbcUtil.update;
-import static se.uu.its.integration.ladok2groups.JdbcUtil.update2;
+import static se.uu.its.integration.ladok2groups.util.JdbcUtil.query;
+import static se.uu.its.integration.ladok2groups.util.JdbcUtil.queryByObj;
+import static se.uu.its.integration.ladok2groups.util.JdbcUtil.update;
+import static se.uu.its.integration.ladok2groups.util.JdbcUtil.update2;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -25,6 +25,7 @@ import se.uu.its.integration.ladok2groups.l2dto.InReg;
 import se.uu.its.integration.ladok2groups.l2dto.Reg;
 import se.uu.its.integration.ladok2groups.sql.EsbGroupSql;
 import se.uu.its.integration.ladok2groups.sql.Ladok2GroupSql;
+import se.uu.its.integration.ladok2groups.util.MembershipEventUtil;
 
 public class Ladok2Groups {
 	
