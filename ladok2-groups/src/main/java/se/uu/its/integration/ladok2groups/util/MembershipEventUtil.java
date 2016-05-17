@@ -59,7 +59,9 @@ public class MembershipEventUtil {
 		ge.setCourseCode(r.getKurskod());
 		ge.setReportCode(r.getAnmkod());
 		ge.setSemester(r.getStartter());
-		ge.setOrigin(r.getOrigin());
+		String[] o1o2 = r.getOrigin().split(":");
+		ge.setOrigin(o1o2[0]);
+		ge.setOrigin2(o1o2[1]);
 		return ge;
 	}
 
@@ -86,7 +88,7 @@ public class MembershipEventUtil {
 	public static MembershipEvent toMembershipEvent(Avliden a) {
 		MembershipEvent ge = newMembershipEvent(a);
 		ge.setMeType(Type.REMOVE);
-		ge.setOrigin("avliden");
+		ge.setOrigin("AVLIDEN");
 		return ge;
 	}
 	

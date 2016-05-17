@@ -13,7 +13,7 @@ ladok.sql.reg: |
         reg.idatum as datum,
         reg.itid as tid,
         reg.pnr,
-        'ffgkurs:ktill2' as origin
+        'FFGKURS:KTILL2' as origin
     FROM
         uu.ffgkurs reg
              left outer join uu.godkkurs gk on gk.pnr = reg.pnr AND gk.kurs = reg.kurs
@@ -45,7 +45,7 @@ ladok.sql.reg: |
         reg.idatum as datum,
         reg.itid as tid,
         reg.pnr,
-        'fortkurs:ktfort2' as origin
+        'FORTKURS:KTFORT2' as origin
     FROM
         uu.fortkurs reg
             left outer join uu.godkkurs gk on gk.pnr = reg.pnr AND gk.kurs = reg.kurs
@@ -89,7 +89,7 @@ ladok.sql.reg: |
         reg.idatum as datum,
         reg.itid as tid,
         reg.pnr,
-        'omkurs:ktill2' as origin
+        'OMKURS:KTILL2' as origin
     FROM
         uu.omkurs reg
             left outer join uu.godkkurs gk on gk.pnr = reg.pnr AND gk.kurs = reg.kurs
@@ -130,7 +130,7 @@ ladok.sql.reg: |
         reg.idatum as datum,
         reg.itid as tid,
         reg.pnr,
-        'omkurs:ktfort2' as origin
+        'OMKURS:KTFORT2' as origin
     FROM
         uu.omkurs reg
             left outer join uu.godkkurs gk on gk.pnr = reg.pnr AND gk.kurs = reg.kurs
@@ -163,7 +163,7 @@ ladok.sql.reg: |
         reg.idatum as datum,
         reg.itid as tid,
         reg.pnr,
-        'ubindrg:ktill2' as origin
+        'UBINDRG:KTILL2' as origin
     FROM
         uu.ubindrg reg
            left outer join uu.godkkurs gk on gk.pnr = reg.pnr AND gk.kurs = reg.kurs
@@ -206,7 +206,7 @@ ladok.sql.reg: |
         reg.idatum as datum,
         reg.itid as tid,
         reg.pnr,
-        'ubindrg:ktfort2' as origin
+        'UBINDRG:KTFORT2' as origin
     FROM
         uu.ubindrg reg
             left outer join uu.godkkurs gk on gk.pnr = reg.pnr AND gk.kurs = reg.kurs
@@ -286,7 +286,7 @@ ladok.sql.inreg: |
         i.pnr as pnr,
         i.termin as termin,
         i.kurs as kurskod,
-        'inregffg' as origin
+        'INREGFFG' as origin
     from
         uu.inregffg i
     where
@@ -303,7 +303,7 @@ ladok.sql.inreg: |
         i.pnr as pnr,
         i.termin as termin,
         i.kurs as kurskod,
-        'inregfo' as origin
+        'INREGFO' as origin
     from
         uu.inregfo i
     where
@@ -322,7 +322,7 @@ ladok.sql.inreg: |
         i.pnr as pnr,
         i.termin as termin,
         i.kurs as kurskod,
-        'inregom' as origin
+        'INREGOM' as origin
     from
         uu.inregom i
     where
