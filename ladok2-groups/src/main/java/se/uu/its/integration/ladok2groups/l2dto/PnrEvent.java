@@ -4,7 +4,7 @@ public class PnrEvent {
 	
 	String pnr;
     String datum;
-    String tid = "235959";
+    String tid;
 
 	public String getPnr() {
 		return pnr;
@@ -22,11 +22,6 @@ public class PnrEvent {
 		return tid;
 	}
 	public void setTid(String tid) {
-		// Absence of time -> set as late as possible to not miss any event
-		if (tid == null || tid.equals("000000")) {
-			this.tid = "235959";
-		} else {
-			this.tid = tid;
-		}
+		this.tid = tid;
 	}
 }

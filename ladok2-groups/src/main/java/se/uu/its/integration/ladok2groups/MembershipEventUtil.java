@@ -132,15 +132,17 @@ public class MembershipEventUtil {
 	}
 
 	private static MembershipEvent newMembershipEvent(PnrEvent pe) {
-		MembershipEvent me = new MembershipEvent();
-		me.setPnr(pe.getPnr());
-		me.setDate(getDate(pe.getDatum(), pe.getTid()));
-		return me;
-	}
-	
-	private static Date getDate(String date, String time) {
 		try {
-			return DATE_FORMAT.parse(date + " " + time);
+			MembershipEvent me = new MembershipEvent();
+			me.setPnr(pe.getPnr());
+			// Absence of time -> set as late as possible to not miss any event
+			String time = pe.getTid();
+			if (time == null || time.equals("000000")) {
+				time = "235959";
+			}
+			Date date = DATE_FORMAT.parse(pe.getDatum() + " " + time);
+			me.setDate(date);
+			return me;
 		} catch (ParseException e) {
 			throw new RuntimeException(e);
 		}
