@@ -14,7 +14,9 @@
 
     <cm:property-placeholder persistent-id="se.uu.its.integration">
         <cm:default-properties>
-            <cm:property name="ladok2groups.start" value="2015-11-01 000000" />
+            <cm:property name="ladok2groups.start"  value="2007-01-01 000000" />
+            <cm:property name="ladok2groups.period" value="60000" />
+            <cm:property name="ladok2groups.count"  value="-1" />
         </cm:default-properties>
     </cm:property-placeholder>
 
@@ -51,11 +53,11 @@
 
             <description>Update Ladok 2 group event table</description>
 
-            <from id="Ladok 2 Groups timer" uri="timer://ladok?fixedRate=true&amp;period=5000&amp;repeatCount=0" />
+            <from id="Ladok 2 Groups timer" uri="timer://ladok?fixedRate=false&amp;period={{ladok2groups.period}}&amp;repeatCount={{ladok2groups.count}}" />
 
             <to id="Ladok 2 Groups Event table update" uri="bean:ladok2Groups?method=updateGroupEvents" />
 
-            <log message="Ladok 2 Groups Events table updated: '$simple{body}' " loggingLevel="INFO" logName="se.uu.its.integration.ladok2groups"/>
+            <log message="Ladok 2 Groups Events table updated" loggingLevel="INFO" logName="se.uu.its.integration.ladok2groups"/>
 
             <stop id="Handling finished" />
 
