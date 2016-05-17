@@ -117,6 +117,10 @@ public class MembershipEventUtil {
 		}
 	}
 
+	public static String format(Date date) {
+		return DATE_FORMAT.format(date);
+	}
+
 	private static MembershipEvent toMembershipEvent(Object o) {
 		if (o instanceof Reg) {
 			return toMembershipEvent((Reg) o);

@@ -4,9 +4,7 @@ import static se.uu.its.integration.ladok2groups.JdbcUtil.query;
 import static se.uu.its.integration.ladok2groups.JdbcUtil.queryByObj;
 import static se.uu.its.integration.ladok2groups.JdbcUtil.update;
 import static se.uu.its.integration.ladok2groups.JdbcUtil.update2;
-import static se.uu.its.integration.ladok2groups.MembershipEventUtil.DATE_FORMAT;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -48,15 +46,11 @@ public class Ladok2Groups {
 	}
 	
 	public String getLadok2GroupEventStart() {
-		return DATE_FORMAT.format(ladok2GroupEventStart);
+		return MembershipEventUtil.format(ladok2GroupEventStart);
 	}
 	
 	public void setLadok2GroupEventStart(String time) {
-		try {
-			ladok2GroupEventStart = MembershipEventUtil.DATE_FORMAT.parse(time);
-		} catch (ParseException e) {
-			throw new RuntimeException(e);
-		}
+		ladok2GroupEventStart = MembershipEventUtil.getDate(time);
 	}
 
 	public void setEsbDs(DataSource esbDs) {
@@ -113,7 +107,7 @@ public class Ladok2Groups {
 		List<MembershipEvent> mes =  getNewLadokMembershipEvents(from, to);
 		update(esbJdbc, esbSql.getSaveNewPotentialMembershipEventSql(), mes);
 		log.info("Updated potential membership events in interval [" 
-				+ DATE_FORMAT.format(from) + ", " + DATE_FORMAT.format(to) + "): " + mes.size());
+				+ MembershipEventUtil.format(from) + ", " + MembershipEventUtil.format(to) + "): " + mes.size());
 		return mes.size();
 	}
 	
@@ -147,10 +141,10 @@ public class Ladok2Groups {
 	}
 	
 	List<MembershipEvent> getNewLadokMembershipEvents(Date from, Date to) {
-		String d_to = MembershipEventUtil.DATE_FORMAT.format(to);
+		String d_to = MembershipEventUtil.format(to);
 		String[] dt_to = d_to.split(" ");
 		String date_to = dt_to[0];
-		String d_from = MembershipEventUtil.DATE_FORMAT.format(from);
+		String d_from = MembershipEventUtil.format(from);
 		String[] dt_from = d_from.split(" ");
 		String date_from = dt_from[0];
 		String time_from = date_from.equals(date_to) ? dt_from[1] : "000000";
