@@ -19,7 +19,8 @@ ladok.sql.reg: |
              left outer join uu.godkkurs gk on gk.pnr = reg.pnr AND gk.kurs = reg.kurs
         ,uu.ktill2 kt
     WHERE
-        reg.idatum >= :datum
+        reg.idatum >= :datum_from
+        AND reg.idatum <= :datum_to
         AND reg.itid >= :tid
         AND kt.kurskod = reg.kurs
         AND kt.startter = reg.termin
@@ -50,7 +51,8 @@ ladok.sql.reg: |
             left outer join uu.godkkurs gk on gk.pnr = reg.pnr AND gk.kurs = reg.kurs
         ,uu.ktfort2 kt
     WHERE
-        reg.idatum >= :datum
+        reg.idatum >= :datum_from
+        AND reg.idatum <= :datum_to
         AND reg.itid >= :tid
         AND kt.kurskod = reg.kurs
         AND kt.termin = reg.termin
@@ -93,7 +95,8 @@ ladok.sql.reg: |
             left outer join uu.godkkurs gk on gk.pnr = reg.pnr AND gk.kurs = reg.kurs
         ,uu.ktill2 kt
     WHERE
-        reg.idatum >= :datum
+        reg.idatum >= :datum_from
+        AND reg.idatum <= :datum_to
         AND reg.itid >= :tid
         AND kt.kurskod = reg.kurs
         AND kt.startter = reg.termin
@@ -133,7 +136,8 @@ ladok.sql.reg: |
             left outer join uu.godkkurs gk on gk.pnr = reg.pnr AND gk.kurs = reg.kurs
         ,uu.ktfort2 kt
     WHERE
-        reg.idatum >= :datum
+        reg.idatum >= :datum_from
+        AND reg.idatum <= :datum_to
         AND reg.itid >= :tid
         AND kt.kurskod = reg.kurs
         AND kt.termin = reg.termin
@@ -165,7 +169,8 @@ ladok.sql.reg: |
            left outer join uu.godkkurs gk on gk.pnr = reg.pnr AND gk.kurs = reg.kurs
         ,uu.ktill2 kt
     WHERE
-        reg.idatum >= :datum
+        reg.idatum >= :datum_from
+        AND reg.idatum <= :datum_to
         AND reg.itid >= :tid
         AND reg.kurs > ''
         AND kt.kurskod = reg.kurs
@@ -207,7 +212,8 @@ ladok.sql.reg: |
             left outer join uu.godkkurs gk on gk.pnr = reg.pnr AND gk.kurs = reg.kurs
         ,uu.ktfort2 kt
     WHERE
-        reg.idatum >= :datum
+        reg.idatum >= :datum_from
+        AND reg.idatum <= :datum_to
         AND reg.itid >= :tid
         AND reg.kurs > ''
         AND kt.kurskod = reg.kurs
@@ -262,7 +268,8 @@ ladok.sql.bortreg: |
     from
         uu.bortregk b
     where
-        b.idatum >= :datum
+        b.idatum >= :datum_from
+        AND b.idatum <= :datum_to
         and b.itid >= :tid
     order by 
         datum asc, tid asc
@@ -283,7 +290,8 @@ ladok.sql.inreg: |
     from
         uu.inregffg i
     where
-        i.idatum >= :datum
+        i.idatum >= :datum_from
+        and i.idatum <= :datum_to
         and i.itid >= :tid
     union
     -- 
@@ -299,7 +307,8 @@ ladok.sql.inreg: |
     from
         uu.inregfo i
     where
-        i.idatum >= :datum
+        i.idatum >= :datum_from
+        and i.idatum <= :datum_to
         and i.itid >= :tid
     union
     -- 
@@ -317,7 +326,8 @@ ladok.sql.inreg: |
     from
         uu.inregom i
     where
-        i.idatum >= :datum
+        i.idatum >= :datum_from
+        and i.idatum <= :datum_to
         and i.itid >= :tid
     order by 
         datum asc, tid asc
@@ -332,7 +342,8 @@ ladok.sql.avliden: |
         namn n 
     where 
         n.avliden = 'J' 
-        and n.inldat >= :datum
+        and n.inldat >= :datum_from
+        and n.inldat <= :datum_to
     order by 
         datum asc
 
