@@ -44,12 +44,7 @@ public class Ladok2Groups {
 	NamedParameterJdbcTemplate l2Jdbc;
 	
 	public Date getLadok2GroupEventStartTime() {
-		try { // TODO: DEBUG
-			return DATE_FORMAT.parse("2015-11-01 000000");
-		} catch (ParseException e) {
-			return null;
-		}
-		//return ladok2GroupEventStart;
+		return ladok2GroupEventStart;
 	}
 	
 	public String getLadok2GroupEventStart() {
@@ -86,10 +81,6 @@ public class Ladok2Groups {
 				pmes.get(0).getDate().getTime() + 1000);
 		// Skip most recent events to make sure all events for this interval have arrived at Ladok:
 		Date end = new Date(new Date().getTime() - 15000);
-		
-		// TODO: See below
-		//int numMEs = updatePotentialMembershipEvents(start, end);
-		//updateMembershipEvents();
 		
 		// If interval is too large, batch updates to each day:
 		Calendar from = new GregorianCalendar();
