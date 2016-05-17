@@ -1,8 +1,8 @@
 package se.uu.its.integration.ladok2groups.l2dto;
 
 public class PnrEvent {
-
-    String pnr;
+	
+	String pnr;
     String datum;
     String tid = "235959";
 
@@ -25,7 +25,8 @@ public class PnrEvent {
 		// Absence of time -> set as late as possible to not miss any event
 		if (tid == null || tid.equals("000000")) {
 			this.tid = "235959";
+		} else {
+			this.tid = tid;
 		}
-		this.tid = tid;
 	}
 }
