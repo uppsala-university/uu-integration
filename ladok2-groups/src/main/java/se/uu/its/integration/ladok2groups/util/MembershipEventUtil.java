@@ -22,6 +22,7 @@ import se.uu.its.integration.ladok2groups.l2dto.Reg;
 public class MembershipEventUtil {
 
 	public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HHmmss");
+	public static final SimpleDateFormat DATE_FORMAT_HHMM = new SimpleDateFormat("yyyy-MM-dd HHmm");
 	
 	public static final Comparator<MembershipEvent> MEMBERSHIPEVENT_COMPARATOR = new Comparator<MembershipEvent>() {
 		@Override
@@ -113,7 +114,11 @@ public class MembershipEventUtil {
 		try {
 			return DATE_FORMAT.parse(formattedDate);
 		} catch (ParseException e) {
-			throw new RuntimeException(e);
+			try {
+				return DATE_FORMAT_HHMM.parse(formattedDate);
+			} catch (ParseException e1) {
+				throw new RuntimeException(e);
+			}
 		}
 	}
 
