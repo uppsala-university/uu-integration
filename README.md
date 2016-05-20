@@ -1,29 +1,30 @@
 # UU Integration
-Uppsala University integration components.
+This is the Uppsala University integration components. The overall picture of the components is an event routing network containing message brokering along with a set of channel adapters.  
 
+![alt text](https://raw.githubusercontent.com/uppsala-university/uu-integration/master/docs/event-routing-network-map.png "Uppsala university Event Routing Network Map")
+
+The target environment for the components in the event routing map is an OSGi container, the target environment for channels is a MQ Broker and the target environment for the log database is a RDBMS. An example of a fully provisioned target environment is found at the GitHub repository [integration-runtime](https://github.com/uppsala-university/integration-runtime).
 
 ## Dependencies
-UU integration depends on common-integration, ladok, and ladok-integration. They are all available on github:
+The total set of integration components is supplied by dependencies of components from repositories 
 
-https://github.com/uppsala-university
+*  [common-integration](https://github.com/uppsala-university/common-integration)
+*  [ladok](https://github.com/uppsala-university/ladok)
+*  [ladok-integration](https://github.com/uppsala-university/ladok-integration)
 
+They are all available on [Uppsala University GitHub repository](https://github.com/uppsala-university).
 
 ## Build
-Build the respective projects (common-integration, ladok, ladok-integration, and uu-integration) using maven:
+Build the project along with its dependencies 
+
+* common-integration
+* ladok
+* ladok-integration
+* uu-integration
+
+using maven:
 
     mvn install -Dmaven.test.skip=true
 
-
-## Deploy in Karaf/Servicemix
-Karaf has the ability to load features and OSGi bundles either by dropping them in the deploy folder or by
-logging in to the Karaf shell and deploying them by a set of deploy commands.
-
-Karaf will look for bundles and features referenced by a 'mvn:'-url in the local maven repository and in any
-additional repositories specified in $SERVICEMIX_HOME/etc/org.ops4j.pax.url.mvn.cfg.
-
-To deploy all of the UU Integration features and bundles, in Karaf/Servicemix shell type the following commands:
-
-    repo-add mvn:se.uu.its.integration/uu-integration-packaging-karaf/1.0.0-SNAPSHOT/xml/features
-    feature:install uu-integration-all
-
-Or, drop uu-integration-packaging-karaf/target/classes/features.xml in $SERVICEMIX_HOME/deploy/
+## Deployment
+Deployment is bound to the execution enviroment. For deployment in a Karaf/ServiceMix environment read the [Karaf deployment documentation](https://github.com/uppsala-university/uu-integration/blob/master/uu-integration-packaging-karaf/README.md). 
