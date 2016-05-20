@@ -122,7 +122,11 @@ public class Ladok2Groups {
 		log.info("Number of unprocessed potential membership events: " + potentialMembershipEvents.size());
 		for (MembershipEvent me : potentialMembershipEvents) {
 			if (me.getMeType() == MembershipEvent.Type.ADD) {
-				// TODO: fortsattningsreg -> update membership ?
+				if ("FORTKURS".equals(me.getOrigin())) {
+					// fortsattningsreg -> we already have the membership, 
+					// but for completeness we add the event
+					update(esbJdbc, esbSql.getSaveNewMembershipEventSql(), me);
+				}
 				update2(esbDs, 
 						esbSql.getSaveNewMembershipEventSql(), me,
 						esbSql.getSaveNewMembershipSql(), toMembership(me), 
