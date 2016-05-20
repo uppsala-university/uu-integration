@@ -22,6 +22,7 @@ import se.uu.its.integration.ladok2groups.l2dto.Reg;
 public class MembershipEventUtil {
 
 	public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HHmmss");
+	public static final SimpleDateFormat DATE_FORMAT_HHMM = new SimpleDateFormat("yyyy-MM-dd HHmm");
 	
 	public static final Comparator<MembershipEvent> MEMBERSHIPEVENT_COMPARATOR = new Comparator<MembershipEvent>() {
 		@Override
@@ -58,7 +59,9 @@ public class MembershipEventUtil {
 		ge.setCourseCode(r.getKurskod());
 		ge.setReportCode(r.getAnmkod());
 		ge.setSemester(r.getStartter());
-		ge.setOrigin(r.getOrigin());
+		String[] o1o2 = r.getOrigin().split(":");
+		ge.setOrigin(o1o2[0]);
+		ge.setOrigin2(o1o2[1]);
 		return ge;
 	}
 
@@ -85,7 +88,7 @@ public class MembershipEventUtil {
 	public static MembershipEvent toMembershipEvent(Avliden a) {
 		MembershipEvent ge = newMembershipEvent(a);
 		ge.setMeType(Type.REMOVE);
-		ge.setOrigin("avliden");
+		ge.setOrigin("AVLIDEN");
 		return ge;
 	}
 	
@@ -113,7 +116,11 @@ public class MembershipEventUtil {
 		try {
 			return DATE_FORMAT.parse(formattedDate);
 		} catch (ParseException e) {
-			throw new RuntimeException(e);
+			try {
+				return DATE_FORMAT_HHMM.parse(formattedDate);
+			} catch (ParseException e1) {
+				throw new RuntimeException(e);
+			}
 		}
 	}
 
