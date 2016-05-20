@@ -1,5 +1,5 @@
 # UU Integration
-This is the Uppsala University integration components. The overall picture of the components is an event routing network containing message brokering along with a set of channel adapters.  
+This is the Uppsala University integration components. The overall picture of the components is an event routing network containing message brokering along with a set of channel adapters and messaging gateways. 
 
 ![alt text](https://raw.githubusercontent.com/uppsala-university/uu-integration/master/docs/event-routing-network-map.png "Uppsala university Event Routing Network Map")
 
