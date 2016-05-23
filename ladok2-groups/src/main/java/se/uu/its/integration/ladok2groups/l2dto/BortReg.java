@@ -1,7 +1,6 @@
 package se.uu.its.integration.ladok2groups.l2dto;
 
 
-
 public class BortReg extends PnrEvent {
 	
 	String kurskod;

@@ -1,4 +1,4 @@
-package se.uu.its.integration.ladok2groups;
+package se.uu.its.integration.ladok2groups.util;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

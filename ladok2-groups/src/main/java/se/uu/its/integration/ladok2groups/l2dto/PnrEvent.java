@@ -1,8 +1,8 @@
 package se.uu.its.integration.ladok2groups.l2dto;
 
 public class PnrEvent {
-
-    String pnr;
+	
+	String pnr;
     String datum;
     String tid;
 

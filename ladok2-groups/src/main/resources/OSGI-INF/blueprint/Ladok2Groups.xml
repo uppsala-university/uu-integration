@@ -12,13 +12,13 @@
         http://camel.apache.org/schema/blueprint http://camel.apache.org/schema/blueprint/camel-blueprint.xsd
         http://aries.apache.org/xmlns/jpa/v1.0.0 http://aries.apache.org/xmlns/jpa/v1.0.0" >
 
-    <!--
-    <cm:property-placeholder persistent-id="se.uu.its.integration" placeholder-prefix="$(" placeholder-suffix=")">
+    <cm:property-placeholder persistent-id="se.uu.its.integration">
         <cm:default-properties>
-            <cm:property name="host" value="http://0.0.0.0:8990/" />
+            <cm:property name="ladok2groups.start"  value="2007-01-01 000000" />
+            <cm:property name="ladok2groups.period" value="60000" />
+            <cm:property name="ladok2groups.count"  value="-1" />
         </cm:default-properties>
     </cm:property-placeholder>
-    -->
 
     <reference id="esbDs" interface="javax.sql.DataSource" filter="(osgi.jndi.service.name=jdbc/UUDS)" />
 
@@ -27,6 +27,7 @@
     <bean id="ladok2Groups" class="se.uu.its.integration.ladok2groups.Ladok2Groups">
         <property name="esbDs" ref="esbDs" />
         <property name="ladok2ReadDs" ref="ladok2ReadDs" />
+        <property name="ladok2GroupEventStart" value="${ladok2groups.start}" />
     </bean>
 
     <camelContext id="Ladok2Groups"
@@ -52,11 +53,11 @@
 
             <description>Update Ladok 2 group event table</description>
 
-            <from id="Ladok 2 Groups timer" uri="timer://ladok?fixedRate=true&amp;period=5000&amp;repeatCount=0" />
+            <from id="Ladok 2 Groups timer" uri="timer://ladok?fixedRate=false&amp;period={{ladok2groups.period}}&amp;repeatCount={{ladok2groups.count}}" />
 
             <to id="Ladok 2 Groups Event table update" uri="bean:ladok2Groups?method=updateGroupEvents" />
 
-            <log message="Ladok 2 Groups Events table updated: '$simple{body}' " loggingLevel="INFO" logName="se.uu.its.integration.ladok2groups"/>
+            <log message="Ladok 2 Groups Events table updated" loggingLevel="INFO" logName="se.uu.its.integration.ladok2groups"/>
 
             <stop id="Handling finished" />
 

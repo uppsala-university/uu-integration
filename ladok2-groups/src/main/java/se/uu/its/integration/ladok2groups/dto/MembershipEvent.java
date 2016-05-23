@@ -2,7 +2,7 @@ package se.uu.its.integration.ladok2groups.dto;
 
 import java.util.Date;
 
-import se.uu.its.integration.ladok2groups.MembershipEventUtil;
+import se.uu.its.integration.ladok2groups.util.MembershipEventUtil;
 
 public class MembershipEvent {
 	
@@ -25,7 +25,7 @@ public class MembershipEvent {
 		this.id = id;
 	}
 	public String getFormattedDate() {
-		return MembershipEventUtil.DATE_FORMAT.format(date);
+		return MembershipEventUtil.format(date);
 	}
 	public Date getDate() {
 		return date;

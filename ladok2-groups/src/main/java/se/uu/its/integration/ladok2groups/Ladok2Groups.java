@@ -1,12 +1,20 @@
 package se.uu.its.integration.ladok2groups;
 
-import static se.uu.its.integration.ladok2groups.JdbcUtil.query;
-import static se.uu.its.integration.ladok2groups.JdbcUtil.queryByObj;
-import static se.uu.its.integration.ladok2groups.JdbcUtil.update;
-import static se.uu.its.integration.ladok2groups.JdbcUtil.update2;
+import static se.uu.its.integration.ladok2groups.util.JdbcUtil.query;
+import static se.uu.its.integration.ladok2groups.util.JdbcUtil.queryByObj;
+import static se.uu.its.integration.ladok2groups.util.JdbcUtil.update;
+import static se.uu.its.integration.ladok2groups.util.JdbcUtil.update2;
+import static se.uu.its.integration.ladok2groups.util.MembershipEventUtil.filter;
+import static se.uu.its.integration.ladok2groups.util.MembershipEventUtil.format;
+import static se.uu.its.integration.ladok2groups.util.MembershipEventUtil.getDate;
+import static se.uu.its.integration.ladok2groups.util.MembershipEventUtil.sort;
+import static se.uu.its.integration.ladok2groups.util.MembershipEventUtil.toMembership;
+import static se.uu.its.integration.ladok2groups.util.MembershipEventUtil.toMembershipEvents;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -27,6 +35,8 @@ import se.uu.its.integration.ladok2groups.sql.Ladok2GroupSql;
 public class Ladok2Groups {
 	
 	static Log log = LogFactory.getLog(Ladok2Groups.class);
+	
+	Date ladok2GroupEventStart;
 
 	DataSource esbDs;
 	DataSource ladok2ReadDs;
@@ -36,6 +46,18 @@ public class Ladok2Groups {
 	
 	NamedParameterJdbcTemplate esbJdbc;
 	NamedParameterJdbcTemplate l2Jdbc;
+	
+	public Date getLadok2GroupEventStartTime() {
+		return ladok2GroupEventStart;
+	}
+	
+	public String getLadok2GroupEventStart() {
+		return format(ladok2GroupEventStart);
+	}
+	
+	public void setLadok2GroupEventStart(String time) {
+		ladok2GroupEventStart = getDate(time);
+	}
 
 	public void setEsbDs(DataSource esbDs) {
 		this.esbDs = esbDs;
@@ -50,41 +72,64 @@ public class Ladok2Groups {
 		if (l2Jdbc == null) { l2Jdbc = new NamedParameterJdbcTemplate(ladok2ReadDs); }
 	}
 	
-	public String updateGroupEvents() throws Exception {
+	public void updateGroupEvents() throws Exception {
 		init(); // delayed init to let the ds resources have time to be injected
-		// Not interested in events older than this:
-		Date defaultFrom = MembershipEventUtil.DATE_FORMAT.parse("2015-11-01 000000"); // TODO: 2007-01-01
 		List<MembershipEvent> pmes = query(esbJdbc, MembershipEvent.class,
 				esbSql.getMostRecentPotentialMembershipEventSql());
 		// Skip forward 1 second from most recent event to avoid duplicate events:
-		Date from = pmes.isEmpty() ? defaultFrom : new Date(pmes.get(0).getDate().getTime() + 1000);
-		Date now = new Date();
-		// Skip most recent events to make sure all events for that time have arrived at Ladok:
-		Date to = new Date(now.getTime() - 15000); 
-		int numMEs = updatePotentialMembershipEvents(from, to);
-		updateMembershipEvents();
-		return "Number of new Ladok membership events: " + numMEs;
-	}
-	
-	int updatePotentialMembershipEvents(Date from, Date to) {
-		List<MembershipEvent> mes =  getNewLadokMembershipEvents(from, to); // TODO: max num
-		if (mes.size() > 10) {
-			mes =  mes.subList(0, 10);
+		Date start = pmes.isEmpty() ? getLadok2GroupEventStartTime() : new Date(
+				pmes.get(0).getDate().getTime() + 1000);
+		// Skip most recent events to make sure all events for this interval have arrived at Ladok:
+		Date end = new Date(new Date().getTime() - 15000);
+		
+		// If interval is too large, batch updates to each day:
+		Calendar from = new GregorianCalendar();
+		from.setTimeInMillis(start.getTime());
+		from.set(Calendar.MILLISECOND, 0);
+		Calendar to = new GregorianCalendar();
+		to.setTimeInMillis(end.getTime());
+		to.set(Calendar.MILLISECOND, 0);
+		int endYear = to.get(Calendar.YEAR);
+		int endDay = to.get(Calendar.DAY_OF_YEAR);
+		to.setTime(from.getTime());
+		to.set(Calendar.HOUR_OF_DAY, 23);
+		to.set(Calendar.MINUTE, 59);
+		to.set(Calendar.SECOND, 59);
+
+		// Update events for all days up to the last day
+		while (to.after(from) && (to.get(Calendar.YEAR) < endYear || to.get(Calendar.DAY_OF_YEAR) < endDay)) {
+			updatePotentialMembershipEvents(from.getTime(), to.getTime());
+			updateMembershipEvents();
+			// Increment interval one day:
+			from.setTime(to.getTime());
+			to.add(Calendar.DAY_OF_YEAR, 1);
 		}
+		// Update events for the last day
+		updatePotentialMembershipEvents(from.getTime(), end);
+		updateMembershipEvents();
+	}
+		
+	int updatePotentialMembershipEvents(Date from, Date to) {
+		List<MembershipEvent> mes =  getNewLadokMembershipEvents(from, to);
 		update(esbJdbc, esbSql.getSaveNewPotentialMembershipEventSql(), mes);
+		log.info("Updated potential membership events in interval [" 
+				+ format(from) + ", " + format(to) + "): " + mes.size());
 		return mes.size();
 	}
 	
 	int updateMembershipEvents() {
 		List<MembershipEvent> potentialMembershipEvents = getUnprocessedPotentialMembershipEvents();
-		//List<MembershipEvent> mes = new ArrayList<MembershipEvent>();
-		log.info("Unprocessed mes: " + potentialMembershipEvents);
+		log.info("Number of unprocessed potential membership events: " + potentialMembershipEvents.size());
 		for (MembershipEvent me : potentialMembershipEvents) {
 			if (me.getMeType() == MembershipEvent.Type.ADD) {
-				// TODO: fortsattningsreg -> update membership ?
+				if ("FORTKURS".equals(me.getOrigin())) {
+					// fortsattningsreg -> we already have the membership, 
+					// but for completeness we add the event
+					update(esbJdbc, esbSql.getSaveNewMembershipEventSql(), me);
+				}
 				update2(esbDs, 
 						esbSql.getSaveNewMembershipEventSql(), me,
-						esbSql.getSaveNewMembershipSql(), MembershipEventUtil.toMembership(me), 
+						esbSql.getSaveNewMembershipSql(), toMembership(me), 
 						log);
 				log.info("Adding new membership add event: " + me);
 			} else {
@@ -106,21 +151,28 @@ public class Ladok2Groups {
 	}
 	
 	List<MembershipEvent> getNewLadokMembershipEvents(Date from, Date to) {
-		String fd = MembershipEventUtil.DATE_FORMAT.format(from);
-		String[] dateAndTime = fd.split(" ");
-		String date = dateAndTime[0];
-		String time = dateAndTime[1];
-		List<Reg> reg = query(l2Jdbc, Reg.class, l2Sql.getRegSql(), "datum", date, "tid", time);
-		List<BortReg> bortreg = query(l2Jdbc, BortReg.class, l2Sql.getBortRegSql(), "datum", date, "tid", time);
-		List<InReg> inreg = query(l2Jdbc, InReg.class, l2Sql.getInRegSql(), "datum", date, "tid", time);
-		List<Avliden> avliden = query(l2Jdbc, Avliden.class, l2Sql.getAvlidenSql(), "datum", date);
+		String d_to = format(to);
+		String[] dt_to = d_to.split(" ");
+		String date_to = dt_to[0];
+		String d_from = format(from);
+		String[] dt_from = d_from.split(" ");
+		String date_from = dt_from[0];
+		String time_from = date_from.equals(date_to) ? dt_from[1] : "000000";
+		List<Reg> reg = query(l2Jdbc, Reg.class, l2Sql.getRegSql(), 
+				"datum_from", date_from, "datum_to", date_to, "tid", time_from);
+		List<BortReg> bortreg = query(l2Jdbc, BortReg.class, l2Sql.getBortRegSql(), 
+				"datum_from", date_from, "datum_to", date_to, "tid", time_from);
+		List<InReg> inreg = query(l2Jdbc, InReg.class, l2Sql.getInRegSql(), 
+				"datum_from", date_from, "datum_to", date_to, "tid", time_from);
+		List<Avliden> avliden = query(l2Jdbc, Avliden.class, l2Sql.getAvlidenSql(), 
+				"datum_from", date_from, "datum_to", date_to);
 		List<MembershipEvent> mes = new ArrayList<MembershipEvent>();
-        mes.addAll(MembershipEventUtil.toMembershipEvents(reg));
-        mes.addAll(MembershipEventUtil.toMembershipEvents(bortreg));
-        mes.addAll(MembershipEventUtil.toMembershipEvents(inreg));
-        mes.addAll(MembershipEventUtil.toMembershipEvents(avliden));
-		MembershipEventUtil.sort(mes);
-		mes = MembershipEventUtil.filter(mes, from, to);
+        mes.addAll(toMembershipEvents(reg));
+        mes.addAll(toMembershipEvents(bortreg));
+        mes.addAll(toMembershipEvents(inreg));
+        mes.addAll(toMembershipEvents(avliden));
+		sort(mes);
+		mes = filter(mes, from, to);
 		return mes;
 	}
 	
