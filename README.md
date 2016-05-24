@@ -5,6 +5,8 @@ This is the Uppsala University integration components. The overall picture of th
 
 The target environment for the components in the event routing map is an OSGi container, the target environment for channels is a MQ Broker and the target environment for the log database is a RDBMS. An example of a fully provisioned target environment is found at the GitHub repository [integration-runtime](https://github.com/uppsala-university/integration-runtime).
 
+Vital to the message bus is the internal language within the message bus. This language is implemented and documented in the sub module [esb-model](https://github.com/uppsala-university/uu-integration/tree/master/esb-model).
+
 ## Dependencies
 The total set of integration components is supplied by dependencies of components from repositories 
 
