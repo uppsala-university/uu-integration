@@ -56,7 +56,7 @@ public class JdbcUtil {
 		return  NamedParameterUtils.substituteNamedParameters(sql, bpsps);
 	}
 
-	public static PreparedStatementCreator getPreparedStatementCreator(String sql, Object value, Log log) {
+	public static PreparedStatementCreator getPreparedStatementCreator(String sql, Object value) {
 		SqlParameterSource paramSource = new BeanPropertySqlParameterSource(value);
 		ParsedSql parsedSql = NamedParameterUtils.parseSqlStatement(sql);
 		String sqlToUse = NamedParameterUtils.substituteNamedParameters(parsedSql, paramSource);
@@ -70,8 +70,8 @@ public class JdbcUtil {
 			String sql2, Object value2, Log log) {
 		try {
 			Connection con = ds.getConnection();
-			PreparedStatementCreator psc1 = getPreparedStatementCreator(sql1, value1, log);
-			PreparedStatementCreator psc2 = getPreparedStatementCreator(sql2, value2, log);
+			PreparedStatementCreator psc1 = getPreparedStatementCreator(sql1, value1);
+			PreparedStatementCreator psc2 = getPreparedStatementCreator(sql2, value2);
 			update2(con, psc1, psc2, log);
 		} catch (SQLException e) {
 			throw new RuntimeException(e);

@@ -9,6 +9,7 @@ import static se.uu.its.integration.ladok2groups.util.MembershipEventUtil.format
 import static se.uu.its.integration.ladok2groups.util.MembershipEventUtil.getDate;
 import static se.uu.its.integration.ladok2groups.util.MembershipEventUtil.sort;
 import static se.uu.its.integration.ladok2groups.util.MembershipEventUtil.toMembership;
+import static se.uu.its.integration.ladok2groups.util.MembershipEventUtil.toMembershipEvent;
 import static se.uu.its.integration.ladok2groups.util.MembershipEventUtil.toMembershipEvents;
 
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import se.uu.its.integration.ladok2groups.dto.Membership;
-import se.uu.its.integration.ladok2groups.dto.MembershipEvent;
+import se.uu.its.integration.ladok2groups.dto.PotentialMembershipEvent;
 import se.uu.its.integration.ladok2groups.l2dto.Avliden;
 import se.uu.its.integration.ladok2groups.l2dto.BortReg;
 import se.uu.its.integration.ladok2groups.l2dto.InReg;
@@ -74,7 +75,7 @@ public class Ladok2Groups {
 	
 	public void updateGroupEvents() throws Exception {
 		init(); // delayed init to let the ds resources have time to be injected
-		List<MembershipEvent> pmes = query(esbJdbc, MembershipEvent.class,
+		List<PotentialMembershipEvent> pmes = query(esbJdbc, PotentialMembershipEvent.class,
 				esbSql.getMostRecentPotentialMembershipEventSql());
 		// Skip forward 1 second from most recent event to avoid duplicate events:
 		Date start = pmes.isEmpty() ? getLadok2GroupEventStartTime() : new Date(
@@ -110,7 +111,7 @@ public class Ladok2Groups {
 	}
 		
 	int updatePotentialMembershipEvents(Date from, Date to) {
-		List<MembershipEvent> mes =  getNewLadokMembershipEvents(from, to);
+		List<PotentialMembershipEvent> mes =  getNewLadokMembershipEvents(from, to);
 		update(esbJdbc, esbSql.getSaveNewPotentialMembershipEventSql(), mes);
 		log.info("Updated potential membership events in interval [" 
 				+ format(from) + ", " + format(to) + "): " + mes.size());
@@ -118,39 +119,44 @@ public class Ladok2Groups {
 	}
 	
 	int updateMembershipEvents() {
-		List<MembershipEvent> potentialMembershipEvents = getUnprocessedPotentialMembershipEvents();
+		List<PotentialMembershipEvent> potentialMembershipEvents = getUnprocessedPotentialMembershipEvents();
 		log.info("Number of unprocessed potential membership events: " + potentialMembershipEvents.size());
-		for (MembershipEvent me : potentialMembershipEvents) {
-			if (me.getMeType() == MembershipEvent.Type.ADD) {
-				if ("FORTKURS".equals(me.getOrigin())) {
+		for (PotentialMembershipEvent pme : potentialMembershipEvents) {
+			if (pme.getMeType() == PotentialMembershipEvent.Type.ADD) {
+				if ("FORTKURS".equals(pme.getOrigin())) {
 					// fortsattningsreg -> we already have the membership, 
-					// but for completeness we add the event
-					update(esbJdbc, esbSql.getSaveNewMembershipEventSql(), me);
-				}
-				update2(esbDs, 
-						esbSql.getSaveNewMembershipEventSql(), me,
-						esbSql.getSaveNewMembershipSql(), toMembership(me), 
-						log);
-				log.info("Adding new membership add event: " + me);
-			} else {
-				List<Membership> ms = queryByObj(esbJdbc, Membership.class, esbSql.getFindMembershipsSql(), me);
-				if (ms.size() == 1) {
-					me.setReportCode(ms.get(0).getReportCode());
-					update(esbJdbc, esbSql.getSaveNewMembershipEventSql(), me);
-					// TODO: Delete memberships in the same transaction
-					log.info("Adding new membership remove event: " + me);
-				} else if (ms.size() == 0) {
-					log.info("Skipping potential membership remove event due to no matching membership: " + me);
+					// but for completeness and future use we add the event
+					update(esbJdbc, esbSql.getSaveNewMembershipEventSql(), toMembershipEvent(pme));
 				} else {
-					// TODO: check matching memberships and possibly make multiple events
-					log.info("Skipping potential membership remove event due to ambiguity: " + me);
+					update2(esbDs,
+							esbSql.getSaveNewMembershipEventSql(), toMembershipEvent(pme),
+							esbSql.getSaveNewMembershipSql(), toMembership(pme),
+							log);
+				}
+				log.info("Adding new membership add event: " + pme);
+			} else {
+				// TODO: Is avreg semester always == start semester?
+				List<Membership> ms = queryByObj(esbJdbc, Membership.class, esbSql.getFindMembershipsSql(), pme);
+				if (ms.size() >= 0) {
+					for (Membership m : ms) {
+						pme.setReportCode(m.getReportCode());
+						pme.setCourseCode(m.getCourseCode());
+						pme.setSemester(m.getSemester());
+						update2(esbDs,
+								esbSql.getSaveNewMembershipEventSql(), toMembershipEvent(pme),
+								esbSql.getDeleteMembershipSql(), m,
+								log);
+						log.info("Adding new membership remove event: " + pme);
+					}
+				} else {
+					log.info("Skipping potential membership remove event due to no matching membership: " + pme);
 				}
 			}
 		}
 		return potentialMembershipEvents.size();
 	}
 	
-	List<MembershipEvent> getNewLadokMembershipEvents(Date from, Date to) {
+	List<PotentialMembershipEvent> getNewLadokMembershipEvents(Date from, Date to) {
 		String d_to = format(to);
 		String[] dt_to = d_to.split(" ");
 		String date_to = dt_to[0];
@@ -166,7 +172,7 @@ public class Ladok2Groups {
 				"datum_from", date_from, "datum_to", date_to, "tid", time_from);
 		List<Avliden> avliden = query(l2Jdbc, Avliden.class, l2Sql.getAvlidenSql(), 
 				"datum_from", date_from, "datum_to", date_to);
-		List<MembershipEvent> mes = new ArrayList<MembershipEvent>();
+		List<PotentialMembershipEvent> mes = new ArrayList<PotentialMembershipEvent>();
         mes.addAll(toMembershipEvents(reg));
         mes.addAll(toMembershipEvents(bortreg));
         mes.addAll(toMembershipEvents(inreg));
@@ -176,15 +182,15 @@ public class Ladok2Groups {
 		return mes;
 	}
 	
-	List<MembershipEvent> getUnprocessedPotentialMembershipEvents() {
-		List<MembershipEvent> unprocessed;
-		List<MembershipEvent> mes = query(esbJdbc, MembershipEvent.class,
+	List<PotentialMembershipEvent> getUnprocessedPotentialMembershipEvents() {
+		List<PotentialMembershipEvent> unprocessed;
+		List<PotentialMembershipEvent> mes = query(esbJdbc, PotentialMembershipEvent.class,
 				esbSql.getMostRecentMembershipEventSql());
 		if (mes.isEmpty()) {
-			unprocessed = query(esbJdbc, MembershipEvent.class, 
+			unprocessed = query(esbJdbc, PotentialMembershipEvent.class, 
 					esbSql.getAllPotentialMembershipEventsSql());
 		} else {
-			unprocessed = query(esbJdbc, MembershipEvent.class,
+			unprocessed = query(esbJdbc, PotentialMembershipEvent.class,
 					esbSql.getPotentialMembershipEventsNewerThanSql(), 
 					"id", mes.get(0).getId());
 		}

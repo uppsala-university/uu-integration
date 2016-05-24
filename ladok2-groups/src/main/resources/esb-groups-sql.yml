@@ -26,7 +26,7 @@ esb.sql.mostRecentPotentialMembershipEvent: |
 
 esb.sql.mostRecentMembershipEvent: |
     select
-       id, date, pnr, meType, courseCode, reportCode, semester, origin, origin2
+       id, pmeid, date, pnr, meType, courseCode, reportCode, semester, origin, origin2
     from
         MEMBERSHIP_EVENTS
     where
@@ -37,8 +37,8 @@ esb.sql.saveNewPotentialMembershipEvent: |
     values (:date, :pnr, :meTypeAsString, :courseCode, :reportCode, :semester, :origin, :origin2)
 
 esb.sql.saveNewMembershipEvent: |
-    insert into MEMBERSHIP_EVENTS (id, date, pnr, meType, courseCode, reportCode, semester, origin, origin2)
-    values (:id, :date, :pnr, :meTypeAsString, :courseCode, :reportCode, :semester, :origin, :origin2)
+    insert into MEMBERSHIP_EVENTS (pmeid, date, pnr, meType, courseCode, reportCode, semester, origin, origin2)
+    values (:pmeid, :date, :pnr, :meTypeAsString, :courseCode, :reportCode, :semester, :origin, :origin2)
 
 esb.sql.saveNewMembership: |
     insert into MEMBERSHIPS (date, pnr, courseCode, reportCode, semester, origin, origin2)

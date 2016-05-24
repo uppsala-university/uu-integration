@@ -12,7 +12,8 @@ import java.util.Map;
 
 import se.uu.its.integration.ladok2groups.dto.Membership;
 import se.uu.its.integration.ladok2groups.dto.MembershipEvent;
-import se.uu.its.integration.ladok2groups.dto.MembershipEvent.Type;
+import se.uu.its.integration.ladok2groups.dto.PotentialMembershipEvent;
+import se.uu.its.integration.ladok2groups.dto.PotentialMembershipEvent.Type;
 import se.uu.its.integration.ladok2groups.l2dto.Avliden;
 import se.uu.its.integration.ladok2groups.l2dto.BortReg;
 import se.uu.its.integration.ladok2groups.l2dto.InReg;
@@ -24,20 +25,20 @@ public class MembershipEventUtil {
 	public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HHmmss");
 	public static final SimpleDateFormat DATE_FORMAT_HHMM = new SimpleDateFormat("yyyy-MM-dd HHmm");
 	
-	public static final Comparator<MembershipEvent> MEMBERSHIPEVENT_COMPARATOR = new Comparator<MembershipEvent>() {
+	public static final Comparator<PotentialMembershipEvent> MEMBERSHIPEVENT_COMPARATOR = new Comparator<PotentialMembershipEvent>() {
 		@Override
-		public int compare(MembershipEvent me1, MembershipEvent me2) {
+		public int compare(PotentialMembershipEvent me1, PotentialMembershipEvent me2) {
 			return me1.getDate().compareTo(me2.getDate());
 		}
 	};
 	
-	public static void sort(List<MembershipEvent> mes) {
+	public static void sort(List<? extends PotentialMembershipEvent> mes) {
 		Collections.sort(mes, MEMBERSHIPEVENT_COMPARATOR);
 	}
 	
-	public static List<MembershipEvent> filter(List<MembershipEvent> mes, Date from, Date to) {
-		List<MembershipEvent> fmes = new ArrayList<MembershipEvent>();
-		for (MembershipEvent me : mes) {
+	public static List<PotentialMembershipEvent> filter(List<PotentialMembershipEvent> mes, Date from, Date to) {
+		List<PotentialMembershipEvent> fmes = new ArrayList<PotentialMembershipEvent>();
+		for (PotentialMembershipEvent me : mes) {
 			if (!from.after(me.getDate()) && me.getDate().before(to)) { // from: incl, to: excl
 				fmes.add(me);
 			}
@@ -45,16 +46,16 @@ public class MembershipEventUtil {
 		return fmes;
 	}
 
-	public static List<MembershipEvent> toMembershipEvents(List<?> os) {
-		List<MembershipEvent> mes = new ArrayList<MembershipEvent>(os.size());
+	public static List<PotentialMembershipEvent> toMembershipEvents(List<?> os) {
+		List<PotentialMembershipEvent> mes = new ArrayList<PotentialMembershipEvent>(os.size());
 		for (Object o : os) {
 			mes.add(toMembershipEvent(o));
 		}
 		return mes;
 	}
 
-	public static MembershipEvent toMembershipEvent(Reg r) {
-		MembershipEvent ge = newMembershipEvent(r);
+	public static PotentialMembershipEvent toMembershipEvent(Reg r) {
+		PotentialMembershipEvent ge = newMembershipEvent(r);
 		ge.setMeType(Type.ADD);
 		ge.setCourseCode(r.getKurskod());
 		ge.setReportCode(r.getAnmkod());
@@ -65,8 +66,8 @@ public class MembershipEventUtil {
 		return ge;
 	}
 
-	public static MembershipEvent toMembershipEvent(BortReg r) {
-		MembershipEvent ge = newMembershipEvent(r);
+	public static PotentialMembershipEvent toMembershipEvent(BortReg r) {
+		PotentialMembershipEvent ge = newMembershipEvent(r);
 		ge.setMeType(Type.REMOVE);
 		Map<String, String> urPost = parseUrPost(r.getUrpost());
 		ge.setSemester(urPost.get("TERMIN"));
@@ -76,8 +77,8 @@ public class MembershipEventUtil {
 		return ge;
 	}
 
-	public static MembershipEvent toMembershipEvent(InReg r) {
-		MembershipEvent ge = newMembershipEvent(r);
+	public static PotentialMembershipEvent toMembershipEvent(InReg r) {
+		PotentialMembershipEvent ge = newMembershipEvent(r);
 		ge.setMeType(Type.REMOVE);
 		ge.setOrigin(r.getOrigin());
 		ge.setCourseCode(r.getKurskod());
@@ -85,22 +86,36 @@ public class MembershipEventUtil {
 		return ge;
 	}
 
-	public static MembershipEvent toMembershipEvent(Avliden a) {
-		MembershipEvent ge = newMembershipEvent(a);
+	public static MembershipEvent toMembershipEvent(PotentialMembershipEvent pme) {
+		MembershipEvent me = new MembershipEvent();
+		me.setPmeid(pme.getId());
+		me.setMeType(pme.getMeType());
+		me.setDate(pme.getDate());
+		me.setPnr(pme.getPnr());
+		me.setCourseCode(pme.getCourseCode());
+		me.setReportCode(pme.getReportCode());
+		me.setSemester(pme.getSemester());
+		me.setOrigin(pme.getOrigin());
+		me.setOrigin2(pme.getOrigin2());
+		return me;
+	}
+	
+	public static PotentialMembershipEvent toMembershipEvent(Avliden a) {
+		PotentialMembershipEvent ge = newMembershipEvent(a);
 		ge.setMeType(Type.REMOVE);
 		ge.setOrigin("AVLIDEN");
 		return ge;
 	}
 	
-	public static List<Membership> toMemberships(List<MembershipEvent> mes) {
+	public static List<Membership> toMemberships(List<PotentialMembershipEvent> mes) {
 		List<Membership> ms = new ArrayList<Membership>(mes.size());
-		for (MembershipEvent me : mes) {
+		for (PotentialMembershipEvent me : mes) {
 			ms.add(toMembership(me));
 		}
 		return ms;
 	}
 	
-	public static Membership toMembership(MembershipEvent me) {
+	public static Membership toMembership(PotentialMembershipEvent me) {
 		Membership m = new Membership();
 		m.setDate(me.getDate());
 		m.setPnr(me.getPnr());
@@ -128,7 +143,7 @@ public class MembershipEventUtil {
 		return DATE_FORMAT.format(date);
 	}
 
-	private static MembershipEvent toMembershipEvent(Object o) {
+	private static PotentialMembershipEvent toMembershipEvent(Object o) {
 		if (o instanceof Reg) {
 			return toMembershipEvent((Reg) o);
 		} else if (o instanceof BortReg) {
@@ -142,9 +157,9 @@ public class MembershipEventUtil {
 		}
 	}
 
-	private static MembershipEvent newMembershipEvent(PnrEvent pe) {
+	private static PotentialMembershipEvent newMembershipEvent(PnrEvent pe) {
 		try {
-			MembershipEvent me = new MembershipEvent();
+			PotentialMembershipEvent me = new PotentialMembershipEvent();
 			me.setPnr(pe.getPnr());
 			// Absence of time -> set as late as possible to not miss any event
 			String time = pe.getTid();
