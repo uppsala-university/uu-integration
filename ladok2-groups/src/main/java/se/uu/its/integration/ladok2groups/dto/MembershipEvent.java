@@ -17,8 +17,8 @@ public class MembershipEvent extends PotentialMembershipEvent {
 		return "MembershipEvent [id=" + id + ", pmeid=" + pmeid + ", date="
 				+ date + ", pnr=" + pnr + ", meType=" + meType
 				+ ", courseCode=" + courseCode + ", reportCode=" + reportCode
-				+ ", semester=" + semester + ", origin=" + origin
-				+ ", origin2=" + origin2 + "]";
+				+ ", startSemester=" + startSemester + ", semester=" + semester
+				+ ", origin=" + origin + ", origin2=" + origin2 + "]";
 	}
 	
 }

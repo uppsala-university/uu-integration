@@ -5,6 +5,7 @@ public class Reg extends PnrEvent {
     
 	String anmkod;
     String startter;
+    String termin;
     String kurskod;
     String completed;
     String origin;
@@ -20,6 +21,12 @@ public class Reg extends PnrEvent {
 	}
 	public void setStartter(String startter) {
 		this.startter = startter;
+	}
+	public String getTermin() {
+		return termin;
+	}
+	public void setTermin(String termin) {
+		this.termin = termin;
 	}
 	public String getKurskod() {
 		return kurskod;
@@ -44,8 +51,8 @@ public class Reg extends PnrEvent {
 	public String toString() {
 		return "Reg [datum=" + datum + ", tid=" + tid + ", pnr=" + pnr
 				+ ", anmkod=" + anmkod + ", startter=" + startter
-				+ ", kurskod=" + kurskod + ", completed=" + completed
-				+ ", origin=" + origin + "]";
+				+ ", termin=" + termin + ", kurskod=" + kurskod
+				+ ", completed=" + completed + ", origin=" + origin + "]";
 	}
 	
 }

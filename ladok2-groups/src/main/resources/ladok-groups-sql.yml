@@ -8,6 +8,7 @@ ladok.sql.reg: |
     SELECT
         distinct kt.kod as anmkod,
         kt.startter as startter,
+        reg.termin as termin,
         kt.kurskod,
         COALESCE(gk.datum, '') as completed,
         reg.idatum as datum,
@@ -40,6 +41,7 @@ ladok.sql.reg: |
     SELECT
         distinct kt.kod as anmkod,
         kt.startter as startter,
+        reg.termin as termin,
         kt.kurskod,
         COALESCE(gk.datum, '') as completed,
         reg.idatum as datum,
@@ -84,6 +86,7 @@ ladok.sql.reg: |
     SELECT
         distinct kt.kod as anmkod,
         kt.startter as startter,
+        reg.termin as termin,
         kt.kurskod,
         COALESCE(gk.datum, '') as completed,
         reg.idatum as datum,
@@ -125,6 +128,7 @@ ladok.sql.reg: |
     SELECT
         distinct kt.kod as anmkod,
         kt.startter as startter,
+        reg.termin as termin,
         kt.kurskod,
         COALESCE(gk.datum, '') as completed,
         reg.idatum as datum,
@@ -158,6 +162,7 @@ ladok.sql.reg: |
     SELECT
         distinct kt.kod as anmkod,
         kt.startter as startter,
+        reg.termin as termin,
         kt.kurskod,
         COALESCE(gk.datum, '') as completed,
         reg.idatum as datum,
@@ -201,6 +206,7 @@ ladok.sql.reg: |
     SELECT
         distinct kt.kod as anmkod,
         kt.startter as startter,
+        reg.termin as termin,
         kt.kurskod,
         COALESCE(gk.datum, '') as completed,
         reg.idatum as datum,

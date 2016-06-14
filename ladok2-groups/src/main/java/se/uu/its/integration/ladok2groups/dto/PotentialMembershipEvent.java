@@ -14,6 +14,7 @@ public class PotentialMembershipEvent {
 	Type meType;
 	String courseCode;
 	String reportCode;
+	String startSemester;
 	String semester;
 	String origin;
 	String origin2;
@@ -57,6 +58,12 @@ public class PotentialMembershipEvent {
 	public void setCourseCode(String courseCode) {
 		this.courseCode = courseCode;
 	}
+	public String getStartSemester() {
+		return startSemester;
+	}
+	public void setStartSemester(String startSemester) {
+		this.startSemester = startSemester;
+	}
 	public String getSemester() {
 		return semester;
 	}
@@ -84,10 +91,10 @@ public class PotentialMembershipEvent {
 	
 	@Override
 	public String toString() {
-		return "PotentialMembershipEvent [id=" + id + ", date=" + getFormattedDate() + ", pnr=" + pnr
-				+ ", meType=" + meType + ", courseCode=" + courseCode
-				+ ", semester=" + semester + ", reportCode=" + reportCode
-				+ ", origin=" + origin + ", origin2=" + origin2 + "]";
+		return "PotentialMembershipEvent [id=" + id + ", date=" + getFormattedDate() 
+				+ ", pnr=" + pnr + ", meType=" + meType + ", courseCode=" + courseCode
+				+ ", startSemester=" + startSemester + ", semester=" + semester
+				+ ", reportCode=" + reportCode + ", origin=" + origin + ", origin2=" + origin2 + "]";
 	}
 	
 }

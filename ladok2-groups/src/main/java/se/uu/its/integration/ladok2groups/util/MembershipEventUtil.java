@@ -59,7 +59,8 @@ public class MembershipEventUtil {
 		ge.setMeType(Type.ADD);
 		ge.setCourseCode(r.getKurskod());
 		ge.setReportCode(r.getAnmkod());
-		ge.setSemester(r.getStartter());
+		ge.setStartSemester(r.getStartter());
+		ge.setSemester(r.getTermin());
 		String[] o1o2 = r.getOrigin().split(":");
 		ge.setOrigin(o1o2[0]);
 		ge.setOrigin2(o1o2[1]);
@@ -94,6 +95,7 @@ public class MembershipEventUtil {
 		me.setPnr(pme.getPnr());
 		me.setCourseCode(pme.getCourseCode());
 		me.setReportCode(pme.getReportCode());
+		me.setStartSemester(pme.getStartSemester());
 		me.setSemester(pme.getSemester());
 		me.setOrigin(pme.getOrigin());
 		me.setOrigin2(pme.getOrigin2());
@@ -121,6 +123,7 @@ public class MembershipEventUtil {
 		m.setPnr(me.getPnr());
 		m.setCourseCode(me.getCourseCode());
 		m.setReportCode(me.getReportCode());
+		m.setStartSemester(me.getStartSemester());
 		m.setSemester(me.getSemester());
 		m.setOrigin(me.getOrigin());
 		m.setOrigin2(me.getOrigin2());

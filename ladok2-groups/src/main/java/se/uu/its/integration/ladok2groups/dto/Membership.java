@@ -10,6 +10,7 @@ public class Membership {
 	String pnr;
 	String courseCode;
 	String reportCode;
+	String startSemester;
 	String semester;
 	String origin;
 	String origin2;
@@ -44,6 +45,12 @@ public class Membership {
 	public void setReportCode(String reportCode) {
 		this.reportCode = reportCode;
 	}
+	public String getStartSemester() {
+		return startSemester;
+	}
+	public void setStartSemester(String startSemester) {
+		this.startSemester = startSemester;
+	}
 	public String getSemester() {
 		return semester;
 	}
@@ -65,10 +72,9 @@ public class Membership {
 	
 	@Override
 	public String toString() {
-		return "Membership [id=" + id + ", pnr=" + pnr + ", courseCode="
-				+ courseCode + ", reportCode=" + reportCode + ", semester="
-				+ semester + ", origin=" + origin + ", origin2=" + origin2
-				+ "]";
+		return "Membership [id=" + id + ", pnr=" + pnr + ", courseCode=" + courseCode 
+				+ ", reportCode=" + reportCode + ", startSemester=" + startSemester
+				+ ", semester=" + semester + ", origin=" + origin + ", origin2=" + origin2 + "]";
 	}
 
 }
