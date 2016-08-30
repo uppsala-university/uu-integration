@@ -9,6 +9,9 @@ public class EsbGroupSql {
 	public EsbGroupSql() {
 		sql = YamlUtil.loadSql(this.getClass().getClassLoader(), "esb-groups-sql.yml");
 	}
+	
+	
+	// PotentialMembershipEvent
 
     public String getAllPotentialMembershipEventsSql() {
 		return sql.get("esb.sql.allPotentialMembershipEvents");
@@ -22,31 +25,63 @@ public class EsbGroupSql {
 		return sql.get("esb.sql.mostRecentPotentialMembershipEvent");
 	}
 
-	public String getMostRecentMembershipEventSql() {
-		return sql.get("esb.sql.mostRecentMembershipEvent");
-	}
-
 	public String getSaveNewPotentialMembershipEventSql() {
 		return sql.get("esb.sql.saveNewPotentialMembershipEvent");
+	}
+	
+	
+	// MembershipEvent
+
+	public String getMostRecentMembershipEventSql() {
+		return sql.get("esb.sql.mostRecentMembershipEvent");
 	}
 
 	public String getSaveNewMembershipEventSql() {
 		return sql.get("esb.sql.saveNewMembershipEvent");
 	}
+
 	
-	public String getUpdateMembershipSql() {
-		return sql.get("esb.sql.updateMembership");
+	// Membership
+	
+	public String getMembershipsSql() {
+		return sql.get("esb.sql.memberships");
 	}
-
-	public String getDeleteMembershipSql() {
-		return sql.get("esb.sql.deleteMembership");
+	
+	public String getMembershipsByCourseCodeSql() {
+		return sql.get("esb.sql.membershipsByCourseCode");
 	}
-
+	
+	public String getMembershipsByReportCodeStartSemesterSql() {
+		return sql.get("esb.sql.membershipsByReportCodeStartSemester");
+	}
+	
+	public String getMembershipsByCourseCodeSemesterOrigin2Sql() {
+		return sql.get("esb.sql.membershipsByCourseCodeSemesterOrigin2");
+	}
+	
 	public String getSaveNewMembershipSql() {
 		return sql.get("esb.sql.saveNewMembership");
 	}
 
-	public String getFindMembershipsSql() {
-		return sql.get("esb.sql.findMemberships");
+	public String getUpdateMembershipSql() {
+		return sql.get("esb.sql.updateMembership");
 	}
+
+	public String getDeleteMembershipByIdSql() {
+		return sql.get("esb.sql.deleteMembershipById");
+	}
+
+	public String getDeleteMembershipByCourseCodeSql() {
+		return sql.get("esb.sql.deleteMembershipByCourseCode");
+	}
+
+	public String getDeleteMembershipsByCourseCodeSemesterOrigin2Sql() {
+		return sql.get("esb.sql.deleteMembershipsByCourseCodeSemesterOrigin2");
+	}
+	
+	public String getDeleteMembershipsSql() {
+		return sql.get("esb.sql.deleteMemberships");
+	}
+	
+	
 }

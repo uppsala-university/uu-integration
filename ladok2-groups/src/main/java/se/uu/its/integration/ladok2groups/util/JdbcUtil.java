@@ -2,7 +2,9 @@ package se.uu.its.integration.ladok2groups.util;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +21,81 @@ import org.springframework.jdbc.core.namedparam.NamedParameterUtils;
 import org.springframework.jdbc.core.namedparam.ParsedSql;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 
+import se.uu.its.integration.ladok2groups.dto.Membership;
+import se.uu.its.integration.ladok2groups.dto.MembershipEvent;
+import se.uu.its.integration.ladok2groups.dto.PotentialMembershipEvent;
+import se.uu.its.integration.ladok2groups.sql.EsbGroupSql;
+
 public class JdbcUtil {
+	
+	static EsbGroupSql esbSql = new EsbGroupSql();
+
+	public static MembershipEvent saveMembershipAddEvent(DataSource ds, Log log, PotentialMembershipEvent pme) {
+		return saveMembershipAddEvent(ds, log, pme, null);
+	}
+
+	public static MembershipEvent saveMembershipAddEvent(DataSource ds, Log log, PotentialMembershipEvent pme, Membership obsoleteMembership) {
+		MembershipEvent me = null;
+		List<PreparedStatement> pss = new ArrayList<PreparedStatement>();
+		Connection con = null;
+		try {
+			con = ds.getConnection();
+			con.setAutoCommit(false);
+			me = MembershipEventUtil.toMembershipEvent(pme);
+			PreparedStatement psme = getPreparedStatement(con, esbSql.getSaveNewMembershipEventSql(), me);
+			pss.add(psme);
+			psme.execute();
+			ResultSet genKeys = psme.getGeneratedKeys();
+			genKeys.next();
+			long genId = genKeys.getLong(1);
+			me.setId(genId);
+			Membership m = MembershipEventUtil.toMembership(me);
+			PreparedStatement psm = getPreparedStatement(con, esbSql.getSaveNewMembershipSql(), m);
+			pss.add(psm);
+			psm.execute();
+			if (obsoleteMembership != null) {
+				PreparedStatement psd = getPreparedStatement(con,
+						esbSql.getDeleteMembershipByIdSql(), obsoleteMembership);
+				pss.add(psd);
+				psd.execute();
+			}
+			con.commit();
+			return me;
+		} catch (Exception e ) {
+			log.error(e);
+			if (con != null) {
+				try {
+					log.error("Transaction is being rolled back");
+					con.rollback();
+				} catch(SQLException excep) {
+					log.error(excep);
+				}
+			}
+		} finally {
+			for (PreparedStatement ps : pss) {
+				if (ps != null) {
+					try {
+						ps.close();
+					} catch (SQLException e) {
+						log.error(e.getMessage(), e);
+					}
+				}
+			}
+			if (con != null) { 
+				try {
+					con.setAutoCommit(true);
+				} catch (SQLException e) {
+					log.error(e.getMessage(), e);
+				} 
+				try {
+					con.close(); 
+				} catch (SQLException e) {
+					log.error(e.getMessage(), e);
+				} 
+			}
+		}
+		return me;
+	}
 	
 	public static <T> List<T> query(NamedParameterJdbcTemplate t, Class<T> c, 
 			String sql, Object... params) {
@@ -50,43 +126,47 @@ public class JdbcUtil {
 	    return t.update(sql, bpsps);
 	}
 	
-	@Deprecated
-	static String substituteParamsFromObj(String sql, Object value) {
-		BeanPropertySqlParameterSource bpsps = new BeanPropertySqlParameterSource(value);
-		return  NamedParameterUtils.substituteNamedParameters(sql, bpsps);
+	public static void updateN(DataSource ds, Log log, SqlAndValueObjs... savs) {
+		try {
+			List<PreparedStatementCreator> pscs = new ArrayList<PreparedStatementCreator>(savs.length);
+			Connection con = ds.getConnection();
+			for (SqlAndValueObjs sav : savs) {
+				for (Object value : sav.getValues()) {
+					PreparedStatementCreator psc = getPreparedStatementCreator(sav.getSql(), value);
+					pscs.add(psc);
+				}
+			}
+			updateN(con, pscs, log);
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
-	public static PreparedStatementCreator getPreparedStatementCreator(String sql, Object value) {
+	static PreparedStatement getPreparedStatement(Connection con, String sql, Object value) throws SQLException {
+		PreparedStatementCreator psc = getPreparedStatementCreator(sql, value);
+		return psc.createPreparedStatement(con);
+	}
+
+	static PreparedStatementCreator getPreparedStatementCreator(String sql, Object value) {
 		SqlParameterSource paramSource = new BeanPropertySqlParameterSource(value);
 		ParsedSql parsedSql = NamedParameterUtils.parseSqlStatement(sql);
 		String sqlToUse = NamedParameterUtils.substituteNamedParameters(parsedSql, paramSource);
 		Object[] params = NamedParameterUtils.buildValueArray(parsedSql, paramSource, null);
 		int[] paramTypes = NamedParameterUtils.buildSqlTypeArray(parsedSql, paramSource);
 		PreparedStatementCreatorFactory pscf = new PreparedStatementCreatorFactory(sqlToUse, paramTypes);
+		pscf.setReturnGeneratedKeys(true);
 		return pscf.newPreparedStatementCreator(params);
 	}
 
-	public static void update2(DataSource ds, String sql1, Object value1,
-			String sql2, Object value2, Log log) {
-		try {
-			Connection con = ds.getConnection();
-			PreparedStatementCreator psc1 = getPreparedStatementCreator(sql1, value1);
-			PreparedStatementCreator psc2 = getPreparedStatementCreator(sql2, value2);
-			update2(con, psc1, psc2, log);
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	static void update2(Connection con, PreparedStatementCreator psc1, PreparedStatementCreator psc2, Log log) throws SQLException {
-		PreparedStatement s1 = null;
-		PreparedStatement s2 = null;
+	static void updateN(Connection con, List<PreparedStatementCreator> pscs, Log log) throws SQLException {
+		List<PreparedStatement> pss = new ArrayList<PreparedStatement>(pscs.size());
 		try {
 			con.setAutoCommit(false);
-			s1 = psc1.createPreparedStatement(con);
-			s2 = psc2.createPreparedStatement(con);
-			s1.executeUpdate();
-			s2.executeUpdate();
+			for (PreparedStatementCreator psc : pscs) {
+				PreparedStatement ps = psc.createPreparedStatement(con);
+				pss.add(ps);
+				ps.executeUpdate();
+			}
 			con.commit();
 		} catch (SQLException e ) {
 			log.error(e);
@@ -99,10 +179,12 @@ public class JdbcUtil {
 				}
 			}
 		} finally {
-			if (s1 != null) { s1.close(); }
-			if (s2 != null) { s2.close(); }
+			for (PreparedStatement ps : pss) {
+				if (ps != null) { ps.close(); }
+			}
 			if (con != null) { con.setAutoCommit(true); con.close(); }
 		}
 	}
-	
+
+
 }

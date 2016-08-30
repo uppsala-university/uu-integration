@@ -91,10 +91,10 @@ public class PotentialMembershipEvent {
 	
 	@Override
 	public String toString() {
-		return "PotentialMembershipEvent [id=" + id + ", date=" + getFormattedDate() 
-				+ ", pnr=" + pnr + ", meType=" + meType + ", courseCode=" + courseCode
+		return "PotentialMembershipEvent [id=" + id + ", date=" + date
+				+ ", pnr=" + pnr + ", meType=" + meType + ", courseCode="
+				+ courseCode + ", reportCode=" + reportCode
 				+ ", startSemester=" + startSemester + ", semester=" + semester
-				+ ", reportCode=" + reportCode + ", origin=" + origin + ", origin2=" + origin2 + "]";
+				+ ", origin=" + origin + ", origin2=" + origin2 + "]";
 	}
-	
 }

@@ -21,7 +21,7 @@ import se.uu.its.integration.ladok2groups.l2dto.PnrEvent;
 import se.uu.its.integration.ladok2groups.l2dto.Reg;
 
 public class MembershipEventUtil {
-
+	
 	public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HHmmss");
 	public static final SimpleDateFormat DATE_FORMAT_HHMM = new SimpleDateFormat("yyyy-MM-dd HHmm");
 	
@@ -89,7 +89,7 @@ public class MembershipEventUtil {
 
 	public static MembershipEvent toMembershipEvent(PotentialMembershipEvent pme) {
 		MembershipEvent me = new MembershipEvent();
-		me.setPmeid(pme.getId());
+		me.setPmeId(pme.getId());
 		me.setMeType(pme.getMeType());
 		me.setDate(pme.getDate());
 		me.setPnr(pme.getPnr());
@@ -100,6 +100,19 @@ public class MembershipEventUtil {
 		me.setOrigin(pme.getOrigin());
 		me.setOrigin2(pme.getOrigin2());
 		return me;
+	}
+	
+	public static List<MembershipEvent> toMembershipEvents(PotentialMembershipEvent pme, List<Membership> ms) {
+		List<MembershipEvent> mes = new ArrayList<MembershipEvent>(ms.size());
+		for (Membership m : ms) {
+			MembershipEvent me = toMembershipEvent(pme);
+			me.setCourseCode(m.getCourseCode());
+			me.setReportCode(m.getReportCode());
+			me.setSemester(m.getSemester());
+			me.setStartSemester(m.getStartSemester());
+			mes.add(me);
+		}
+		return mes;
 	}
 	
 	public static PotentialMembershipEvent toMembershipEvent(Avliden a) {
@@ -119,6 +132,7 @@ public class MembershipEventUtil {
 	
 	public static Membership toMembership(PotentialMembershipEvent me) {
 		Membership m = new Membership();
+		m.setMeId(me.getId());
 		m.setDate(me.getDate());
 		m.setPnr(me.getPnr());
 		m.setCourseCode(me.getCourseCode());
@@ -130,7 +144,7 @@ public class MembershipEventUtil {
 		return m;
 	}
 	
-	public static Date getDate(String formattedDate) {
+	public static Date parse(String formattedDate) {
 		try {
 			return DATE_FORMAT.parse(formattedDate);
 		} catch (ParseException e) {
@@ -161,20 +175,16 @@ public class MembershipEventUtil {
 	}
 
 	private static PotentialMembershipEvent newMembershipEvent(PnrEvent pe) {
-		try {
-			PotentialMembershipEvent me = new PotentialMembershipEvent();
-			me.setPnr(pe.getPnr());
-			// Absence of time -> set as late as possible to not miss any event
-			String time = pe.getTid();
-			if (time == null || time.equals("000000")) {
-				time = "235959";
-			}
-			Date date = DATE_FORMAT.parse(pe.getDatum() + " " + time);
-			me.setDate(date);
-			return me;
-		} catch (ParseException e) {
-			throw new RuntimeException(e);
+		PotentialMembershipEvent me = new PotentialMembershipEvent();
+		me.setPnr(pe.getPnr());
+		// Absence of time -> set as late as possible to not miss any event
+		String time = pe.getTid();
+		if (time == null || time.equals("000000")) {
+			time = "235959";
 		}
+		Date date = parse(pe.getDatum() + " " + time);
+		me.setDate(date);
+		return me;
 	}
 	
 	private static Map<String, String> parseUrPost(String urPost) {

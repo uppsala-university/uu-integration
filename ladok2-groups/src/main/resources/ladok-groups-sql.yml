@@ -343,7 +343,7 @@ ladok.sql.inreg: |
 ladok.sql.avliden: |
     select 
         n.pnr as pnr, 
-        n.inldat as datum 
+        n.inldat as datum
     from 
         namn n 
     where 

@@ -3,18 +3,17 @@ package se.uu.its.integration.ladok2groups.dto;
 
 public class MembershipEvent extends PotentialMembershipEvent {
 	
-	Long pmeid;
+	Long pmeId;
 	
-	public Long getPmeid() {
-		return pmeid;
+	public Long getPmeId() {
+		return pmeId;
 	}
-	public void setPmeid(Long pmeid) {
-		this.pmeid = pmeid;
+	public void setPmeId(Long pmeId) {
+		this.pmeId = pmeId;
 	}
-	
 	@Override
 	public String toString() {
-		return "MembershipEvent [id=" + id + ", pmeid=" + pmeid + ", date="
+		return "MembershipEvent [pmeId=" + pmeId + ", id=" + id + ", date="
 				+ date + ", pnr=" + pnr + ", meType=" + meType
 				+ ", courseCode=" + courseCode + ", reportCode=" + reportCode
 				+ ", startSemester=" + startSemester + ", semester=" + semester
