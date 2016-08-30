@@ -7,4 +7,3 @@ bortregk
         ubindrg -> ta bort reg {pnr, kurskod, aktuell termin, orgin=ubindrg} utbytesstudenter kan felaktigt bokföras dubbelt både som ffgkurs & ubindrg och bara den felaktiga ska tas bort
         inreg* -> gör ingenting (motsvarande reg dyker upp med ny itid/idatum, så vi kommer lägga till studenten på rätt deltagarlista via den händelsen istället)
 	
-
