@@ -63,6 +63,7 @@ public class EsbGroupSql {
 		return sql.get("esb.sql.saveNewMembership");
 	}
 
+	@Deprecated
 	public String getUpdateMembershipSql() {
 		return sql.get("esb.sql.updateMembership");
 	}
