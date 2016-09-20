@@ -1,0 +1,149 @@
+## -- PotentialMembershipEvent
+
+esb.sql.allPotentialMembershipEvents: |
+    select
+       id, date, pnr, meType, courseCode, reportCode, startSemester, semester, origin, origin2
+    from
+        POTENTIAL_MEMBERSHIP_EVENTS
+    order by 
+        id asc
+
+esb.sql.potentialMembershipEventsNewerThan: |
+    select
+       id, date, pnr, meType, courseCode, reportCode, startSemester, semester, origin, origin2
+    from
+        POTENTIAL_MEMBERSHIP_EVENTS
+    where
+        id > :id
+    order by 
+        id asc
+
+esb.sql.mostRecentPotentialMembershipEvent: |
+    select
+       id, date, pnr, meType, courseCode, reportCode, startSemester, semester, origin, origin2
+    from
+        POTENTIAL_MEMBERSHIP_EVENTS
+    where
+        id = (select max(id) from POTENTIAL_MEMBERSHIP_EVENTS)
+
+esb.sql.saveNewPotentialMembershipEvent: |
+    insert into
+        POTENTIAL_MEMBERSHIP_EVENTS (date, pnr, meType, courseCode, reportCode, startSemester, semester, origin, origin2)
+    values
+        (:date, :pnr, :meTypeAsString, :courseCode, :reportCode, :startSemester, :semester, :origin, :origin2)
+
+
+## -- MembershipEvent
+
+esb.sql.mostRecentMembershipEvent: |
+    select
+       id, pmeId, date, pnr, meType, courseCode, reportCode, startSemester, semester, origin, origin2
+    from
+        MEMBERSHIP_EVENTS
+    where
+        id = (select max(id) from MEMBERSHIP_EVENTS)
+
+esb.sql.saveNewMembershipEvent: |
+    insert into
+        MEMBERSHIP_EVENTS (pmeId, date, pnr, meType, courseCode, reportCode, startSemester, semester, origin, origin2)
+    values
+        (:pmeId, :date, :pnr, :meTypeAsString, :courseCode, :reportCode, :startSemester, :semester, :origin, :origin2)
+
+
+## -- Membership
+
+esb.sql.memberships: |
+    select
+        id, meId, date, pnr, courseCode, reportCode, startSemester, semester, origin, origin2
+    from
+        MEMBERSHIPS
+    where
+        pnr            = :pnr
+    order by 
+        id asc
+
+esb.sql.membershipsByCourseCode: |
+    select
+        id, meId, date, pnr, courseCode, reportCode, startSemester, semester, origin, origin2
+    from
+        MEMBERSHIPS
+    where
+        pnr            = :pnr
+        and courseCode = :courseCode
+    order by 
+        id asc
+
+esb.sql.membershipsByReportCodeStartSemester: |
+    select
+        id, meId, date, pnr, courseCode, reportCode, startSemester, semester, origin, origin2
+    from
+        MEMBERSHIPS
+    where
+        pnr               = :pnr
+        and reportCode    = :reportCode
+        and startSemester = :startSemester
+    order by 
+        id asc
+
+esb.sql.membershipsByCourseCodeSemesterOrigin2: |
+    select
+        id, meId, date, pnr, courseCode, reportCode, startSemester, semester, origin, origin2
+    from
+        MEMBERSHIPS
+    where
+        pnr            = :pnr
+        and courseCode = :courseCode
+        and semester   = :semester
+        and origin     = :origin2
+    order by 
+        id asc
+
+esb.sql.saveNewMembership: |
+    insert into
+        MEMBERSHIPS (meId, date, pnr, courseCode, reportCode, startSemester, semester, origin, origin2)
+    values
+        (:meId, :date, :pnr, :courseCode, :reportCode, :startSemester, :semester, :origin, :origin2)
+
+esb.sql.updateMembership: |
+    update
+        MEMBERSHIPS
+    set
+        meId          = :meId,
+        date          = :date,
+        pnr           = :pnr,
+        courseCode    = :courseCode,
+        reportCode    = :reportCode,
+        startSemester = :startSemester,
+        semester      = :semester,
+        origin        = :origin,
+        origin2       = :origin2
+    where
+        id            = :id
+
+esb.sql.deleteMembershipById: |
+    delete from
+        MEMBERSHIPS
+    where
+        id            = :id
+
+esb.sql.deleteMembershipByCourseCode: |
+    delete from
+        MEMBERSHIPS
+    where
+        pnr            = :pnr
+        and courseCode = :courseCode
+
+esb.sql.deleteMembershipsByCourseCodeSemesterOrigin2: |
+    delete from
+        MEMBERSHIPS
+    where
+        pnr            = :pnr
+        and courseCode = :courseCode
+        and semester   = :semester
+        and origin     = :origin2
+
+esb.sql.deleteMemberships: |
+    delete from
+        MEMBERSHIPS
+    where
+        pnr            = :pnr

@@ -1,0 +1,15 @@
+# debug: true
+spring.output.ansi.enabled: NEVER
+
+# logging.config=file:./logback.xml
+# logging.config=file:./log4j.xml
+
+datasource.ladok2read.driver-class-name: com.mysql.jdbc.Driver
+datasource.ladok2read.url: jdbc:mysql://CHANGEME:3306/uu?verifyServerCertificate=false&useSSL=true&requireSSL=true
+datasource.ladok2read.username: CHANGEME
+datasource.ladok2read.password: CHANGEME
+
+datasource.esb.driver-class-name: org.hsqldb.jdbcDriver
+datasource.esb.url: jdbc:hsqldb:file:target/hsqldb;sql.syntax_mys=true
+datasource.esb.username: sa
+datasource.esb.password: 

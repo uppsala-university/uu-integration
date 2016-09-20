@@ -1,0 +1,41 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'spring-boot'
+
+version =  "1.0.1-SNAPSHOT"
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
+buildDir = "target"
+
+buildscript {
+    repositories { mavenCentral() }
+    dependencies {
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:1.3.7.RELEASE"
+	classpath "org.springframework:springloaded:1.2.5.RELEASE"
+    }
+}
+
+eclipse {
+    classpath {
+        defaultOutputDir = file("${buildDir}/classes")
+        downloadSources = true
+        downloadJavadoc = false
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile "org.springframework.boot:spring-boot-starter-jdbc"
+    compile "org.springframework.boot:spring-boot-starter-web"
+    compile "javax.inject:javax.inject:1"
+    compile "org.springframework.boot:spring-boot-starter-actuator"
+    compile "org.flywaydb:flyway-core:4.0.3"
+    runtime "mysql:mysql-connector-java:5.1.39"
+    runtime "org.hsqldb:hsqldb:2.3.2"
+    testCompile "org.springframework.boot:spring-boot-starter-test"
+}

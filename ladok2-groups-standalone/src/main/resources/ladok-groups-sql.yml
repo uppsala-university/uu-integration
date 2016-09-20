@@ -1,0 +1,387 @@
+# Entydiga registreringar från ffgkurs, omkurs, fortkurs, ubindrg
+# Tvetydiga kommer inte med pga villkor att det bara ska finnas ett potentiellt kurstillfälle som registreringen avseer.
+# De tvetydiga får kompletteras via manuella kompletteringsgränssnitt i SP.
+ladok.sql.reg: |
+    -- 
+    -- Find all first time registrations. Join with ktill2 to get the report code.
+    -- 
+    SELECT
+        distinct kt.kod as anmkod,
+        kt.startter as startter,
+        reg.termin as termin,
+        kt.kurskod,
+        COALESCE(gk.datum, '') as completed,
+        reg.idatum as datum,
+        reg.itid as tid,
+        reg.pnr,
+	COALESCE(reg.progr, '') as program,
+        COALESCE(reg.proginr, '') as orientation,
+        'FFGKURS:KTILL2' as origin
+    FROM
+        uu.ffgkurs reg
+             left outer join uu.godkkurs gk on gk.pnr = reg.pnr AND gk.kurs = reg.kurs
+        ,uu.ktill2 kt
+    WHERE
+        reg.idatum >= :datum_from
+        AND reg.idatum <= :datum_to
+        AND reg.itid >= :tid
+        AND kt.kurskod = reg.kurs
+        AND kt.startter = reg.termin
+        AND kt.kurstakt = reg.kurstakt
+        AND kt.kurstid = reg.kurstid
+        AND kt.undform = reg.undform
+        AND kt.ort = reg.ort
+        AND kt.kursomg = reg.omgang
+        AND kt.kurstyp = reg.kurstyp
+    UNION
+    -- 
+    -- Find all continuation-registerations where there is only one course instance
+    -- with the corresponding course code, (continuing) semester and semester in order.
+    -- The student must have a first time registration that corresponds with the
+    -- course code and starting semester.
+    -- 
+    SELECT
+        distinct kt.kod as anmkod,
+        kt.startter as startter,
+        reg.termin as termin,
+        kt.kurskod,
+        COALESCE(gk.datum, '') as completed,
+        reg.idatum as datum,
+        reg.itid as tid,
+        reg.pnr,
+	COALESCE(reg.progr, '') as program,
+        COALESCE(reg.proginr, '') as orientation,
+        'FORTKURS:KTFORT2' as origin
+    FROM
+        uu.fortkurs reg
+            left outer join uu.godkkurs gk on gk.pnr = reg.pnr AND gk.kurs = reg.kurs
+        ,uu.ktfort2 kt
+        ,uu.ffgkurs ffg
+    WHERE
+        reg.idatum >= :datum_from
+        AND reg.idatum <= :datum_to
+        AND reg.itid >= :tid
+        AND kt.kurskod = reg.kurs
+        AND kt.termin = reg.termin
+        AND kt.termordn = reg.termordn
+        AND ffg.pnr = reg.pnr
+        AND ffg.kurs = kt.kurskod
+        AND ffg.termin = kt.startter
+        -- Make sure these course instances are unambiguous:
+        AND NOT EXISTS
+           (SELECT * FROM uu.ktfort2 kt2
+            WHERE
+               kt2.kurskod = kt.kurskod
+               AND kt2.termordn = kt.termordn
+               AND kt2.termin = kt.termin
+               AND (kt2.startter != kt.startter
+                    OR kt2.kurstakt != kt.kurstakt
+                    OR kt2.kurstid != kt.kurstid
+                    OR kt2.undform != kt.undform
+                    OR kt2.ort != kt.ort
+                    OR kt2.kursomg != kt.kursomg
+                    OR kt2.kurstyp != kt.kurstyp
+                    )
+           )
+        AND EXISTS (SELECT * FROM uu.ffgkurs ffg WHERE ffg.pnr = reg.pnr AND ffg.kurs = reg.kurs AND ffg.termin != kt.startter)
+    UNION
+    -- 
+    -- Find all reregistrations on a first semester of a course instance
+    -- where there is only one course instance with the corresponding course code
+    -- and starting semester, or there is another one but that is a continuation
+    -- course instance and the student has no prior continuation registration.
+    --
+    SELECT
+        distinct kt.kod as anmkod,
+        kt.startter as startter,
+        reg.termin as termin,
+        kt.kurskod,
+        COALESCE(gk.datum, '') as completed,
+        reg.idatum as datum,
+        reg.itid as tid,
+        reg.pnr,
+	COALESCE(reg.progr, '') as program,
+        COALESCE(reg.proginr, '') as orientation,
+        'OMKURS:KTILL2' as origin
+    FROM
+        uu.omkurs reg
+            left outer join uu.godkkurs gk on gk.pnr = reg.pnr AND gk.kurs = reg.kurs
+        ,uu.ktill2 kt
+        ,uu.ffgkurs ffg
+    WHERE
+        reg.idatum >= :datum_from
+        AND reg.idatum <= :datum_to
+        AND reg.itid >= :tid
+        AND kt.kurskod = reg.kurs
+        AND kt.startter = reg.termin
+        AND ffg.pnr = reg.pnr
+        AND ffg.kurs = kt.kurskod
+        AND ffg.termin = kt.startter
+        -- Make sure these course instances are unambiguous:
+        AND
+            1 = (SELECT COUNT(*)
+                FROM uu.ktill2 kt2
+                WHERE kt2.kurskod = reg.kurs
+                     AND kt2.startter = reg.termin)
+        AND (0 = (SELECT COUNT(*)
+                FROM uu.ktfort2 kt2
+                WHERE kt2.kurskod = reg.kurs
+                     AND kt2.termin = reg.termin)
+            OR
+             0 = (SELECT COUNT(*)
+                FROM uu.fortkurs fo
+                WHERE fo.pnr = reg.pnr
+                     AND fo.kurs = reg.kurs
+                     AND fo.termin <= reg.termin)
+            )
+    UNION
+    --
+    -- Find all reregistrations on a continuation semester where there is only one course instance
+    -- with the corresponding course code and starting semester
+    --
+    SELECT
+        distinct kt.kod as anmkod,
+        kt.startter as startter,
+        reg.termin as termin,
+        kt.kurskod,
+        COALESCE(gk.datum, '') as completed,
+        reg.idatum as datum,
+        reg.itid as tid,
+        reg.pnr,
+	COALESCE(reg.progr, '') as program,
+        COALESCE(reg.proginr, '') as orientation,
+        'OMKURS:KTFORT2' as origin
+    FROM
+        uu.omkurs reg
+            left outer join uu.godkkurs gk on gk.pnr = reg.pnr AND gk.kurs = reg.kurs
+        ,uu.ktfort2 kt
+        ,uu.ffgkurs ffg
+    WHERE
+        reg.idatum >= :datum_from
+        AND reg.idatum <= :datum_to
+        AND reg.itid >= :tid
+        AND kt.kurskod = reg.kurs
+        AND kt.termin = reg.termin
+        AND ffg.pnr = reg.pnr
+        AND ffg.kurs = kt.kurskod
+        AND ffg.termin = kt.startter
+        -- Make sure these course instances are unambiguous:
+        AND
+            0 = (SELECT COUNT(*)
+                FROM uu.ktill2 kt2
+                WHERE kt2.kurskod = reg.kurs
+                     AND kt2.startter = reg.termin)
+        AND 1 = (SELECT COUNT(*)
+                FROM uu.ktfort2 kt2
+                WHERE kt2.kurskod = reg.kurs
+                     AND kt2.termin = reg.termin)
+    UNION
+    --
+    -- Find all first time registrations for foreign students.
+    --
+    SELECT
+        distinct kt.kod as anmkod,
+        kt.startter as startter,
+        reg.termin as termin,
+        kt.kurskod,
+        COALESCE(gk.datum, '') as completed,
+        reg.idatum as datum,
+        reg.itid as tid,
+        reg.pnr,
+	COALESCE(reg.progr, '') as program,
+        COALESCE(reg.proginr, '') as orientation,
+        'UBINDRG:KTILL2' as origin
+    FROM
+        uu.ubindrg reg
+           left outer join uu.godkkurs gk on gk.pnr = reg.pnr AND gk.kurs = reg.kurs
+        ,uu.ktill2 kt
+        ,uu.ffgkurs ffg
+    WHERE
+        reg.idatum >= :datum_from
+        AND reg.idatum <= :datum_to
+        AND reg.itid >= :tid
+        AND reg.kurs > ''
+        AND kt.kurskod = reg.kurs
+        AND kt.startter = reg.termin
+        AND kt.ort = reg.ort
+        AND kt.kurstyp = reg.finform
+        AND ffg.pnr = reg.pnr
+        AND ffg.kurs = kt.kurskod
+        AND ffg.termin = kt.startter
+        -- Make sure these course instances are unambiguous:
+        AND NOT EXISTS
+           (SELECT * FROM uu.ktill2 k2
+            WHERE
+               k2.kurskod = kt.kurskod
+               AND k2.startter = kt.startter
+               AND k2.ort = kt.ort
+               AND k2.kurstyp = kt.kurstyp
+               AND (k2.kurstakt != kt.kurstakt
+                    OR k2.kurstid != kt.kurstid
+                    OR k2.undform != kt.undform
+                    OR k2.kursomg != kt.kursomg
+                   )
+            )
+        -- Check that it doesn't exist a real ffgkurs registration that overrides this ubindrg registration:
+        AND NOT EXISTS
+           (SELECT * FROM uu.ffgkurs ffg WHERE ffg.pnr = reg.pnr AND ffg.kurs = reg.kurs)
+    UNION
+    --
+    -- Find all continuation registrations for foreign students.
+    --
+    SELECT
+        distinct kt.kod as anmkod,
+        kt.startter as startter,
+        reg.termin as termin,
+        kt.kurskod,
+        COALESCE(gk.datum, '') as completed,
+        reg.idatum as datum,
+        reg.itid as tid,
+        reg.pnr,
+	COALESCE(reg.progr, '') as program,
+        COALESCE(reg.proginr, '') as orientation,
+        'UBINDRG:KTFORT2' as origin
+    FROM
+        uu.ubindrg reg
+            left outer join uu.godkkurs gk on gk.pnr = reg.pnr AND gk.kurs = reg.kurs
+        ,uu.ktfort2 kt
+        ,uu.ffgkurs ffg
+    WHERE
+        reg.idatum >= :datum_from
+        AND reg.idatum <= :datum_to
+        AND reg.itid >= :tid
+        AND reg.kurs > ''
+        AND kt.kurskod = reg.kurs
+        AND kt.termin = reg.termin
+        AND kt.ort = reg.ort
+        AND kt.kurstyp = reg.finform
+        AND ffg.pnr = reg.pnr
+        AND ffg.kurs = kt.kurskod
+        AND ffg.termin = kt.startter
+        -- Make sure these course instances are unambiguous:
+        AND NOT EXISTS
+             (SELECT * FROM uu.ktfort2 kt2
+              WHERE
+                  kt2.kurskod = kt.kurskod
+                  AND kt2.termin = kt.termin
+                  AND kt2.kurstyp = kt.kurstyp
+                  AND kt2.ort = kt.ort
+                  AND (kt2.kurstakt != kt.kurstakt
+                       OR kt2.kurstid != kt.kurstid
+                       OR kt2.undform != kt.undform
+                       OR kt2.kursomg != kt.kursomg
+                       OR kt2.startter != kt.startter
+                      )
+             )
+        -- Make sure these course instances are unambiguous:
+        AND NOT EXISTS
+           (SELECT * FROM uu.ktill2 k2 
+            WHERE
+               k2.kurskod = kt.kurskod
+               AND k2.startter = kt.startter
+               AND k2.ort = kt.ort
+               AND k2.kurstyp = kt.kurstyp
+               AND (k2.kurstakt != kt.kurstakt
+                    OR k2.kurstid != kt.kurstid
+                    OR k2.undform != kt.undform
+                    OR k2.kursomg != kt.kursomg
+                   )
+           )
+        -- Check that it doesn't exist a real ffgkurs registration that overrides this ubindrg registration:
+        AND NOT EXISTS
+            (SELECT * FROM uu.ffgkurs ffg WHERE ffg.pnr = reg.pnr AND ffg.kurs = reg.kurs)
+        ORDER BY
+            datum asc, tid asc
+
+
+# Avregistreringar i bortregk
+ladok.sql.bortreg: |
+    select
+        b.idatum as datum,
+        b.itid as tid,
+        b.pnr as pnr,
+        b.kurs as kurskod,
+        b.urtabell as urtabell,
+        b.urpost as urpost
+    from
+        uu.bortregk b
+    where
+        b.idatum >= :datum_from
+        AND b.idatum <= :datum_to
+        and b.itid >= :tid
+    order by 
+        datum asc, tid asc
+
+
+# Avregistreringar i inregffg, inregfo och inregom
+ladok.sql.inreg: |
+    -- 
+    -- INREGFFG: Avregistrering av forstagangsregistrering
+    -- 
+    select
+        i.idatum as datum,
+        i.itid as tid,
+        i.pnr as pnr,
+        i.termin as termin,
+        i.kurs as kurskod,
+        'INREGFFG' as origin
+    from
+        uu.inregffg i
+    where
+        i.idatum >= :datum_from
+        and i.idatum <= :datum_to
+        and i.itid >= :tid
+    union
+    -- 
+    -- INREGFO: Avregistrering av fortsattningsregistrering
+    -- 
+    select
+        i.idatum as datum,
+        i.itid as tid,
+        i.pnr as pnr,
+        i.termin as termin,
+        i.kurs as kurskod,
+        'INREGFO' as origin
+    from
+        uu.inregfo i
+    where
+        i.idatum >= :datum_from
+        and i.idatum <= :datum_to
+        and i.itid >= :tid
+    union
+    -- 
+    -- INREGOM: Avregistrering av omregistrering
+    -- NOTE: Inte entydigt, pga inte vet om omregistreringen gällde en ffgkurs eller fortkurs
+    --       För fortkurs kan vi inte entydigt få fram starttermin.
+    -- 
+    select
+        i.idatum as datum,
+        i.itid as tid,
+        i.pnr as pnr,
+        i.termin as termin,
+        i.kurs as kurskod,
+        'INREGOM' as origin
+    from
+        uu.inregom i
+    where
+        i.idatum >= :datum_from
+        and i.idatum <= :datum_to
+        and i.itid >= :tid
+    order by 
+        datum asc, tid asc
+
+
+# Avlidna
+ladok.sql.avliden: |
+    select 
+        n.pnr as pnr, 
+        n.inldat as datum
+    from 
+        namn n 
+    where 
+        n.avliden = 'J' 
+        and n.inldat >= :datum_from
+        and n.inldat <= :datum_to
+    order by 
+        datum asc
+
