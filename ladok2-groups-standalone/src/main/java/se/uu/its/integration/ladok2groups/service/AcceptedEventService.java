@@ -6,9 +6,9 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AcceptedService {
+public class AcceptedEventService {
 	
-	static Log log = LogFactory.getLog(AcceptedService.class);
+	static Log log = LogFactory.getLog(AcceptedEventService.class);
 	
 	@Scheduled(fixedDelay=30000)
 	public void updateAcceptedMembers() throws Exception {

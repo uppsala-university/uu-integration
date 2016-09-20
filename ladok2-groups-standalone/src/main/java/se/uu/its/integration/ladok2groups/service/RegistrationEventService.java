@@ -40,9 +40,9 @@ import se.uu.its.integration.ladok2groups.sql.Ladok2GroupSql;
 import se.uu.its.integration.ladok2groups.util.JdbcUtil;
 
 @Service
-public class Ladok2Groups {
+public class RegistrationEventService {
 	
-	static Log log = LogFactory.getLog(Ladok2Groups.class);
+	static Log log = LogFactory.getLog(RegistrationEventService.class);
 	
 	@Autowired @Qualifier("ladok2read")
 	DataSource ladok2ReadDs;
@@ -59,7 +59,7 @@ public class Ladok2Groups {
 	Ladok2GroupSql l2Sql = new Ladok2GroupSql();
 	EsbGroupSql esbSql = new EsbGroupSql();
 	
-	Date ladok2GroupEventStart = parse("2016-06-01 000000"); // parse("2007-01-01 000000"); // TODO: Extract to property
+	Date registrationEventStart = parse("2016-06-01 000000"); // parse("2007-01-01 000000"); // TODO: Extract to property
 
 	public void updateGroupEvents() throws Exception {
 		updateRegistrationMembershipEvents();
@@ -70,7 +70,7 @@ public class Ladok2Groups {
 		List<PotentialMembershipEvent> pmes = query(esbJdbc, PotentialMembershipEvent.class,
 				esbSql.getMostRecentPotentialMembershipEventSql());
 		// Skip forward 1 second from most recent event to avoid duplicate events:
-		Date start = pmes.isEmpty() ? ladok2GroupEventStart : new Date(
+		Date start = pmes.isEmpty() ? registrationEventStart : new Date(
 				pmes.get(0).getDate().getTime() + 1000);
 		// Skip most recent events to make sure all events for this interval have arrived at Ladok:
 		Date end = new Date(new Date().getTime() - 15000);

@@ -4,13 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import se.uu.its.integration.ladok2groups.service.Ladok2Groups;
+import se.uu.its.integration.ladok2groups.service.RegistrationEventService;
 
 @RestController
 public class RootController {
 	
 	@Autowired
-	Ladok2Groups ladokGroups;
+	RegistrationEventService ladokGroups;
     
     @RequestMapping("")
     public String index() {

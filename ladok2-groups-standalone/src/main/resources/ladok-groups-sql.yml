@@ -14,7 +14,7 @@ ladok.sql.reg: |
         reg.idatum as datum,
         reg.itid as tid,
         reg.pnr,
-	COALESCE(reg.progr, '') as program,
+        COALESCE(reg.progr, '') as program,
         COALESCE(reg.proginr, '') as orientation,
         'FFGKURS:KTILL2' as origin
     FROM
@@ -49,8 +49,8 @@ ladok.sql.reg: |
         reg.idatum as datum,
         reg.itid as tid,
         reg.pnr,
-	COALESCE(reg.progr, '') as program,
-        COALESCE(reg.proginr, '') as orientation,
+        COALESCE(ffg.progr, '') as program,
+        COALESCE(ffg.proginr, '') as orientation,
         'FORTKURS:KTFORT2' as origin
     FROM
         uu.fortkurs reg
@@ -100,8 +100,8 @@ ladok.sql.reg: |
         reg.idatum as datum,
         reg.itid as tid,
         reg.pnr,
-	COALESCE(reg.progr, '') as program,
-        COALESCE(reg.proginr, '') as orientation,
+        COALESCE(ffg.progr, '') as program,
+        COALESCE(ffg.proginr, '') as orientation,
         'OMKURS:KTILL2' as origin
     FROM
         uu.omkurs reg
@@ -148,8 +148,8 @@ ladok.sql.reg: |
         reg.idatum as datum,
         reg.itid as tid,
         reg.pnr,
-	COALESCE(reg.progr, '') as program,
-        COALESCE(reg.proginr, '') as orientation,
+        COALESCE(ffg.progr, '') as program,
+        COALESCE(ffg.proginr, '') as orientation,
         'OMKURS:KTFORT2' as origin
     FROM
         uu.omkurs reg
@@ -188,8 +188,8 @@ ladok.sql.reg: |
         reg.idatum as datum,
         reg.itid as tid,
         reg.pnr,
-	COALESCE(reg.progr, '') as program,
-        COALESCE(reg.proginr, '') as orientation,
+        COALESCE(ffg.progr, '') as program,
+        COALESCE(ffg.proginr, '') as orientation,
         'UBINDRG:KTILL2' as origin
     FROM
         uu.ubindrg reg
@@ -238,8 +238,8 @@ ladok.sql.reg: |
         reg.idatum as datum,
         reg.itid as tid,
         reg.pnr,
-	COALESCE(reg.progr, '') as program,
-        COALESCE(reg.proginr, '') as orientation,
+        COALESCE(ffg.progr, '') as program,
+        COALESCE(ffg.proginr, '') as orientation,
         'UBINDRG:KTFORT2' as origin
     FROM
         uu.ubindrg reg
