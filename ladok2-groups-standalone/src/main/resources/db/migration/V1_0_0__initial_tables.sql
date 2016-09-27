@@ -16,7 +16,7 @@ CREATE TABLE MEMBERSHIP_EVENTS (
   id            BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   pmeId         BIGINT NOT NULL,
   date          TIMESTAMP NOT NULL,
-  pnr           VARCHAR(255) NOT NULL,
+  pnr           VARCHAR(255),
   meType        VARCHAR(255) NOT NULL,
   courseCode    VARCHAR(255) NOT NULL,
   reportCode    VARCHAR(255) NOT NULL,
