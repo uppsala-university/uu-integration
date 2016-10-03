@@ -2,9 +2,9 @@ package se.uu.its.integration.ladok2groups.util;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,81 +21,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterUtils;
 import org.springframework.jdbc.core.namedparam.ParsedSql;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 
-import se.uu.its.integration.ladok2groups.dto.Membership;
-import se.uu.its.integration.ladok2groups.dto.MembershipEvent;
-import se.uu.its.integration.ladok2groups.dto.PotentialMembershipEvent;
-import se.uu.its.integration.ladok2groups.sql.EsbGroupSql;
-
 public class JdbcUtil {
-	
-	static EsbGroupSql esbSql = new EsbGroupSql();
-
-	public static MembershipEvent saveMembershipAddEvent(DataSource ds, Log log, PotentialMembershipEvent pme) {
-		return saveMembershipAddEvent(ds, log, pme, null);
-	}
-
-	public static MembershipEvent saveMembershipAddEvent(DataSource ds, Log log, PotentialMembershipEvent pme, Membership obsoleteMembership) {
-		MembershipEvent me = null;
-		List<PreparedStatement> pss = new ArrayList<PreparedStatement>();
-		Connection con = null;
-		try {
-			con = ds.getConnection();
-			con.setAutoCommit(false);
-			me = MembershipEventUtil.toMembershipEvent(pme);
-			PreparedStatement psme = getPreparedStatement(con, esbSql.getSaveNewMembershipEventSql(), me);
-			pss.add(psme);
-			psme.execute();
-			ResultSet genKeys = psme.getGeneratedKeys();
-			genKeys.next();
-			long genId = genKeys.getLong(1);
-			me.setId(genId);
-			Membership m = MembershipEventUtil.toMembership(me);
-			PreparedStatement psm = getPreparedStatement(con, esbSql.getSaveNewMembershipSql(), m);
-			pss.add(psm);
-			psm.execute();
-			if (obsoleteMembership != null) {
-				PreparedStatement psd = getPreparedStatement(con,
-						esbSql.getDeleteMembershipByIdSql(), obsoleteMembership);
-				pss.add(psd);
-				psd.execute();
-			}
-			con.commit();
-			return me;
-		} catch (Exception e ) {
-			log.error(e);
-			if (con != null) {
-				try {
-					log.error("Transaction is being rolled back");
-					con.rollback();
-				} catch(SQLException excep) {
-					log.error(excep);
-				}
-			}
-		} finally {
-			for (PreparedStatement ps : pss) {
-				if (ps != null) {
-					try {
-						ps.close();
-					} catch (SQLException e) {
-						log.error(e.getMessage(), e);
-					}
-				}
-			}
-			if (con != null) { 
-				try {
-					con.setAutoCommit(true);
-				} catch (SQLException e) {
-					log.error(e.getMessage(), e);
-				} 
-				try {
-					con.close(); 
-				} catch (SQLException e) {
-					log.error(e.getMessage(), e);
-				} 
-			}
-		}
-		return me;
-	}
 	
 	public static <T> List<T> query(NamedParameterJdbcTemplate t, Class<T> c, 
 			String sql, Object... params) {
@@ -109,7 +35,12 @@ public class JdbcUtil {
 	public static <T> List<T> queryByObj(NamedParameterJdbcTemplate t, Class<T> c, 
 			String sql, Object queryObj) {
 		BeanPropertySqlParameterSource bpsps = new BeanPropertySqlParameterSource(queryObj);
-		return t.query(sql, bpsps, BeanPropertyRowMapper.newInstance(c));
+		if (Integer.class.equals(c) || Long.class.equals(c) || String.class.equals(c)
+				|| Date.class.equals(c))  {
+			return t.queryForList(sql, bpsps, c);
+		} else {
+			return t.query(sql, bpsps, BeanPropertyRowMapper.newInstance(c));
+		}
 	}
 		
 	public static int[] update(NamedParameterJdbcTemplate t, String sql, List<?> values) {

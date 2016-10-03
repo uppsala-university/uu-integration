@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import se.uu.its.integration.ladok2groups.dto.GroupEvent;
 import se.uu.its.integration.ladok2groups.dto.Membership;
 import se.uu.its.integration.ladok2groups.dto.MembershipEvent;
 import se.uu.its.integration.ladok2groups.dto.PotentialMembershipEvent;
@@ -46,10 +47,10 @@ public class MembershipEventUtil {
 		return fmes;
 	}
 
-	public static List<PotentialMembershipEvent> toMembershipEvents(List<?> os) {
-		List<PotentialMembershipEvent> mes = new ArrayList<PotentialMembershipEvent>(os.size());
-		for (Object o : os) {
-			mes.add(toMembershipEvent(o));
+	public static List<PotentialMembershipEvent> toMembershipEvents(List<? extends PnrEvent> es) {
+		List<PotentialMembershipEvent> mes = new ArrayList<PotentialMembershipEvent>(es.size());
+		for (PnrEvent e : es) {
+			mes.add(toMembershipEvent(e));
 		}
 		return mes;
 	}
@@ -142,6 +143,21 @@ public class MembershipEventUtil {
 		m.setOrigin(me.getOrigin());
 		m.setOrigin2(me.getOrigin2());
 		return m;
+	}
+	
+	public static GroupEvent toGroupEvent(PotentialMembershipEvent pme) {
+		GroupEvent me = new GroupEvent();
+		me.setPmeId(pme.getId());
+		me.setMeType(Type.ADDGROUP); // Only addgroup events so far
+		me.setDate(pme.getDate());
+		me.setPnr(null);
+		me.setCourseCode(pme.getCourseCode());
+		me.setReportCode(pme.getReportCode());
+		me.setStartSemester(pme.getStartSemester());
+		me.setSemester(null);
+		me.setOrigin(pme.getOrigin());
+		me.setOrigin2(pme.getOrigin2());
+		return me;
 	}
 	
 	public static Date parse(String formattedDate) {

@@ -6,7 +6,7 @@ import se.uu.its.integration.ladok2groups.util.MembershipEventUtil;
 
 public class PotentialMembershipEvent {
 	
-	public enum Type { ADD, REMOVE };
+	public enum Type { ADD, REMOVE, ADDGROUP };
 	
 	Long id;
 	Date date;

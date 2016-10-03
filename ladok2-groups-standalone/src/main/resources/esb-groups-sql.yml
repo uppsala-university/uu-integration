@@ -52,6 +52,15 @@ esb.sql.saveNewMembershipEvent: |
 
 ## -- Membership
 
+esb.sql.numberOfMembersForCourseInstance: |
+    select
+        count(*)
+    from
+        MEMBERSHIPS
+    where
+        reportCode        = :reportCode
+        and startSemester = :startSemester
+
 esb.sql.memberships: |
     select
         id, meId, date, pnr, courseCode, reportCode, startSemester, semester, origin, origin2

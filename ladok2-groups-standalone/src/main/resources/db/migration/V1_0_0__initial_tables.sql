@@ -21,7 +21,7 @@ CREATE TABLE MEMBERSHIP_EVENTS (
   courseCode    VARCHAR(255) NOT NULL,
   reportCode    VARCHAR(255) NOT NULL,
   startSemester VARCHAR(255) NOT NULL,
-  semester      VARCHAR(255) NOT NULL,
+  semester      VARCHAR(255),
   origin        VARCHAR(255) NOT NULL,
   origin2       VARCHAR(255),
   FOREIGN KEY (pmeId) REFERENCES POTENTIAL_MEMBERSHIP_EVENTS(id)

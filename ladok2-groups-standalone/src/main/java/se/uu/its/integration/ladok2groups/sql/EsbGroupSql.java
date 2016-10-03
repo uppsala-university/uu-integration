@@ -43,6 +43,10 @@ public class EsbGroupSql {
 	
 	// Membership
 	
+	public String getNumberOfMembershipsForCourseInstanceSql() {
+		return sql.get("esb.sql.numberOfMembersForCourseInstance");
+	}
+	
 	public String getMembershipsSql() {
 		return sql.get("esb.sql.memberships");
 	}

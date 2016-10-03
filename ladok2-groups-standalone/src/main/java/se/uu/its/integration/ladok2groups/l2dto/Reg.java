@@ -8,6 +8,8 @@ public class Reg extends PnrEvent {
     String termin;
     String kurskod;
     String completed;
+    String program;
+    String programOrientation;
     String origin;
 
 	public String getAnmkod() {

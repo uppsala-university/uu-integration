@@ -2,9 +2,9 @@ package se.uu.its.integration.ladok2groups.service;
 
 import static se.uu.its.integration.ladok2groups.util.JdbcUtil.query;
 import static se.uu.its.integration.ladok2groups.util.JdbcUtil.queryByObj;
-import static se.uu.its.integration.ladok2groups.util.JdbcUtil.saveMembershipAddEvent;
 import static se.uu.its.integration.ladok2groups.util.JdbcUtil.update;
 import static se.uu.its.integration.ladok2groups.util.JdbcUtil.updateN;
+import static se.uu.its.integration.ladok2groups.util.MembershipEventJdbcUtil.saveMembershipAddEvent;
 import static se.uu.its.integration.ladok2groups.util.MembershipEventUtil.filter;
 import static se.uu.its.integration.ladok2groups.util.MembershipEventUtil.format;
 import static se.uu.its.integration.ladok2groups.util.MembershipEventUtil.parse;
@@ -37,7 +37,6 @@ import se.uu.its.integration.ladok2groups.l2dto.InReg;
 import se.uu.its.integration.ladok2groups.l2dto.Reg;
 import se.uu.its.integration.ladok2groups.sql.EsbGroupSql;
 import se.uu.its.integration.ladok2groups.sql.Ladok2GroupSql;
-import se.uu.its.integration.ladok2groups.util.JdbcUtil;
 
 @Service
 public class RegistrationEventService {
@@ -61,12 +60,7 @@ public class RegistrationEventService {
 	
 	Date registrationEventStart = parse("2016-06-01 000000"); // parse("2007-01-01 000000"); // TODO: Extract to property
 
-	public void updateGroupEvents() throws Exception {
-		updateRegistrationMembershipEvents();
-	}
-
-	public void updateRegistrationMembershipEvents() throws Exception {
-		//init(); // delayed init to let the ds resources have time to be injected
+	public void updateEvents() throws Exception {
 		List<PotentialMembershipEvent> pmes = query(esbJdbc, PotentialMembershipEvent.class,
 				esbSql.getMostRecentPotentialMembershipEventSql());
 		// Skip forward 1 second from most recent event to avoid duplicate events:
@@ -118,17 +112,17 @@ public class RegistrationEventService {
 			String orig = pme.getOrigin();
 			if (pme.getMeType() == PotentialMembershipEvent.Type.ADD) {
 				if ("FFGKURS".equals(orig) || "OMKURS".equals(orig) || "UBINDRG".equals(orig)) {
-					MembershipEvent me = saveMembershipAddEvent(esbDs, log, pme);
+					MembershipEvent me = saveMembershipAddEvent(esbDs, esbJdbc, log, pme);
 					log.info("New membership add event: " + pme + " generated event: " + me);
 				} else if ("FORTKURS".equals(orig)) {
 					List<Membership> ms = queryByObj(esbJdbc, Membership.class, 
 							esbSql.getMembershipsByReportCodeStartSemesterSql(), pme);
 					if (!ms.isEmpty()) {
-						MembershipEvent me = saveMembershipAddEvent(esbDs, log, pme, ms.get(0));
+						MembershipEvent me = saveMembershipAddEvent(esbDs, esbJdbc, log, pme, ms.get(0));
 						log.info("Updating existing membership event with FORTKURS event: "
 								+ pme + ", generated event: " + me);
 					} else {
-						MembershipEvent me = JdbcUtil.saveMembershipAddEvent(esbDs, log, pme);
+						MembershipEvent me = saveMembershipAddEvent(esbDs, esbJdbc, log, pme);
 						log.info("New membership add event: " + pme + ", generated event: " + me);
 					}
 				} else {

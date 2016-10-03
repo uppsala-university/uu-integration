@@ -10,15 +10,15 @@ import se.uu.its.integration.ladok2groups.service.RegistrationEventService;
 public class RootController {
 	
 	@Autowired
-	RegistrationEventService ladokGroups;
+	RegistrationEventService regEvents;
     
     @RequestMapping("")
     public String index() {
     	try {
-			ladokGroups.updateGroupEvents();
+			regEvents.updateEvents();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-    	return "Hello";
+    	return "Testing group update";
     }
 }
