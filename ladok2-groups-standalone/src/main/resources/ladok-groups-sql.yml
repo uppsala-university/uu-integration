@@ -116,7 +116,6 @@ ladok.sql.reg: |
         AND kt.startter = reg.termin
         AND ffg.pnr = reg.pnr
         AND ffg.kurs = kt.kurskod
-        AND ffg.termin = kt.startter
         -- Make sure these course instances are unambiguous:
         AND
             1 = (SELECT COUNT(*)
@@ -164,7 +163,6 @@ ladok.sql.reg: |
         AND kt.termin = reg.termin
         AND ffg.pnr = reg.pnr
         AND ffg.kurs = kt.kurskod
-        AND ffg.termin = kt.startter
         -- Make sure these course instances are unambiguous:
         AND
             0 = (SELECT COUNT(*)
@@ -188,14 +186,13 @@ ladok.sql.reg: |
         reg.idatum as datum,
         reg.itid as tid,
         reg.pnr,
-        COALESCE(ffg.progr, '') as program,
-        COALESCE(ffg.proginr, '') as orientation,
+        '' as program,
+        '' as orientation,
         'UBINDRG:KTILL2' as origin
     FROM
         uu.ubindrg reg
            left outer join uu.godkkurs gk on gk.pnr = reg.pnr AND gk.kurs = reg.kurs
         ,uu.ktill2 kt
-        ,uu.ffgkurs ffg
     WHERE
         reg.idatum >= :datum_from
         AND reg.idatum <= :datum_to
@@ -205,9 +202,6 @@ ladok.sql.reg: |
         AND kt.startter = reg.termin
         AND kt.ort = reg.ort
         AND kt.kurstyp = reg.finform
-        AND ffg.pnr = reg.pnr
-        AND ffg.kurs = kt.kurskod
-        AND ffg.termin = kt.startter
         -- Make sure these course instances are unambiguous:
         AND NOT EXISTS
            (SELECT * FROM uu.ktill2 k2
@@ -238,14 +232,13 @@ ladok.sql.reg: |
         reg.idatum as datum,
         reg.itid as tid,
         reg.pnr,
-        COALESCE(ffg.progr, '') as program,
-        COALESCE(ffg.proginr, '') as orientation,
+        '' as program,
+        '' as orientation,
         'UBINDRG:KTFORT2' as origin
     FROM
         uu.ubindrg reg
             left outer join uu.godkkurs gk on gk.pnr = reg.pnr AND gk.kurs = reg.kurs
         ,uu.ktfort2 kt
-        ,uu.ffgkurs ffg
     WHERE
         reg.idatum >= :datum_from
         AND reg.idatum <= :datum_to
@@ -255,9 +248,6 @@ ladok.sql.reg: |
         AND kt.termin = reg.termin
         AND kt.ort = reg.ort
         AND kt.kurstyp = reg.finform
-        AND ffg.pnr = reg.pnr
-        AND ffg.kurs = kt.kurskod
-        AND ffg.termin = kt.startter
         -- Make sure these course instances are unambiguous:
         AND NOT EXISTS
              (SELECT * FROM uu.ktfort2 kt2
