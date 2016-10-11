@@ -15,7 +15,7 @@ ladok.sql.reg: |
         reg.itid as tid,
         reg.pnr,
         COALESCE(reg.progr, '') as program,
-        COALESCE(reg.proginr, '') as orientation,
+        COALESCE(reg.proginr, '') as inriktning,
         'FFGKURS:KTILL2' as origin
     FROM
         uu.ffgkurs reg
@@ -50,7 +50,7 @@ ladok.sql.reg: |
         reg.itid as tid,
         reg.pnr,
         COALESCE(ffg.progr, '') as program,
-        COALESCE(ffg.proginr, '') as orientation,
+        COALESCE(ffg.proginr, '') as inriktning,
         'FORTKURS:KTFORT2' as origin
     FROM
         uu.fortkurs reg
@@ -101,7 +101,7 @@ ladok.sql.reg: |
         reg.itid as tid,
         reg.pnr,
         COALESCE(ffg.progr, '') as program,
-        COALESCE(ffg.proginr, '') as orientation,
+        COALESCE(ffg.proginr, '') as inriktning,
         'OMKURS:KTILL2' as origin
     FROM
         uu.omkurs reg
@@ -148,7 +148,7 @@ ladok.sql.reg: |
         reg.itid as tid,
         reg.pnr,
         COALESCE(ffg.progr, '') as program,
-        COALESCE(ffg.proginr, '') as orientation,
+        COALESCE(ffg.proginr, '') as inriktning,
         'OMKURS:KTFORT2' as origin
     FROM
         uu.omkurs reg
@@ -187,7 +187,7 @@ ladok.sql.reg: |
         reg.itid as tid,
         reg.pnr,
         '' as program,
-        '' as orientation,
+        '' as inriktning,
         'UBINDRG:KTILL2' as origin
     FROM
         uu.ubindrg reg
@@ -233,7 +233,7 @@ ladok.sql.reg: |
         reg.itid as tid,
         reg.pnr,
         '' as program,
-        '' as orientation,
+        '' as inriktning,
         'UBINDRG:KTFORT2' as origin
     FROM
         uu.ubindrg reg
@@ -282,33 +282,6 @@ ladok.sql.reg: |
             (SELECT * FROM uu.ffgkurs ffg WHERE ffg.pnr = reg.pnr AND ffg.kurs = reg.kurs)
         ORDER BY
             datum asc, tid asc
-
-
-# Antagningar till kurstillfalle
-ladok.sql.accepted=
-    SELECT
-        la.anmalt as anmkod,
-        la.termin as starttermin,
-        kt.kurskod as kurskod,
-        la.pnr as pnr,
-        la.progr as program,
-        la.proginr as orientation,
-        la.svar as svar,
-        la.villkor as villkor,
-        la.villkor2 as villkor2,
-        la.villkor3 as villkor3,
-        la.inlkoppl as proganmkod
-    FROM
-        uu.lantkurs la,
-        uu.ktill2 kt
-    WHERE
-        la.termin = '20162'
-        -- :termin
-        AND la.svar <> 'N'
-        AND la.anmalt = kt.kod
-        AND la.termin = kt.startter
-        -- AND (la.inlkoppl = '' OR la.inlkoppl is null)
-        AND NOT EXISTS (SELECT * FROM uu.ffgkurs ffg WHERE ffg.pnr = la.pnr AND ffg.kurs = kt.kurskod)
 
 
 # Avregistreringar i bortregk
@@ -401,4 +374,31 @@ ladok.sql.avliden: |
         and n.inldat <= :datum_to
     order by
         datum asc
+
+
+# Antagningar till kurstillfalle
+ladok.sql.accepted=
+    SELECT
+        ak.anmalt as anmkod,
+        ak.termin as starttermin,
+        kt.kurskod as kurskod,
+        ak.pnr as pnr,
+        ak.progr as program,
+        ak.proginr as inriktning,
+        ak.svar as svar,
+        ak.villkor as villkor,
+        ak.villkor2 as villkor2,
+        ak.villkor3 as villkor3,
+        ak.inlkoppl as proganmkod
+    FROM
+        uu.lantkurs ak,
+        uu.ktill2 kt
+    WHERE
+        ak.termin = '20162'
+        -- ak.termin = :termin
+        AND ak.svar <> 'N'
+        AND ak.anmalt = kt.kod
+        AND ak.termin = kt.startter
+        -- AND (ak.inlkoppl = '' OR ak.inlkoppl is null)
+        AND NOT EXISTS (SELECT * FROM uu.ffgkurs ffg WHERE ffg.pnr = ak.pnr AND ffg.kurs = kt.kurskod)
 
