@@ -9,7 +9,7 @@ public class Reg extends PnrEvent {
     String kurskod;
     String completed;
     String program;
-    String programOrientation;
+    String inriktning;
     String origin;
 
 	public String getAnmkod() {
@@ -42,6 +42,18 @@ public class Reg extends PnrEvent {
 	public void setCompleted(String completed) {
 		this.completed = completed;
 	}
+	public String getProgram() {
+		return program;
+	}
+	public void setProgram(String program) {
+		this.program = program;
+	}
+	public String getInriktning() {
+		return inriktning;
+	}
+	public void setInriktning(String inriktning) {
+		this.inriktning = inriktning;
+	}
 	public String getOrigin() {
 		return origin;
 	}
@@ -51,10 +63,10 @@ public class Reg extends PnrEvent {
 	
 	@Override
 	public String toString() {
-		return "Reg [datum=" + datum + ", tid=" + tid + ", pnr=" + pnr
-				+ ", anmkod=" + anmkod + ", startter=" + startter
-				+ ", termin=" + termin + ", kurskod=" + kurskod
-				+ ", completed=" + completed + ", origin=" + origin + "]";
+		return "Reg [anmkod=" + anmkod + ", startter=" + startter + ", termin="
+				+ termin + ", kurskod=" + kurskod + ", completed=" + completed
+				+ ", program=" + program + ", inriktning=" + inriktning
+				+ ", origin=" + origin + ", pnr=" + pnr + ", datum=" + datum
+				+ ", tid=" + tid + "]";
 	}
-	
 }
