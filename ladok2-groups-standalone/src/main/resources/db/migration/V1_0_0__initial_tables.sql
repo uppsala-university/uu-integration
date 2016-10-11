@@ -54,9 +54,9 @@ CREATE TABLE ACC_MEMBERSHIPS (
   program        VARCHAR(255),
   orientation    VARCHAR(255),
   response       VARCHAR(255),
-  condition      VARCHAR(255),
-  condition2     VARCHAR(255),
-  condition3     VARCHAR(255),
+  cond           VARCHAR(255),
+  cond2          VARCHAR(255),
+  cond3          VARCHAR(255),
   progReportCode VARCHAR(255)
 );
 
