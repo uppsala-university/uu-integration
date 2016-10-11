@@ -37,7 +37,7 @@ esb.sql.saveNewPotentialMembershipEvent: |
 
 esb.sql.mostRecentMembershipEvent: |
     select
-       id, pmeId, date, pnr, meType, courseCode, reportCode, startSemester, semester, origin, origin2
+       id, date, pnr, meType, courseCode, reportCode, startSemester, semester, origin, origin2
     from
         MEMBERSHIP_EVENTS
     where
@@ -45,9 +45,9 @@ esb.sql.mostRecentMembershipEvent: |
 
 esb.sql.saveNewMembershipEvent: |
     insert into
-        MEMBERSHIP_EVENTS (pmeId, date, pnr, meType, courseCode, reportCode, startSemester, semester, origin, origin2)
+        MEMBERSHIP_EVENTS (date, pnr, meType, courseCode, reportCode, startSemester, semester, origin, origin2)
     values
-        (:pmeId, :date, :pnr, :meTypeAsString, :courseCode, :reportCode, :startSemester, :semester, :origin, :origin2)
+        (:date, :pnr, :meTypeAsString, :courseCode, :reportCode, :startSemester, :semester, :origin, :origin2)
 
 
 ## -- Membership
@@ -63,7 +63,7 @@ esb.sql.numberOfMembersForCourseInstance: |
 
 esb.sql.memberships: |
     select
-        id, meId, date, pnr, courseCode, reportCode, startSemester, semester, origin, origin2
+        id, date, pnr, courseCode, reportCode, startSemester, semester, origin, origin2
     from
         MEMBERSHIPS
     where
@@ -73,7 +73,7 @@ esb.sql.memberships: |
 
 esb.sql.membershipsByCourseCode: |
     select
-        id, meId, date, pnr, courseCode, reportCode, startSemester, semester, origin, origin2
+        id, date, pnr, courseCode, reportCode, startSemester, semester, origin, origin2
     from
         MEMBERSHIPS
     where
@@ -84,7 +84,7 @@ esb.sql.membershipsByCourseCode: |
 
 esb.sql.membershipsByReportCodeStartSemester: |
     select
-        id, meId, date, pnr, courseCode, reportCode, startSemester, semester, origin, origin2
+        id, date, pnr, courseCode, reportCode, startSemester, semester, origin, origin2
     from
         MEMBERSHIPS
     where
@@ -96,7 +96,7 @@ esb.sql.membershipsByReportCodeStartSemester: |
 
 esb.sql.membershipsByCourseCodeSemesterOrigin2: |
     select
-        id, meId, date, pnr, courseCode, reportCode, startSemester, semester, origin, origin2
+        id, date, pnr, courseCode, reportCode, startSemester, semester, origin, origin2
     from
         MEMBERSHIPS
     where
@@ -109,15 +109,14 @@ esb.sql.membershipsByCourseCodeSemesterOrigin2: |
 
 esb.sql.saveNewMembership: |
     insert into
-        MEMBERSHIPS (meId, date, pnr, courseCode, reportCode, startSemester, semester, origin, origin2)
+        MEMBERSHIPS (date, pnr, courseCode, reportCode, startSemester, semester, origin, origin2)
     values
-        (:meId, :date, :pnr, :courseCode, :reportCode, :startSemester, :semester, :origin, :origin2)
+        (:date, :pnr, :courseCode, :reportCode, :startSemester, :semester, :origin, :origin2)
 
 esb.sql.updateMembership: |
     update
         MEMBERSHIPS
     set
-        meId          = :meId,
         date          = :date,
         pnr           = :pnr,
         courseCode    = :courseCode,

@@ -2,7 +2,11 @@ package se.uu.its.integration.ladok2groups.util;
 
 import static se.uu.its.integration.ladok2groups.util.JdbcUtil.getPreparedStatement;
 import static se.uu.its.integration.ladok2groups.util.JdbcUtil.queryByObj;
+import static se.uu.its.integration.ladok2groups.util.JdbcUtil.updateN;
+import static se.uu.its.integration.ladok2groups.util.MembershipEventUtil.toGroupEvent;
 import static se.uu.its.integration.ladok2groups.util.MembershipEventUtil.toMembershipEvent;
+import static se.uu.its.integration.ladok2groups.util.MembershipEventUtil.toMembership;
+import static se.uu.its.integration.ladok2groups.util.SqlAndValueObjs.sqlAndVals;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -32,6 +36,27 @@ public class MembershipEventJdbcUtil {
 	}
 
 	public static MembershipEvent saveMembershipAddEvent(DataSource ds,
+			NamedParameterJdbcTemplate jt, Log log,
+			PotentialMembershipEvent pme, Membership obsoleteMembership) {
+		List<SqlAndValueObjs> savs = new ArrayList<>();
+		List<Integer> numRegs = queryByObj(jt, Integer.class,
+				esbSql.getNumberOfMembershipsForCourseInstanceSql(), pme);
+		if (numRegs.get(0) == 0) {
+			// First membership for this group -> create an implicit new group event
+			savs.add(sqlAndVals(esbSql.getSaveNewMembershipEventSql(), toGroupEvent(pme)));
+		}
+		// Save the new membership event and corresponding membership
+		savs.add(sqlAndVals(esbSql.getSaveNewMembershipEventSql(), toMembershipEvent(pme)));
+		savs.add(sqlAndVals(esbSql.getSaveNewMembershipSql(), toMembership(pme)));
+		if (obsoleteMembership != null) {
+			// Remove any obsolete memberships
+			savs.add(sqlAndVals(esbSql.getDeleteMembershipByIdSql(), obsoleteMembership));
+		}
+		updateN(ds, log, savs);
+		return null;
+	}
+	
+	public static MembershipEvent saveMembershipAddEvent_DEPRECATED(DataSource ds,
 			NamedParameterJdbcTemplate jt, Log log,
 			PotentialMembershipEvent pme, Membership obsoleteMembership) {
 		MembershipEvent me = null;

@@ -90,7 +90,6 @@ public class MembershipEventUtil {
 
 	public static MembershipEvent toMembershipEvent(PotentialMembershipEvent pme) {
 		MembershipEvent me = new MembershipEvent();
-		me.setPmeId(pme.getId());
 		me.setMeType(pme.getMeType());
 		me.setDate(pme.getDate());
 		me.setPnr(pme.getPnr());
@@ -133,7 +132,6 @@ public class MembershipEventUtil {
 	
 	public static Membership toMembership(PotentialMembershipEvent me) {
 		Membership m = new Membership();
-		m.setMeId(me.getId());
 		m.setDate(me.getDate());
 		m.setPnr(me.getPnr());
 		m.setCourseCode(me.getCourseCode());
@@ -147,7 +145,6 @@ public class MembershipEventUtil {
 	
 	public static GroupEvent toGroupEvent(PotentialMembershipEvent pme) {
 		GroupEvent me = new GroupEvent();
-		me.setPmeId(pme.getId());
 		me.setMeType(Type.ADDGROUP); // Only addgroup events so far
 		me.setDate(pme.getDate());
 		me.setPnr(null);

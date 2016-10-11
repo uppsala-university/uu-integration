@@ -5,7 +5,6 @@ import java.util.Date;
 public class Membership {
 	
 	Long id;
-	Long meId;
 	Date date;
 	String pnr;
 	String courseCode;
@@ -20,12 +19,6 @@ public class Membership {
 	}
 	public void setId(Long id) {
 		this.id = id;
-	}
-	public Long getMeId() {
-		return meId;
-	}
-	public void setMeId(Long meId) {
-		this.meId = meId;
 	}
 	public Date getDate() {
 		return date;
@@ -78,11 +71,10 @@ public class Membership {
 	
 	@Override
 	public String toString() {
-		return "Membership [id=" + id + ", meId=" + meId + ", date=" + date
+		return "Membership [id=" + id + ", date=" + date
 				+ ", pnr=" + pnr + ", courseCode=" + courseCode
 				+ ", reportCode=" + reportCode + ", startSemester="
 				+ startSemester + ", semester=" + semester + ", origin="
 				+ origin + ", origin2=" + origin2 + "]";
 	}
-
 }

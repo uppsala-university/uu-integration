@@ -5,7 +5,7 @@ public class GroupEvent extends MembershipEvent {
 	
 	@Override
 	public String toString() {
-		return "GroupEvent [pmeId=" + pmeId + ", id=" + id + ", date="
+		return "GroupEvent [id=" + id + ", date="
 				+ date + ", pnr=" + pnr + ", meType=" + meType
 				+ ", courseCode=" + courseCode + ", reportCode=" + reportCode
 				+ ", startSemester=" + startSemester + ", semester=" + semester

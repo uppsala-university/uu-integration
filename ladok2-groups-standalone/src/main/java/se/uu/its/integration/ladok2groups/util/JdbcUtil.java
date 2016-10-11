@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -56,10 +57,14 @@ public class JdbcUtil {
 		BeanPropertySqlParameterSource bpsps = new BeanPropertySqlParameterSource(value);
 	    return t.update(sql, bpsps);
 	}
-	
+
 	public static void updateN(DataSource ds, Log log, SqlAndValueObjs... savs) {
+		updateN(ds, log, Arrays.asList(savs));
+	}
+
+	public static void updateN(DataSource ds, Log log, List<SqlAndValueObjs> savs) {
 		try {
-			List<PreparedStatementCreator> pscs = new ArrayList<PreparedStatementCreator>(savs.length);
+			List<PreparedStatementCreator> pscs = new ArrayList<PreparedStatementCreator>(savs.size());
 			Connection con = ds.getConnection();
 			for (SqlAndValueObjs sav : savs) {
 				for (Object value : sav.getValues()) {
