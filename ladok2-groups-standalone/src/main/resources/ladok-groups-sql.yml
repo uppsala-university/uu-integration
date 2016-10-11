@@ -377,7 +377,7 @@ ladok.sql.avliden: |
 
 
 # Antagningar till kurstillfalle
-ladok.sql.accepted=
+ladok.sql.accepted: |
     SELECT
         ak.anmalt as anmkod,
         ak.termin as starttermin,
