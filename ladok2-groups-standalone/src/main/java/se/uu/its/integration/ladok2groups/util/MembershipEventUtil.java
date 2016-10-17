@@ -10,11 +10,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import se.uu.its.integration.ladok2groups.dto.AccMembership;
 import se.uu.its.integration.ladok2groups.dto.GroupEvent;
 import se.uu.its.integration.ladok2groups.dto.Membership;
 import se.uu.its.integration.ladok2groups.dto.MembershipEvent;
 import se.uu.its.integration.ladok2groups.dto.PotentialMembershipEvent;
 import se.uu.its.integration.ladok2groups.dto.PotentialMembershipEvent.Type;
+import se.uu.its.integration.ladok2groups.l2dto.Antagen;
 import se.uu.its.integration.ladok2groups.l2dto.Avliden;
 import se.uu.its.integration.ladok2groups.l2dto.BortReg;
 import se.uu.its.integration.ladok2groups.l2dto.InReg;
@@ -88,6 +90,14 @@ public class MembershipEventUtil {
 		return ge;
 	}
 
+	public static PotentialMembershipEvent toMembershipEvent(Avliden a) {
+		PotentialMembershipEvent ge = newMembershipEvent(a);
+		ge.setMeType(Type.REMOVE);
+		ge.setOrigin("AVLIDEN");
+		return ge;
+	}
+
+	
 	public static MembershipEvent toMembershipEvent(PotentialMembershipEvent pme) {
 		MembershipEvent me = new MembershipEvent();
 		me.setMeType(pme.getMeType());
@@ -113,13 +123,6 @@ public class MembershipEventUtil {
 			mes.add(me);
 		}
 		return mes;
-	}
-	
-	public static PotentialMembershipEvent toMembershipEvent(Avliden a) {
-		PotentialMembershipEvent ge = newMembershipEvent(a);
-		ge.setMeType(Type.REMOVE);
-		ge.setOrigin("AVLIDEN");
-		return ge;
 	}
 	
 	public static List<Membership> toMemberships(List<PotentialMembershipEvent> mes) {
@@ -155,6 +158,62 @@ public class MembershipEventUtil {
 		me.setOrigin(pme.getOrigin());
 		me.setOrigin2(pme.getOrigin2());
 		return me;
+	}
+	
+	public static List<AccMembership> toAccMemberships(List<Antagen> as, Date date) {
+		List<AccMembership> accs = new ArrayList<>();
+		for (Antagen antagen : as) {
+			accs.add(toAccMembership(antagen, date));
+		}
+		return accs;
+	}
+
+	public static List<MembershipEvent> toMembershipAddEvents(List<AccMembership> ms) {
+		List<MembershipEvent> es = new ArrayList<>();
+		for (AccMembership m : ms) {
+			es.add(toMembershipEvent(m, Type.ADD));
+		}
+		return es;
+	}
+	
+	public static List<MembershipEvent> toMembershipRemoveEvents(List<AccMembership> ms) {
+		List<MembershipEvent> es = new ArrayList<>();
+		for (AccMembership m : ms) {
+			es.add(toMembershipEvent(m, Type.REMOVE));
+		}
+		return es;
+	}
+	
+	private static MembershipEvent toMembershipEvent(AccMembership m, Type t) {
+		MembershipEvent e = new MembershipEvent();
+		e.setMeType(t);
+		e.setDate(m.getDate());
+		e.setPnr(m.getPnr());
+		e.setReportCode(m.getReportCode());
+		e.setStartSemester(m.getSemester());
+		e.setSemester(m.getSemester());
+		e.setCourseCode(m.getCourseCode());
+		e.setOrigin("LANTKURS");
+		// TODO: cond
+		//e.setOrigin2();
+		return e;
+	}
+	
+	public static AccMembership toAccMembership(Antagen a, Date date) {
+		AccMembership acc = new AccMembership();
+		acc.setDate(date);
+		acc.setPnr(a.getPnr());
+		acc.setReportCode(a.getAnmkod());
+		acc.setSemester(a.getTermin());
+		acc.setCourseCode(a.getKurskod());
+		acc.setCond(a.getVillkor());
+		acc.setCond2(a.getVillkor2());
+		acc.setCond3(a.getVillkor3());
+		acc.setOrientation(a.getInriktning());
+		acc.setProgram(a.getProgram());
+		acc.setProgReportCode(a.getProganmkod());
+		acc.setResponse(a.getSvar());
+		return acc;
 	}
 	
 	public static Date parse(String formattedDate) {

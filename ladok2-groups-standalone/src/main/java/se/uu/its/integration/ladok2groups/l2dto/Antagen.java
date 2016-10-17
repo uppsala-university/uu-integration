@@ -21,7 +21,7 @@ public class Antagen {
 	public void setAnmkod(String anmkod) {
 		this.anmkod = anmkod;
 	}
-	public String getTtermin() {
+	public String getTermin() {
 		return termin;
 	}
 	public void setTermin(String termin) {
