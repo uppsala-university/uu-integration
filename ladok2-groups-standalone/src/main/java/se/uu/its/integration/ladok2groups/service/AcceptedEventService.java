@@ -10,7 +10,7 @@ public class AcceptedEventService {
 	
 	static Log log = LogFactory.getLog(AcceptedEventService.class);
 	
-	@Scheduled(fixedDelay=30000)
+	@Scheduled(fixedDelayString = "${app.AcceptedEventService.updateAcceptedMembers.delay}")
 	public void updateAcceptedMembers() throws Exception {
 		System.out.println("Helu schedule: " + System.currentTimeMillis());
 	}
