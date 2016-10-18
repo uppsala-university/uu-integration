@@ -25,6 +25,9 @@ CREATE TABLE MEMBERSHIP_EVENTS (
   semester           VARCHAR(255),
   program            VARCHAR(255),
   programOrientation VARCHAR(255),
+  condition1         VARCHAR(255),
+  condition2         VARCHAR(255),
+  condition3         VARCHAR(255),
   origin             VARCHAR(255) NOT NULL,
   origin2            VARCHAR(255)
 );
@@ -56,8 +59,8 @@ CREATE TABLE ACC_MEMBERSHIPS (
   program            VARCHAR(255),
   programOrientation VARCHAR(255),
   response           VARCHAR(255),
-  cond               VARCHAR(255),
-  cond2              VARCHAR(255),
-  cond3              VARCHAR(255),
+  condition1         VARCHAR(255),
+  condition2         VARCHAR(255),
+  condition3         VARCHAR(255),
   programReportCode  VARCHAR(255)
 );

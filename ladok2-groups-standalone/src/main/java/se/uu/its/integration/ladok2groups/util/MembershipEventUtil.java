@@ -201,9 +201,10 @@ public class MembershipEventUtil {
 		e.setCourseCode(m.getCourseCode());
 		e.setProgram(m.getProgram());
 		e.setProgramOrientation(m.getProgramOrientation());
+		e.setCondition1(m.getCondition1());
+		e.setCondition2(m.getCondition2());
+		e.setCondition3(m.getCondition3());
 		e.setOrigin("LANTKURS");
-		// TODO: cond
-		//e.setOrigin2();
 		return e;
 	}
 	
@@ -214,9 +215,9 @@ public class MembershipEventUtil {
 		acc.setReportCode(a.getAnmkod());
 		acc.setSemester(a.getTermin());
 		acc.setCourseCode(a.getKurskod());
-		acc.setCond(a.getVillkor());
-		acc.setCond2(a.getVillkor2());
-		acc.setCond3(a.getVillkor3());
+		acc.setCondition1(a.getVillkor());
+		acc.setCondition2(a.getVillkor2());
+		acc.setCondition3(a.getVillkor3());
 		acc.setProgram(a.getProgram());
 		acc.setProgramOrientation(a.getInriktning());
 		acc.setProgramReportCode(a.getProgramAnmkod());

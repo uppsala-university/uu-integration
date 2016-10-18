@@ -12,10 +12,13 @@ public class AccMembership {
 	String program;
 	String programOrientation;
 	String response;
-	String cond;
-	String cond2;
-	String cond3;
+	String condition1;
+	String condition2;
+	String condition3;
 	String programReportCode;
+	
+	public AccMembership() {
+	}
 	
 	public Date getDate() {
 		return date;
@@ -65,23 +68,23 @@ public class AccMembership {
 	public void setResponse(String response) {
 		this.response = response;
 	}
-	public String getCond() {
-		return cond;
+	public String getCondition1() {
+		return condition1;
 	}
-	public void setCond(String cond) {
-		this.cond = cond;
+	public void setCondition1(String condition1) {
+		this.condition1 = condition1;
 	}
-	public String getCond2() {
-		return cond2;
+	public String getCondition2() {
+		return condition2;
 	}
-	public void setCond2(String cond2) {
-		this.cond2 = cond2;
+	public void setCondition2(String condition2) {
+		this.condition2 = condition2;
 	}
-	public String getCond3() {
-		return cond3;
+	public String getCondition3() {
+		return condition3;
 	}
-	public void setCond3(String cond3) {
-		this.cond3 = cond3;
+	public void setCondition3(String condition3) {
+		this.condition3 = condition3;
 	}
 	public String getProgramReportCode() {
 		return programReportCode;
@@ -137,14 +140,16 @@ public class AccMembership {
 		}
 		return true;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "AccMembership [date=" + date + ", pnr=" + pnr + ", courseCode="
 				+ courseCode + ", reportCode=" + reportCode + ", semester="
-				+ semester + ", program=" + program + ", orientation="
-				+ programOrientation + ", response=" + response + ", cond="
-				+ cond + ", cond2=" + cond2 + ", cond3=" + cond3 
-				+ ", progReportCode=" + programReportCode + "]";
+				+ semester + ", program=" + program + ", programOrientation="
+				+ programOrientation + ", response=" + response
+				+ ", condition1=" + condition1 + ", condition2=" + condition2
+				+ ", condition3=" + condition3 + ", programReportCode="
+				+ programReportCode + "]";
 	}
+	
 }
