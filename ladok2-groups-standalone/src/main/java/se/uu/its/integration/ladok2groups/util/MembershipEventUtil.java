@@ -64,6 +64,8 @@ public class MembershipEventUtil {
 		ge.setReportCode(r.getAnmkod());
 		ge.setStartSemester(r.getStartter());
 		ge.setSemester(r.getTermin());
+		ge.setProgram(r.getProgram());
+		ge.setProgramOrientation(r.getInriktning());
 		String[] o1o2 = r.getOrigin().split(":");
 		ge.setOrigin(o1o2[0]);
 		ge.setOrigin2(o1o2[1]);
@@ -107,6 +109,8 @@ public class MembershipEventUtil {
 		me.setReportCode(pme.getReportCode());
 		me.setStartSemester(pme.getStartSemester());
 		me.setSemester(pme.getSemester());
+		me.setProgram(pme.getProgram());
+		me.setProgramOrientation(pme.getProgramOrientation());
 		me.setOrigin(pme.getOrigin());
 		me.setOrigin2(pme.getOrigin2());
 		return me;
@@ -155,6 +159,8 @@ public class MembershipEventUtil {
 		me.setReportCode(pme.getReportCode());
 		me.setStartSemester(pme.getStartSemester());
 		me.setSemester(null);
+		me.setProgram(pme.getProgram());
+		me.setProgramOrientation(pme.getProgramOrientation());
 		me.setOrigin(pme.getOrigin());
 		me.setOrigin2(pme.getOrigin2());
 		return me;
@@ -193,6 +199,8 @@ public class MembershipEventUtil {
 		e.setStartSemester(m.getSemester());
 		e.setSemester(m.getSemester());
 		e.setCourseCode(m.getCourseCode());
+		e.setProgram(m.getProgram());
+		e.setProgramOrientation(m.getProgramOrientation());
 		e.setOrigin("LANTKURS");
 		// TODO: cond
 		//e.setOrigin2();
@@ -209,9 +217,9 @@ public class MembershipEventUtil {
 		acc.setCond(a.getVillkor());
 		acc.setCond2(a.getVillkor2());
 		acc.setCond3(a.getVillkor3());
-		acc.setOrientation(a.getInriktning());
 		acc.setProgram(a.getProgram());
-		acc.setProgReportCode(a.getProganmkod());
+		acc.setProgramOrientation(a.getInriktning());
+		acc.setProgramReportCode(a.getProgramAnmkod());
 		acc.setResponse(a.getSvar());
 		return acc;
 	}

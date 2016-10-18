@@ -11,6 +11,8 @@ public class Membership {
 	String reportCode;
 	String startSemester;
 	String semester;
+	String program;
+	String programOrientation;
 	String origin;
 	String origin2;
 	
@@ -56,6 +58,18 @@ public class Membership {
 	public void setSemester(String semester) {
 		this.semester = semester;
 	}
+	public String getProgram() {
+		return program;
+	}
+	public void setProgram(String program) {
+		this.program = program;
+	}
+	public String getProgramOrientation() {
+		return programOrientation;
+	}
+	public void setProgramOrientation(String orientation) {
+		this.programOrientation = orientation;
+	}
 	public String getOrigin() {
 		return origin;
 	}
@@ -68,13 +82,15 @@ public class Membership {
 	public void setOrigin2(String origin2) {
 		this.origin2 = origin2;
 	}
-	
+
 	@Override
 	public String toString() {
-		return "Membership [id=" + id + ", date=" + date
-				+ ", pnr=" + pnr + ", courseCode=" + courseCode
-				+ ", reportCode=" + reportCode + ", startSemester="
-				+ startSemester + ", semester=" + semester + ", origin="
-				+ origin + ", origin2=" + origin2 + "]";
+		return "Membership [id=" + id + ", date=" + date + ", pnr=" + pnr
+				+ ", courseCode=" + courseCode + ", reportCode=" + reportCode
+				+ ", startSemester=" + startSemester + ", semester=" + semester
+				+ ", program=" + program + ", programOrientation="
+				+ programOrientation + ", origin=" + origin + ", origin2="
+				+ origin2 + "]";
 	}
+	
 }

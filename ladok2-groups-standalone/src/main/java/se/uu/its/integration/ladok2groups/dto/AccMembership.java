@@ -10,12 +10,12 @@ public class AccMembership {
 	String reportCode;
 	String semester;
 	String program;
-	String orientation;
+	String programOrientation;
 	String response;
 	String cond;
 	String cond2;
 	String cond3;
-	String progReportCode;
+	String programReportCode;
 	
 	public Date getDate() {
 		return date;
@@ -53,11 +53,11 @@ public class AccMembership {
 	public void setProgram(String program) {
 		this.program = program;
 	}
-	public String getOrientation() {
-		return orientation;
+	public String getProgramOrientation() {
+		return programOrientation;
 	}
-	public void setOrientation(String orientation) {
-		this.orientation = orientation;
+	public void setProgramOrientation(String programOrientation) {
+		this.programOrientation = programOrientation;
 	}
 	public String getResponse() {
 		return response;
@@ -83,11 +83,11 @@ public class AccMembership {
 	public void setCond3(String cond3) {
 		this.cond3 = cond3;
 	}
-	public String getProgReportCode() {
-		return progReportCode;
+	public String getProgramReportCode() {
+		return programReportCode;
 	}
-	public void setProgReportCode(String progReportCode) {
-		this.progReportCode = progReportCode;
+	public void setProgramReportCode(String programReportCode) {
+		this.programReportCode = programReportCode;
 	}
 	
 	@Override
@@ -143,8 +143,8 @@ public class AccMembership {
 		return "AccMembership [date=" + date + ", pnr=" + pnr + ", courseCode="
 				+ courseCode + ", reportCode=" + reportCode + ", semester="
 				+ semester + ", program=" + program + ", orientation="
-				+ orientation + ", response=" + response + ", cond="
+				+ programOrientation + ", response=" + response + ", cond="
 				+ cond + ", cond2=" + cond2 + ", cond3=" + cond3 
-				+ ", progReportCode=" + progReportCode + "]";
+				+ ", progReportCode=" + programReportCode + "]";
 	}
 }

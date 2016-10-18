@@ -389,7 +389,7 @@ ladok.sql.accepted: |
         ak.villkor as villkor,
         ak.villkor2 as villkor2,
         ak.villkor3 as villkor3,
-        ak.inlkoppl as proganmkod
+        ak.inlkoppl as programAnmkod
     FROM
         uu.lantkurs ak,
         uu.ktill2 kt

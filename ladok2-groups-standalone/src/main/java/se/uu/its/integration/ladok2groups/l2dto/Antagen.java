@@ -13,7 +13,7 @@ public class Antagen {
     String villkor;
     String villkor2;
     String villkor3;
-    String proganmkod;
+    String programAnmkod;
     
 	public String getAnmkod() {
 		return anmkod;
@@ -75,11 +75,11 @@ public class Antagen {
 	public void setVillkor3(String villkor3) {
 		this.villkor3 = villkor3;
 	}
-	public String getProganmkod() {
-		return proganmkod;
+	public String getProgramAnmkod() {
+		return programAnmkod;
 	}
-	public void setProganmkod(String proganmkod) {
-		this.proganmkod = proganmkod;
+	public void setProgramAnmkod(String proganmkod) {
+		this.programAnmkod = proganmkod;
 	}
 
 	@Override
@@ -88,6 +88,6 @@ public class Antagen {
 				+ ", kurskod=" + kurskod + ", pnr=" + pnr + ", program="
 				+ program + ", inriktning=" + inriktning + ", svar=" + svar
 				+ ", villkor=" + villkor + ", villkor2=" + villkor2
-				+ ", villkor3=" + villkor3 + ", proganmkod=" + proganmkod + "]";
+				+ ", villkor3=" + villkor3 + ", programAnmKod=" + programAnmkod + "]";
 	}
 }

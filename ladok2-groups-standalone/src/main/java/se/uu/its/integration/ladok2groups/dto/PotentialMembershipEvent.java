@@ -16,8 +16,13 @@ public class PotentialMembershipEvent {
 	String reportCode;
 	String startSemester;
 	String semester;
+	String program;
+	String programOrientation;
 	String origin;
 	String origin2;
+	
+	public PotentialMembershipEvent() {
+	}
 
 	public Long getId() {
 		return id;
@@ -76,6 +81,18 @@ public class PotentialMembershipEvent {
 	public void setReportCode(String reportCode) {
 		this.reportCode = reportCode;
 	}
+	public String getProgram() {
+		return program;
+	}
+	public void setProgram(String program) {
+		this.program = program;
+	}
+	public String getProgramOrientation() {
+		return programOrientation;
+	}
+	public void setProgramOrientation(String orientation) {
+		this.programOrientation = orientation;
+	}
 	public String getOrigin() {
 		return origin;
 	}
@@ -95,6 +112,7 @@ public class PotentialMembershipEvent {
 				+ ", pnr=" + pnr + ", meType=" + meType + ", courseCode="
 				+ courseCode + ", reportCode=" + reportCode
 				+ ", startSemester=" + startSemester + ", semester=" + semester
+				+ ", program=" + program + ", programOrientation=" + programOrientation
 				+ ", origin=" + origin + ", origin2=" + origin2 + "]";
 	}
 }
