@@ -3,9 +3,6 @@ package se.uu.its.integration.ladok2groups.util;
 import static se.uu.its.integration.ladok2groups.util.JdbcUtil.getPreparedStatement;
 import static se.uu.its.integration.ladok2groups.util.JdbcUtil.queryByObj;
 import static se.uu.its.integration.ladok2groups.util.JdbcUtil.updateN;
-import static se.uu.its.integration.ladok2groups.util.MembershipEventUtil.toGroupEvent;
-import static se.uu.its.integration.ladok2groups.util.MembershipEventUtil.toMembershipEvent;
-import static se.uu.its.integration.ladok2groups.util.MembershipEventUtil.toMembership;
 import static se.uu.its.integration.ladok2groups.util.SqlAndValueObjs.sqlAndVals;
 
 import java.sql.Connection;
@@ -43,11 +40,11 @@ public class MembershipEventJdbcUtil {
 				esbSql.getNumberOfMembershipsForCourseInstanceSql(), pme);
 		if (numRegs.get(0) == 0) {
 			// First membership for this group -> create an implicit new group event
-			savs.add(sqlAndVals(esbSql.getSaveNewMembershipEventSql(), toGroupEvent(pme)));
+			savs.add(sqlAndVals(esbSql.getSaveNewMembershipEventSql(), new GroupEvent(pme)));
 		}
 		// Save the new membership event and corresponding membership
-		savs.add(sqlAndVals(esbSql.getSaveNewMembershipEventSql(), toMembershipEvent(pme)));
-		savs.add(sqlAndVals(esbSql.getSaveNewMembershipSql(), toMembership(pme)));
+		savs.add(sqlAndVals(esbSql.getSaveNewMembershipEventSql(), new MembershipEvent(pme)));
+		savs.add(sqlAndVals(esbSql.getSaveNewMembershipSql(), new Membership(pme)));
 		if (obsoleteMembership != null) {
 			// Remove any obsolete memberships
 			savs.add(sqlAndVals(esbSql.getDeleteMembershipByIdSql(), obsoleteMembership));
@@ -70,13 +67,13 @@ public class MembershipEventJdbcUtil {
 			con.setAutoCommit(false);
 			if (nr == 0) {
 				// First membership for this group -> create an implicit new group event
-				GroupEvent ge = MembershipEventUtil.toGroupEvent(pme);
+				GroupEvent ge = new GroupEvent(pme);
 				PreparedStatement psge = getPreparedStatement(con, esbSql.getSaveNewMembershipEventSql(), ge);
 				pss.add(psge);
 				psge.execute();
 			}
 			// Save the new membership event
-			me = toMembershipEvent(pme);
+			me = new MembershipEvent(pme);
 			PreparedStatement psme = getPreparedStatement(con, esbSql.getSaveNewMembershipEventSql(), me);
 			pss.add(psme);
 			psme.execute();
@@ -85,7 +82,7 @@ public class MembershipEventJdbcUtil {
 			genKeys.next();
 			long genId = genKeys.getLong(1);
 			me.setId(genId);
-			Membership m = MembershipEventUtil.toMembership(me);
+			Membership m = new Membership(me);
 			PreparedStatement psm = getPreparedStatement(con, esbSql.getSaveNewMembershipSql(), m);
 			pss.add(psm);
 			psm.execute();

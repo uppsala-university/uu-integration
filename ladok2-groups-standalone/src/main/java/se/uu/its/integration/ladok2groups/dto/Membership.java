@@ -16,6 +16,20 @@ public class Membership {
 	String origin;
 	String origin2;
 	
+	public Membership() {
+	}
+	
+	public Membership(PotentialMembershipEvent me) {
+		setDate(me.getDate());
+		setPnr(me.getPnr());
+		setCourseCode(me.getCourseCode());
+		setReportCode(me.getReportCode());
+		setStartSemester(me.getStartSemester());
+		setSemester(me.getSemester());
+		setOrigin(me.getOrigin());
+		setOrigin2(me.getOrigin2());
+	}
+	
 	public Long getId() {
 		return id;
 	}

@@ -9,6 +9,34 @@ public class MembershipEvent extends PotentialMembershipEvent {
 	public MembershipEvent() {
 	}
 	
+	public MembershipEvent(PotentialMembershipEvent pme) {
+		super(pme);
+	}
+
+	public MembershipEvent(PotentialMembershipEvent pme, Membership m) {
+		this(pme);
+		setCourseCode(m.getCourseCode());
+		setReportCode(m.getReportCode());
+		setSemester(m.getSemester());
+		setStartSemester(m.getStartSemester());
+	}
+	
+	public MembershipEvent(AccMembership m, Type t) {
+		setMeType(t);
+		setDate(m.getDate());
+		setPnr(m.getPnr());
+		setReportCode(m.getReportCode());
+		setStartSemester(m.getSemester());
+		setSemester(m.getSemester());
+		setCourseCode(m.getCourseCode());
+		setProgram(m.getProgram());
+		setProgramOrientation(m.getProgramOrientation());
+		setCondition1(m.getCondition1());
+		setCondition2(m.getCondition2());
+		setCondition3(m.getCondition3());
+		setOrigin("LANTKURS");
+	}
+	
 	public String getCondition1() {
 		return condition1;
 	}

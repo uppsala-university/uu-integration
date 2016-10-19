@@ -1,7 +1,16 @@
 package se.uu.its.integration.ladok2groups.dto;
 
-import java.util.Date;
+import static se.uu.its.integration.ladok2groups.util.MembershipEventUtil.parse;
+import static se.uu.its.integration.ladok2groups.util.MembershipEventUtil.parseUrPost;
 
+import java.util.Date;
+import java.util.Map;
+
+import se.uu.its.integration.ladok2groups.l2dto.Avliden;
+import se.uu.its.integration.ladok2groups.l2dto.BortReg;
+import se.uu.its.integration.ladok2groups.l2dto.InReg;
+import se.uu.its.integration.ladok2groups.l2dto.PnrEvent;
+import se.uu.its.integration.ladok2groups.l2dto.Reg;
 import se.uu.its.integration.ladok2groups.util.MembershipEventUtil;
 
 public class PotentialMembershipEvent {
@@ -23,6 +32,63 @@ public class PotentialMembershipEvent {
 	
 	public PotentialMembershipEvent() {
 	}
+	
+	public PotentialMembershipEvent(PotentialMembershipEvent pme) {
+		setMeType(pme.getMeType());
+		setDate(pme.getDate());
+		setPnr(pme.getPnr());
+		setCourseCode(pme.getCourseCode());
+		setReportCode(pme.getReportCode());
+		setStartSemester(pme.getStartSemester());
+		setSemester(pme.getSemester());
+		setProgram(pme.getProgram());
+		setProgramOrientation(pme.getProgramOrientation());
+		setOrigin(pme.getOrigin());
+		setOrigin2(pme.getOrigin2());
+	}
+	
+	public PotentialMembershipEvent(PnrEvent pe) {
+		setPnr(pe.getPnr());
+		setDate(pe.getDatum(), pe.getTid());
+	}
+
+	public PotentialMembershipEvent(Reg r) {
+		this((PnrEvent) r);
+		setMeType(Type.ADD);
+		setCourseCode(r.getKurskod());
+		setReportCode(r.getAnmkod());
+		setStartSemester(r.getStartter());
+		setSemester(r.getTermin());
+		setProgram(r.getProgram());
+		setProgramOrientation(r.getInriktning());
+		String[] o1o2 = r.getOrigin().split(":");
+		setOrigin(o1o2[0]);
+		setOrigin2(o1o2[1]);
+	}
+
+	public PotentialMembershipEvent(BortReg r) {
+		this((PnrEvent) r);
+		setMeType(Type.REMOVE);
+		Map<String, String> urPost = parseUrPost(r.getUrpost());
+		setSemester(urPost.get("TERMIN"));
+		setCourseCode(r.getKurskod());
+		setOrigin("BORTREGK");
+		setOrigin2(r.getUrtabell());
+	}
+	
+	public PotentialMembershipEvent(InReg r) {
+		this((PnrEvent) r);
+		setMeType(Type.REMOVE);
+		setOrigin(r.getOrigin());
+		setCourseCode(r.getKurskod());
+		setSemester(r.getTermin());
+	}
+
+	public PotentialMembershipEvent(Avliden a) {
+		this((PnrEvent) a);
+		setMeType(Type.REMOVE);
+		setOrigin("AVLIDEN");
+	}
 
 	public Long getId() {
 		return id;
@@ -38,6 +104,13 @@ public class PotentialMembershipEvent {
 	}
 	public void setDate(Date date) {
 		this.date = date;
+	}
+	public void setDate(String date, String time) {
+		// Absence of time -> set as late as possible to not miss any event
+		if (time == null || time.equals("000000")) {
+			time = "235959";
+		}
+		this.date = parse(date + " " + time);
 	}
 	public String getPnr() {
 		return pnr;

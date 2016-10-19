@@ -2,6 +2,8 @@ package se.uu.its.integration.ladok2groups.dto;
 
 import java.util.Date;
 
+import se.uu.its.integration.ladok2groups.l2dto.Antagen;
+
 public class AccMembership {
 
 	Date date;
@@ -18,6 +20,21 @@ public class AccMembership {
 	String programReportCode;
 	
 	public AccMembership() {
+	}
+	
+	public AccMembership(Antagen a, Date date) {
+		setDate(date);
+		setPnr(a.getPnr());
+		setReportCode(a.getAnmkod());
+		setSemester(a.getTermin());
+		setCourseCode(a.getKurskod());
+		setCondition1(a.getVillkor());
+		setCondition2(a.getVillkor2());
+		setCondition3(a.getVillkor3());
+		setProgram(a.getProgram());
+		setProgramOrientation(a.getInriktning());
+		setProgramReportCode(a.getProgramAnmkod());
+		setResponse(a.getSvar());
 	}
 	
 	public Date getDate() {
