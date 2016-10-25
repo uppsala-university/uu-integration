@@ -89,4 +89,18 @@ public class EsbGroupSql {
 	}
 	
 	
+	// AccMembership
+	
+	public String getAccMembershipsSql() {
+		return sql.get("esb.sql.accMemberships");
+	}
+	
+	public String getSaveNewAccMembershipSql() {
+		return sql.get("esb.sql.saveNewAccMembership");
+	}
+	
+	public String getDeleteAccMembershipsSql() {
+		return sql.get("esb.sql.deleteAccMemberships");
+	}
+	
 }

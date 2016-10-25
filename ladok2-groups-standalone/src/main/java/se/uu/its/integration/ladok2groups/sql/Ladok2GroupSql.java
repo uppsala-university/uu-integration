@@ -26,4 +26,7 @@ public class Ladok2GroupSql {
 		return sql.get("ladok.sql.avliden");
 	}
 	
+	public String getAntagenSql() {
+		return sql.get("ladok.sql.antagen");
+	}
 }

@@ -377,28 +377,27 @@ ladok.sql.avliden: |
 
 
 # Antagningar till kurstillfalle
-ladok.sql.accepted: |
+ladok.sql.antagen: |
     SELECT
-        ak.anmalt as anmkod,
-        ak.termin as starttermin,
+        lk.anmalt as anmkod,
+        lk.termin as termin,
         kt.kurskod as kurskod,
-        ak.pnr as pnr,
-        ak.progr as program,
-        ak.proginr as inriktning,
-        ak.svar as svar,
-        ak.villkor as villkor,
-        ak.villkor2 as villkor2,
-        ak.villkor3 as villkor3,
-        ak.inlkoppl as programAnmkod
+        lk.pnr as pnr,
+        lk.progr as program,
+        lk.proginr as inriktning,
+        lk.svar as svar,
+        lk.villkor as villkor,
+        lk.villkor2 as villkor2,
+        lk.villkor3 as villkor3,
+        lk.inlkoppl as programAnmkod
     FROM
-        uu.lantkurs ak,
+        uu.lantkurs lk,
         uu.ktill2 kt
     WHERE
-        ak.termin = '20162'
-        -- ak.termin = :termin
-        AND ak.svar <> 'N'
-        AND ak.anmalt = kt.kod
-        AND ak.termin = kt.startter
-        -- AND (ak.inlkoppl = '' OR ak.inlkoppl is null)
-        AND NOT EXISTS (SELECT * FROM uu.ffgkurs ffg WHERE ffg.pnr = ak.pnr AND ffg.kurs = kt.kurskod)
+        lk.termin = :termin
+        AND lk.svar <> 'N'
+        AND lk.anmalt = kt.kod
+        AND lk.termin = kt.startter
+        -- AND (lk.inlkoppl = '' OR lk.inlkoppl is null)
+        AND NOT EXISTS (SELECT * FROM uu.ffgkurs ffg WHERE ffg.pnr = lk.pnr AND ffg.kurs = kt.kurskod)
 

@@ -177,6 +177,8 @@ esb.sql.accMemberships: |
             response, condition1, condition2, condition3, programReportCode
     from
         ACC_MEMBERSHIPS
+    where
+        semester = :semester
 
 esb.sql.saveNewAccMembership: |
     insert into
