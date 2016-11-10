@@ -1,6 +1,6 @@
 package se.uu.its.integration.ladok2groups.service;
 
-import static se.uu.its.integration.ladok2groups.util.JdbcUtil.query;
+import static se.uu.its.integration.ladok2groups.util.JdbcUtil.queryByParams;
 import static se.uu.its.integration.ladok2groups.util.JdbcUtil.queryByObj;
 import static se.uu.its.integration.ladok2groups.util.JdbcUtil.update;
 import static se.uu.its.integration.ladok2groups.util.JdbcUtil.updateN;
@@ -61,7 +61,7 @@ public class RegistrationEventService {
 	Date registrationEventStart = parse("2016-06-01 000000"); // parse("2007-01-01 000000"); // TODO: Extract to property
 
 	public void updateEvents() throws Exception {
-		List<PotentialMembershipEvent> pmes = query(esbJdbc, PotentialMembershipEvent.class,
+		List<PotentialMembershipEvent> pmes = queryByParams(esbJdbc, PotentialMembershipEvent.class,
 				esbSql.getMostRecentPotentialMembershipEventSql());
 		// Skip forward 1 second from most recent event to avoid duplicate events:
 		Date start = pmes.isEmpty() ? registrationEventStart : new Date(
@@ -176,13 +176,13 @@ public class RegistrationEventService {
 		String[] dt_from = d_from.split(" ");
 		String date_from = dt_from[0];
 		String time_from = date_from.equals(date_to) ? dt_from[1] : "000000";
-		List<Reg> reg = query(l2Jdbc, Reg.class, l2Sql.getRegSql(), 
+		List<Reg> reg = queryByParams(l2Jdbc, Reg.class, l2Sql.getRegSql(), 
 				"datum_from", date_from, "datum_to", date_to, "tid", time_from);
-		List<BortReg> bortreg = query(l2Jdbc, BortReg.class, l2Sql.getBortRegSql(), 
+		List<BortReg> bortreg = queryByParams(l2Jdbc, BortReg.class, l2Sql.getBortRegSql(), 
 				"datum_from", date_from, "datum_to", date_to, "tid", time_from);
-		List<InReg> inreg = query(l2Jdbc, InReg.class, l2Sql.getInRegSql(), 
+		List<InReg> inreg = queryByParams(l2Jdbc, InReg.class, l2Sql.getInRegSql(), 
 				"datum_from", date_from, "datum_to", date_to, "tid", time_from);
-		List<Avliden> avliden = query(l2Jdbc, Avliden.class, l2Sql.getAvlidenSql(), 
+		List<Avliden> avliden = queryByParams(l2Jdbc, Avliden.class, l2Sql.getAvlidenSql(), 
 				"datum_from", date_from, "datum_to", date_to);
 		List<PotentialMembershipEvent> mes = new ArrayList<PotentialMembershipEvent>();
         mes.addAll(toMembershipEvents(reg));
@@ -196,13 +196,13 @@ public class RegistrationEventService {
 	
 	List<PotentialMembershipEvent> getUnprocessedPotentialMembershipEvents() {
 		List<PotentialMembershipEvent> unprocessed;
-		List<PotentialMembershipEvent> mes = query(esbJdbc, PotentialMembershipEvent.class,
+		List<PotentialMembershipEvent> mes = queryByParams(esbJdbc, PotentialMembershipEvent.class,
 				esbSql.getMostRecentMembershipEventSql());
 		if (mes.isEmpty()) {
-			unprocessed = query(esbJdbc, PotentialMembershipEvent.class, 
+			unprocessed = queryByParams(esbJdbc, PotentialMembershipEvent.class, 
 					esbSql.getAllPotentialMembershipEventsSql());
 		} else {
-			unprocessed = query(esbJdbc, PotentialMembershipEvent.class,
+			unprocessed = queryByParams(esbJdbc, PotentialMembershipEvent.class,
 					esbSql.getPotentialMembershipEventsNewerThanSql(), 
 					"id", mes.get(0).getId());
 		}

@@ -1,21 +1,29 @@
 package se.uu.its.integration.ladok2groups.dto;
 
+import java.util.Date;
+
 
 public class GroupEvent extends MembershipEvent {
 	
 	public GroupEvent() {
 	}
 
+	public GroupEvent(Date date, String courseCode, 
+			String startSemester, String reportCode, String origin) {
+		setMeType(Type.ADDGROUP); // Only addgroup events so far
+		setDate(date);
+		setCourseCode(courseCode);
+		setStartSemester(startSemester);
+		setReportCode(reportCode);
+		setOrigin(origin);
+	}
+	
 	public GroupEvent(PotentialMembershipEvent pme) {
 		setMeType(Type.ADDGROUP); // Only addgroup events so far
 		setDate(pme.getDate());
-		setPnr(null);
 		setCourseCode(pme.getCourseCode());
 		setReportCode(pme.getReportCode());
 		setStartSemester(pme.getStartSemester());
-		setSemester(null);
-		setProgram(pme.getProgram());
-		setProgramOrientation(pme.getProgramOrientation());
 		setOrigin(pme.getOrigin());
 		setOrigin2(pme.getOrigin2());
 	}

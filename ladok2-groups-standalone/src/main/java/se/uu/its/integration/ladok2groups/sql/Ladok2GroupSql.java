@@ -29,4 +29,8 @@ public class Ladok2GroupSql {
 	public String getAntagenSql() {
 		return sql.get("ladok.sql.antagen");
 	}
+
+	public String getTerminSql() {
+		return sql.get("ladok.sql.termin");
+	}
 }

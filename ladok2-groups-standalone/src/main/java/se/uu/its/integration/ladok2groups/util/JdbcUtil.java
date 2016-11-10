@@ -24,13 +24,18 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 
 public class JdbcUtil {
 	
-	public static <T> List<T> query(NamedParameterJdbcTemplate t, Class<T> c, 
+	public static <T> List<T> queryByParams(NamedParameterJdbcTemplate t, Class<T> c, 
 			String sql, Object... params) {
 		Map<String, Object> m = new HashMap<String, Object>();
 		for (int i = 0; i < params.length; i+=2) {
 			m.put(params[i].toString(), params[i+1]);
 		}
-		return t.query(sql, m, BeanPropertyRowMapper.newInstance(c));
+		if (Integer.class.equals(c) || Long.class.equals(c) || String.class.equals(c)
+				|| Date.class.equals(c))  {
+			return t.queryForList(sql, m, c);
+		} else {
+			return t.query(sql, m, BeanPropertyRowMapper.newInstance(c));
+		}
 	}
 		
 	public static <T> List<T> queryByObj(NamedParameterJdbcTemplate t, Class<T> c, 

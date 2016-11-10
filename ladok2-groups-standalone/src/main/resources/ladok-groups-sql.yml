@@ -367,7 +367,7 @@ ladok.sql.avliden: |
         n.pnr as pnr,
         n.inldat as datum
     from
-        namn n
+        uu.namn n
     where
         n.avliden = 'J'
         and n.inldat >= :datum_from
@@ -400,4 +400,10 @@ ladok.sql.antagen: |
         AND lk.termin = kt.startter
         -- AND (lk.inlkoppl = '' OR lk.inlkoppl is null)
         AND NOT EXISTS (SELECT * FROM uu.ffgkurs ffg WHERE ffg.pnr = lk.pnr AND ffg.kurs = kt.kurskod)
+
+ladok.sql.termin: |
+    SELECT
+        intermin
+    FROM
+        uu.egenhsk
 
