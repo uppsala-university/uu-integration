@@ -1,6 +1,6 @@
 CREATE TABLE POTENTIAL_MEMBERSHIP_EVENTS (
-  id                 BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  date               TIMESTAMP NOT NULL,
+  id                 BIGINT NOT NULL IDENTITY PRIMARY KEY,
+  date               DATETIME NOT NULL,
   pnr                VARCHAR(255) NOT NULL,
   meType             VARCHAR(255) NOT NULL,
   courseCode         VARCHAR(255),
@@ -11,12 +11,12 @@ CREATE TABLE POTENTIAL_MEMBERSHIP_EVENTS (
   programOrientation VARCHAR(255),
   origin             VARCHAR(255) NOT NULL,
   origin2            VARCHAR(255),
-  processed          BOOLEAN NOT NULL DEFAULT 0
+  processed          BIT NOT NULL DEFAULT 0
 );
 
 CREATE TABLE MEMBERSHIP_EVENTS (
-  id                 BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  date               TIMESTAMP NOT NULL,
+  id                 BIGINT NOT NULL IDENTITY PRIMARY KEY,
+  date               DATETIME NOT NULL,
   pnr                VARCHAR(255),
   meType             VARCHAR(255) NOT NULL,
   courseCode         VARCHAR(255) NOT NULL,
@@ -30,12 +30,12 @@ CREATE TABLE MEMBERSHIP_EVENTS (
   condition3         VARCHAR(255),
   origin             VARCHAR(255) NOT NULL,
   origin2            VARCHAR(255),
-  processed          BOOLEAN NOT NULL DEFAULT 0
+  processed          BIT NOT NULL DEFAULT 0
 );
 
 CREATE TABLE MEMBERSHIPS (
-  id                 BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  date               TIMESTAMP NOT NULL,
+  id                 BIGINT NOT NULL IDENTITY PRIMARY KEY,
+  date               DATETIME NOT NULL,
   pnr                VARCHAR(255) NOT NULL,
   courseCode         VARCHAR(255) NOT NULL,
   reportCode         VARCHAR(255) NOT NULL,
@@ -53,7 +53,7 @@ CREATE INDEX MEMBERSHIPS_PNR_REPORTCODE_STARTSEMESTER_IDX ON MEMBERSHIPS (pnr, r
 CREATE INDEX MEMBERSHIPS_PNR_COURSECODE_SEMESTER_ORIGIN_IDX ON MEMBERSHIPS (pnr, courseCode, semester, origin);
 
 CREATE TABLE ACC_MEMBERSHIPS (
-  date               TIMESTAMP NOT NULL,
+  date               DATETIME NOT NULL,
   pnr                VARCHAR(255) NOT NULL,
   courseCode         VARCHAR(255) NOT NULL,
   reportCode         VARCHAR(255) NOT NULL,
