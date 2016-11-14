@@ -66,11 +66,11 @@ public class AcceptedEventService {
 		long start = System.currentTimeMillis();
 		// TODO: Include prev and/or next semester too?:
 		String semester = queryByParams(l2Jdbc, String.class, l2Sql.getTerminSql()).get(0);
-		Date now = new Date();
+		Date accMemberFetchTime = new Date();
 		List<Antagen> l2Ant = queryByParams(l2Jdbc, Antagen.class,
 				l2Sql.getAntagenSql(), "termin", semester);
 		List<AccMembership> l2Accs = MembershipEventUtil.toAccMemberships(
-				l2Ant, now);
+				l2Ant, accMemberFetchTime);
 		List<AccMembership> storedAccs = queryByParams(esbJdbc, AccMembership.class,
 				esbSql.getAccMembershipsSql(), "semester", semester);
 		List<AccMembership> addedAccs = new ArrayList<AccMembership>(l2Accs);
