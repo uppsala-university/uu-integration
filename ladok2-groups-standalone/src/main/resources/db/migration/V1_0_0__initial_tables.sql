@@ -29,7 +29,8 @@ CREATE TABLE MEMBERSHIP_EVENTS (
   condition2         VARCHAR(255),
   condition3         VARCHAR(255),
   origin             VARCHAR(255) NOT NULL,
-  origin2            VARCHAR(255)
+  origin2            VARCHAR(255),
+  processed          BOOLEAN NOT NULL DEFAULT 0
 );
 
 CREATE TABLE MEMBERSHIPS (
