@@ -19,8 +19,8 @@ public class RootController {
     @RequestMapping("")
 	public String index() {
 		try {
-			// regEvents.updateEvents();
-			return accEvents.updateAccepted();
+			regEvents.updateEvents();
+			// return accEvents.updateAccepted();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

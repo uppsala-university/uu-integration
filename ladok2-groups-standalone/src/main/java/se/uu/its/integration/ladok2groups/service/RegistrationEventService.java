@@ -1,9 +1,9 @@
 package se.uu.its.integration.ladok2groups.service;
 
-import static se.uu.its.integration.ladok2groups.util.JdbcUtil.queryByParams;
+import static se.uu.its.integration.ladok2groups.util.JdbcUtil.executeStatementsInSameTx;
 import static se.uu.its.integration.ladok2groups.util.JdbcUtil.queryByObj;
+import static se.uu.its.integration.ladok2groups.util.JdbcUtil.queryByParams;
 import static se.uu.its.integration.ladok2groups.util.JdbcUtil.update;
-import static se.uu.its.integration.ladok2groups.util.JdbcUtil.updateN;
 import static se.uu.its.integration.ladok2groups.util.MembershipEventJdbcUtil.saveMembershipAddEvent;
 import static se.uu.its.integration.ladok2groups.util.MembershipEventUtil.filter;
 import static se.uu.its.integration.ladok2groups.util.MembershipEventUtil.format;
@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.PlatformTransactionManager;
 
 import se.uu.its.integration.ladok2groups.dto.Membership;
 import se.uu.its.integration.ladok2groups.dto.MembershipEvent;
@@ -46,14 +47,17 @@ public class RegistrationEventService {
 	@Autowired @Qualifier("ladok2read")
 	DataSource ladok2ReadDs;
 
-	@Autowired @Qualifier("esb")
-	DataSource esbDs;
+	/*@Autowired @Qualifier("esb")
+	DataSource esbDs;*/
 
 	@Autowired @Qualifier("ladok2read")
 	NamedParameterJdbcTemplate l2Jdbc;
 	
 	@Autowired @Qualifier("esb")
 	NamedParameterJdbcTemplate esbJdbc;
+	
+	@Autowired @Qualifier("esb")
+	PlatformTransactionManager esbTm;
 
 	Ladok2GroupSql l2Sql = new Ladok2GroupSql();
 	EsbGroupSql esbSql = new EsbGroupSql();
@@ -112,18 +116,17 @@ public class RegistrationEventService {
 			String orig = pme.getOrigin();
 			if (pme.getMeType() == PotentialMembershipEvent.Type.ADD) {
 				if ("FFGKURS".equals(orig) || "OMKURS".equals(orig) || "UBINDRG".equals(orig)) {
-					MembershipEvent me = saveMembershipAddEvent(esbDs, esbJdbc, log, pme);
-					log.info("New membership add event: " + pme + " generated event: " + me);
+					saveMembershipAddEvent(esbJdbc, esbTm, pme);
+					log.info("New membership add event: " + pme);
 				} else if ("FORTKURS".equals(orig)) {
 					List<Membership> ms = queryByObj(esbJdbc, Membership.class, 
 							esbSql.getMembershipsByReportCodeStartSemesterSql(), pme);
 					if (!ms.isEmpty()) {
-						MembershipEvent me = saveMembershipAddEvent(esbDs, esbJdbc, log, pme, ms.get(0));
-						log.info("Updating existing membership event with FORTKURS event: "
-								+ pme + ", generated event: " + me);
+						saveMembershipAddEvent(esbJdbc, esbTm, pme, ms.get(0));
+						log.info("Updating existing membership event with FORTKURS event: " + pme);
 					} else {
-						MembershipEvent me = saveMembershipAddEvent(esbDs, esbJdbc, log, pme);
-						log.info("New membership add event: " + pme + ", generated event: " + me);
+						saveMembershipAddEvent(esbJdbc, esbTm, pme);
+						log.info("New membership add event: " + pme);
 					}
 				} else {
 					log.error("Unknown membership add event: " + pme);
@@ -133,7 +136,8 @@ public class RegistrationEventService {
 					List<Membership> ms = queryByObj(esbJdbc, Membership.class, 
 							esbSql.getMembershipsByCourseCodeSql(), pme);
 					List<MembershipEvent> mes = toMembershipEvents(pme, ms);
-					updateN(esbDs, log,
+					/*updateN(esbDs, log,*/
+					executeStatementsInSameTx(esbJdbc, esbTm,
 							sqlAndVals(esbSql.getSaveNewMembershipEventSql(), mes),
 							sqlAndVals(esbSql.getDeleteMembershipByCourseCodeSql(), pme));
 					log.info("New INREG* membership event: " + pme + ", generated events: " + mes);
@@ -143,7 +147,8 @@ public class RegistrationEventService {
 						List<Membership> ms = queryByObj(esbJdbc, Membership.class, 
 								esbSql.getMembershipsByCourseCodeSemesterOrigin2Sql(), pme);
 						List<MembershipEvent> mes = toMembershipEvents(pme, ms);
-						updateN(esbDs, log,
+						/*updateN(esbDs, log,*/ 
+						executeStatementsInSameTx(esbJdbc, esbTm,
 								sqlAndVals(esbSql.getSaveNewMembershipEventSql(), mes),
 								sqlAndVals(esbSql.getDeleteMembershipsByCourseCodeSemesterOrigin2Sql(), pme));
 						log.info("New BORTREGK membership event: " + pme + ", generated events: " + mes);
@@ -156,7 +161,8 @@ public class RegistrationEventService {
 					List<Membership> ms = queryByObj(esbJdbc, Membership.class, 
 							esbSql.getMembershipsSql(), pme);
 					List<MembershipEvent> mes = toMembershipEvents(pme, ms);
-					updateN(esbDs, log,
+					/*updateN(esbDs, log,*/ 
+					executeStatementsInSameTx(esbJdbc, esbTm,
 							sqlAndVals(esbSql.getSaveNewMembershipEventSql(), mes),
 							sqlAndVals(esbSql.getDeleteMembershipsSql(), pme));
 					log.info("New AVLIDEN membership event: " + pme + ", generated events: " + mes);

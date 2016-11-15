@@ -1,8 +1,5 @@
 package se.uu.its.integration.ladok2groups.util;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -10,17 +7,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.sql.DataSource;
-
-import org.apache.commons.logging.Log;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.PreparedStatementCreator;
-import org.springframework.jdbc.core.PreparedStatementCreatorFactory;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.namedparam.NamedParameterUtils;
-import org.springframework.jdbc.core.namedparam.ParsedSql;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 public class JdbcUtil {
 	
@@ -48,6 +40,31 @@ public class JdbcUtil {
 			return t.query(sql, bpsps, BeanPropertyRowMapper.newInstance(c));
 		}
 	}
+	
+	public static void executeStatementsInSameTx(NamedParameterJdbcTemplate jt, 
+			PlatformTransactionManager tm, SqlAndValueObjs... stms) {
+		executeStatementsInSameTx(jt, tm, Arrays.asList(stms));
+	}
+	
+	public static void executeStatementsInSameTx(NamedParameterJdbcTemplate jt, 
+			PlatformTransactionManager tm, List<SqlAndValueObjs> stms) {
+		TransactionStatus txStat = tm.getTransaction(new DefaultTransactionDefinition());
+		try {
+			for (SqlAndValueObjs st : stms) {
+				String sql = st.getSql();
+				List<BeanPropertySqlParameterSource> bpsps = new ArrayList<>();
+				for (Object v : st.getValues()) {
+					bpsps.add(new BeanPropertySqlParameterSource(v));
+				}
+				jt.batchUpdate(sql,(BeanPropertySqlParameterSource[]) bpsps
+						.toArray(new BeanPropertySqlParameterSource[bpsps.size()]));
+			}
+			tm.commit(txStat);
+		} catch (Exception e) {
+			tm.rollback(txStat);
+			throw e;
+		}
+	}
 		
 	public static int[] update(NamedParameterJdbcTemplate t, String sql, List<?> values) {
 		BeanPropertySqlParameterSource[] bpsps = new BeanPropertySqlParameterSource[values.size()];
@@ -63,15 +80,16 @@ public class JdbcUtil {
 	    return t.update(sql, bpsps);
 	}
 
-	public static void updateN(DataSource ds, Log log, SqlAndValueObjs... savs) {
-		updateN(ds, log, Arrays.asList(savs));
+	/*
+	public static void updateN(DataSource ds, Log log, SqlAndValueObjs... stms) {
+		updateN(ds, log, Arrays.asList(stms));
 	}
 
-	public static void updateN(DataSource ds, Log log, List<SqlAndValueObjs> savs) {
+	public static void updateN(DataSource ds, Log log, List<SqlAndValueObjs> stms) {
 		try {
-			List<PreparedStatementCreator> pscs = new ArrayList<PreparedStatementCreator>(savs.size());
+			List<PreparedStatementCreator> pscs = new ArrayList<PreparedStatementCreator>(stms.size());
 			Connection con = ds.getConnection();
-			for (SqlAndValueObjs sav : savs) {
+			for (SqlAndValueObjs sav : stms) {
 				for (Object value : sav.getValues()) {
 					PreparedStatementCreator psc = getPreparedStatementCreator(sav.getSql(), value);
 					pscs.add(psc);
@@ -126,6 +144,6 @@ public class JdbcUtil {
 			if (con != null) { con.setAutoCommit(true); con.close(); }
 		}
 	}
-
+	*/
 
 }

@@ -1,7 +1,7 @@
 package se.uu.its.integration.ladok2groups.service;
 
+import static se.uu.its.integration.ladok2groups.util.JdbcUtil.executeStatementsInSameTx;
 import static se.uu.its.integration.ladok2groups.util.JdbcUtil.queryByParams;
-import static se.uu.its.integration.ladok2groups.util.JdbcUtil.updateN;
 import static se.uu.its.integration.ladok2groups.util.SqlAndValueObjs.sqlAndVals;
 
 import java.util.ArrayList;
@@ -10,14 +10,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.sql.DataSource;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.PlatformTransactionManager;
 
 import se.uu.its.integration.ladok2groups.dto.AccMembership;
 import se.uu.its.integration.ladok2groups.dto.GroupEvent;
@@ -32,17 +31,22 @@ public class AcceptedEventService {
 	
 	static Log log = LogFactory.getLog(AcceptedEventService.class);
 	
+	/*
 	@Autowired @Qualifier("ladok2read")
 	DataSource ladok2ReadDs;
 
 	@Autowired @Qualifier("esb")
 	DataSource esbDs;
-
+	*/
+	
 	@Autowired @Qualifier("ladok2read")
 	NamedParameterJdbcTemplate l2Jdbc;
 	
 	@Autowired @Qualifier("esb")
 	NamedParameterJdbcTemplate esbJdbc;
+
+	@Autowired @Qualifier("esb")
+	PlatformTransactionManager esbTm;
 
 	Ladok2GroupSql l2Sql = new Ladok2GroupSql();
 	EsbGroupSql esbSql = new EsbGroupSql();
@@ -104,7 +108,8 @@ public class AcceptedEventService {
 						startSemester, reportCode, me.getOrigin()));
 			}
 		}
-		updateN(esbDs, log,
+		/*updateN(esbDs, log,*/
+		executeStatementsInSameTx(esbJdbc, esbTm,
 				sqlAndVals(esbSql.getSaveNewMembershipEventSql(), groupEvents),
 				sqlAndVals(esbSql.getSaveNewMembershipEventSql(), membAddEvents),
 				sqlAndVals(esbSql.getSaveNewAccMembershipSql(), memberships));
