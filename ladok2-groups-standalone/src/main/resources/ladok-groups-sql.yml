@@ -398,8 +398,8 @@ ladok.sql.antagen: |
         AND lk.svar <> 'N'
         AND lk.anmalt = kt.kod
         AND lk.termin = kt.startter
-        -- AND (lk.inlkoppl = '' OR lk.inlkoppl is null)
-        AND NOT EXISTS (SELECT * FROM uu.ffgkurs ffg WHERE ffg.pnr = lk.pnr AND ffg.kurs = kt.kurskod)
+	-- Vi hanterar inte "inte längre antagen-händelser pga registrering" eftersom inte Nya Ladok kommer göra det:
+        -- AND NOT EXISTS (SELECT * FROM uu.ffgkurs ffg WHERE ffg.pnr = lk.pnr AND ffg.kurs = kt.kurskod)
 
 ladok.sql.termin: |
     SELECT
