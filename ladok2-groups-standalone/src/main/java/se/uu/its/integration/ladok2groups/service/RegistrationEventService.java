@@ -19,8 +19,6 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import javax.sql.DataSource;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +36,7 @@ import se.uu.its.integration.ladok2groups.l2dto.InReg;
 import se.uu.its.integration.ladok2groups.l2dto.Reg;
 import se.uu.its.integration.ladok2groups.sql.EsbGroupSql;
 import se.uu.its.integration.ladok2groups.sql.Ladok2GroupSql;
+import se.uu.its.integration.ladok2groups.sql.SpGroupSql;
 
 @Service
 public class RegistrationEventService {
@@ -45,13 +44,10 @@ public class RegistrationEventService {
 	static Log log = LogFactory.getLog(RegistrationEventService.class);
 	
 	@Autowired @Qualifier("ladok2read")
-	DataSource ladok2ReadDs;
-
-	/*@Autowired @Qualifier("esb")
-	DataSource esbDs;*/
-
-	@Autowired @Qualifier("ladok2read")
 	NamedParameterJdbcTemplate l2Jdbc;
+	
+	@Autowired @Qualifier("sp")
+	NamedParameterJdbcTemplate spJdbc;
 	
 	@Autowired @Qualifier("esb")
 	NamedParameterJdbcTemplate esbJdbc;
@@ -60,6 +56,7 @@ public class RegistrationEventService {
 	PlatformTransactionManager esbTm;
 
 	Ladok2GroupSql l2Sql = new Ladok2GroupSql();
+	SpGroupSql spSql = new SpGroupSql();
 	EsbGroupSql esbSql = new EsbGroupSql();
 	
 	Date registrationEventStart = parse("2016-06-01 000000"); // parse("2007-01-01 000000"); // TODO: Extract to property
@@ -102,7 +99,10 @@ public class RegistrationEventService {
 	}
 		
 	int updatePotentialMembershipEvents(Date from, Date to) {
-		List<PotentialMembershipEvent> mes =  getNewLadokMembershipEvents(from, to);
+		List<PotentialMembershipEvent> mes = new ArrayList<>();
+		mes.addAll(getNewSpMembershipEvents(from, to));
+		mes.addAll(getNewLadokMembershipEvents(from, to));
+		sort(mes);
 		update(esbJdbc, esbSql.getSaveNewPotentialMembershipEventSql(), mes);
 		log.info("Updated potential membership events in interval [" 
 				+ format(from) + ", " + format(to) + "): " + mes.size());
@@ -172,6 +172,12 @@ public class RegistrationEventService {
 			}
 		}
 		return potentialMembershipEvents.size();
+	}
+
+	List<PotentialMembershipEvent> getNewSpMembershipEvents(Date from, Date to) {
+		List<PotentialMembershipEvent> mes = queryByParams(spJdbc, PotentialMembershipEvent.class,
+				spSql.getRegEventsInIntervalSql(), "from", from, "to", to);
+		return mes;
 	}
 	
 	List<PotentialMembershipEvent> getNewLadokMembershipEvents(Date from, Date to) {

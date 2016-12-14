@@ -16,7 +16,6 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 public class DbConf {
 	
 	@Bean
-	@Primary
 	@Qualifier("ladok2read")
 	@ConfigurationProperties(prefix="datasource.ladok2read")
 	public DataSource ladok2ReadDataSource() {
@@ -30,6 +29,20 @@ public class DbConf {
 	}
 
 	@Bean
+	@Qualifier("sp")
+	@ConfigurationProperties(prefix="datasource.sp")
+	public DataSource spDataSource() {
+		return DataSourceBuilder.create().build();
+	}
+
+	@Bean
+	@Qualifier("sp")
+	public NamedParameterJdbcTemplate spJdbc(@Qualifier("sp") DataSource spDataSource) {
+	    return new NamedParameterJdbcTemplate(spDataSource);
+	}
+
+	@Bean
+	@Primary
 	@Qualifier("esb")
 	@ConfigurationProperties(prefix="datasource.esb")
 	public DataSource esbDataSource() {

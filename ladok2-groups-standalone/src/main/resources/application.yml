@@ -9,6 +9,11 @@ datasource.ladok2read.url: jdbc:mysql://CHANGEME:3306/uu?verifyServerCertificate
 datasource.ladok2read.username: CHANGEME
 datasource.ladok2read.password: CHANGEME
 
+datasource.sp.driver-class-name: com.ibm.db2.jcc.DB2Driver
+datasource.sp.url: jdbc:db2://CHANGEME:PORT/DB:retrieveMessagesFromServerOnGetMessage=true;
+datasource.sp.username: CHANGEME
+datasource.sp.password: CHANGEME
+
 datasource.esb.driver-class-name: org.hsqldb.jdbcDriver
 datasource.esb.url: jdbc:hsqldb:file:target/hsqldb;sql.syntax_mys=true
 datasource.esb.username: sa
