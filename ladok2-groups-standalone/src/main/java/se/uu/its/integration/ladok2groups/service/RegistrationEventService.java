@@ -54,7 +54,7 @@ public class RegistrationEventService {
 	
 	@Autowired @Qualifier("esb")
 	PlatformTransactionManager esbTm;
-
+	
 	Ladok2GroupSql l2Sql = new Ladok2GroupSql();
 	SpGroupSql spSql = new SpGroupSql();
 	EsbGroupSql esbSql = new EsbGroupSql();
@@ -62,8 +62,13 @@ public class RegistrationEventService {
 	Date registrationEventStart = parse("2016-06-01 000000"); // parse("2007-01-01 000000"); // TODO: Extract to property
 
 	public void updateEvents() throws Exception {
+		batchUpdatesForEachDay();
+	}
+	
+	public void batchUpdatesForEachDay() throws Exception {
+		// Get start date:
 		List<PotentialMembershipEvent> pmes = queryByParams(esbJdbc, PotentialMembershipEvent.class,
-				esbSql.getMostRecentPotentialMembershipEventSql());
+				esbSql.getMostRecentPotentialMembershipEventFromLadokSql());
 		// Skip forward 1 second from most recent event to avoid duplicate events:
 		Date start = pmes.isEmpty() ? registrationEventStart : new Date(
 				pmes.get(0).getDate().getTime() + 1000);
@@ -115,7 +120,8 @@ public class RegistrationEventService {
 		for (PotentialMembershipEvent pme : potentialMembershipEvents) {
 			String orig = pme.getOrigin();
 			if (pme.getMeType() == PotentialMembershipEvent.Type.ADD) {
-				if ("FFGKURS".equals(orig) || "OMKURS".equals(orig) || "UBINDRG".equals(orig)) {
+				if ("FFGKURS".equals(orig) || "OMKURS".equals(orig) || "UBINDRG".equals(orig)
+						|| "SP".equals(orig)) {
 					saveMembershipAddEvent(esbJdbc, esbTm, pme);
 					log.info("New membership add event: " + pme);
 				} else if ("FORTKURS".equals(orig)) {
@@ -175,9 +181,17 @@ public class RegistrationEventService {
 	}
 
 	List<PotentialMembershipEvent> getNewSpMembershipEvents(Date from, Date to) {
-		List<PotentialMembershipEvent> mes = queryByParams(spJdbc, PotentialMembershipEvent.class,
-				spSql.getRegEventsInIntervalSql(), "from", from, "to", to);
-		return mes;
+		List<PotentialMembershipEvent> recentSpMes = queryByParams(esbJdbc, PotentialMembershipEvent.class,
+				esbSql.getMostRecentPotentialMembershipEventFromSpSql());
+		long id = recentSpMes.size() > 0 ? recentSpMes.get(0).getId() : 0;
+		boolean useId = true;
+		if (useId) { 
+			return queryByParams(spJdbc, PotentialMembershipEvent.class,
+					spSql.getRegEventsFromIdToDateSql(), "id", id, "to", to);
+		} else {
+			return queryByParams(spJdbc, PotentialMembershipEvent.class,
+					spSql.getRegEventsInIntervalSql(), "from", from, "to", to);
+		}
 	}
 	
 	List<PotentialMembershipEvent> getNewLadokMembershipEvents(Date from, Date to) {
@@ -217,6 +231,7 @@ public class RegistrationEventService {
 			unprocessed = queryByParams(esbJdbc, PotentialMembershipEvent.class,
 					esbSql.getPotentialMembershipEventsNewerThanSql(), 
 					"id", mes.get(0).getId());
+			log.info("Finding unprocessed potential membership events with id newer than " + mes.get(0).getId());
 		}
 		return unprocessed;
 	}

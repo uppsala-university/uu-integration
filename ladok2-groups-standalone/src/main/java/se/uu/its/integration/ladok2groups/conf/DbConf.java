@@ -3,6 +3,7 @@ package se.uu.its.integration.ladok2groups.conf;
 import javax.sql.DataSource;
 
 import org.flywaydb.core.Flyway;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -14,6 +15,9 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 
 @Configuration
 public class DbConf {
+	
+	@Autowired
+	FlywayProps flywayProps;
 	
 	@Bean
 	@Qualifier("ladok2read")
@@ -67,6 +71,10 @@ public class DbConf {
     public Flyway flyway(@Qualifier("esb") DataSource esbDataSource) {
 	    	Flyway f = new Flyway();
 	    	f.setDataSource(esbDataSource);
+	    	if (flywayProps.isBaselineOnMigrate()) {
+		    	f.setBaselineOnMigrate(flywayProps.isBaselineOnMigrate());
+		    	f.setBaselineVersionAsString(flywayProps.getBaselineVersion());
+	    	}
 	    	f.migrate();
 	    	return f;
     }

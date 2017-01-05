@@ -25,6 +25,14 @@ public class EsbGroupSql {
 		return sql.get("esb.sql.mostRecentPotentialMembershipEvent");
 	}
 
+	public String getMostRecentPotentialMembershipEventFromLadokSql() {
+		return sql.get("esb.sql.mostRecentPotentialMembershipEventFromLadok");
+	}
+
+	public String getMostRecentPotentialMembershipEventFromSpSql() {
+		return sql.get("esb.sql.mostRecentPotentialMembershipEventFromSp");
+	}
+	
 	public String getSaveNewPotentialMembershipEventSql() {
 		return sql.get("esb.sql.saveNewPotentialMembershipEvent");
 	}

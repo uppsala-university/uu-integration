@@ -29,6 +29,26 @@ esb.sql.mostRecentPotentialMembershipEvent: |
     where
         id = (select max(id) from POTENTIAL_MEMBERSHIP_EVENTS)
 
+esb.sql.mostRecentPotentialMembershipEventFromLadok: |
+    select
+       id, date, pnr, meType, courseCode, reportCode, startSemester, semester, program, programOrientation,
+           origin, origin2
+    from
+        POTENTIAL_MEMBERSHIP_EVENTS
+    where
+        origin <> 'SP'
+        and id = (select max(id) from POTENTIAL_MEMBERSHIP_EVENTS)
+
+esb.sql.mostRecentPotentialMembershipEventFromSp: |
+    select
+       id, date, pnr, meType, courseCode, reportCode, startSemester, semester, program, programOrientation,
+           origin, origin2
+    from
+        POTENTIAL_MEMBERSHIP_EVENTS
+    where
+        origin = 'SP'
+        and id = (select max(id) from POTENTIAL_MEMBERSHIP_EVENTS)
+
 esb.sql.saveNewPotentialMembershipEvent: |
     insert into
         POTENTIAL_MEMBERSHIP_EVENTS (date, pnr, meType, courseCode, reportCode, startSemester, semester,
