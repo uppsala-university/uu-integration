@@ -33,4 +33,8 @@ public class Ladok2GroupSql {
 	public String getTerminSql() {
 		return sql.get("ladok.sql.termin");
 	}
+
+	public String getKurskodForKurstillfalleSql() {
+		return sql.get("ladok.sql.kurskodForKurstillfalle");
+	}
 }

@@ -401,9 +401,23 @@ ladok.sql.antagen: |
         -- Vi hanterar inte "inte längre antagen-händelser pga registrering" eftersom inte Nya Ladok kommer göra det:
         -- AND NOT EXISTS (SELECT * FROM uu.ffgkurs ffg WHERE ffg.pnr = lk.pnr AND ffg.kurs = kt.kurskod)
 
+
 ladok.sql.termin: |
     SELECT
         intermin
     FROM
         uu.egenhsk
+
+
+# Kurskod för kurstillfälle
+ladok.sql.kurskodForKurstillfalle: |
+    SELECT
+        startter as starttermin,
+	kod as anmkod,
+	kurskod
+    FROM
+        uu.ktill2
+    WHERE
+        starttermin = :starttermin
+        AND anmkod = :anmkod
 

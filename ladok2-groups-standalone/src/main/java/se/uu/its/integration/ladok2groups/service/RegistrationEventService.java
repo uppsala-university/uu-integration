@@ -33,6 +33,7 @@ import se.uu.its.integration.ladok2groups.dto.PotentialMembershipEvent;
 import se.uu.its.integration.ladok2groups.l2dto.Avliden;
 import se.uu.its.integration.ladok2groups.l2dto.BortReg;
 import se.uu.its.integration.ladok2groups.l2dto.InReg;
+import se.uu.its.integration.ladok2groups.l2dto.Kurstillfalle;
 import se.uu.its.integration.ladok2groups.l2dto.Reg;
 import se.uu.its.integration.ladok2groups.sql.EsbGroupSql;
 import se.uu.its.integration.ladok2groups.sql.Ladok2GroupSql;
@@ -184,13 +185,33 @@ public class RegistrationEventService {
 		List<PotentialMembershipEvent> recentSpMes = queryByParams(esbJdbc, PotentialMembershipEvent.class,
 				esbSql.getMostRecentPotentialMembershipEventFromSpSql());
 		long id = recentSpMes.size() > 0 ? recentSpMes.get(0).getId() : 0;
+		List<PotentialMembershipEvent> pmes;
 		boolean useId = true;
 		if (useId) { 
-			return queryByParams(spJdbc, PotentialMembershipEvent.class,
+			pmes = queryByParams(spJdbc, PotentialMembershipEvent.class,
 					spSql.getRegEventsFromIdToDateSql(), "id", id, "to", to);
 		} else {
-			return queryByParams(spJdbc, PotentialMembershipEvent.class,
+			pmes = queryByParams(spJdbc, PotentialMembershipEvent.class,
 					spSql.getRegEventsInIntervalSql(), "from", from, "to", to);
+		}
+		complementCourseCodesIfNecessary(pmes);
+		return pmes;
+	}
+	
+	void complementCourseCodesIfNecessary(List<PotentialMembershipEvent> pmes) {
+		// TODO: Batch all lookups
+		for (PotentialMembershipEvent pme : pmes) {
+			if (pme.getCourseCode() == null || "".equals(pme.getCourseCode())) {
+				List<Kurstillfalle> ktf = queryByParams(l2Jdbc, Kurstillfalle.class,
+						l2Sql.getKurskodForKurstillfalleSql(), 
+						"starttermin", pme.getStartSemester(), 
+						"anmkod", pme.getReportCode());
+				if (ktf.size() == 1) {
+					pme.setCourseCode(ktf.get(0).getKurskod());
+				} else {
+					log.error("Can't find course code in Uppdok for SP event: " + pme);
+				}
+			}
 		}
 	}
 	
