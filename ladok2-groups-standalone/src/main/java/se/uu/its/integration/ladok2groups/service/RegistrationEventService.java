@@ -208,6 +208,7 @@ public class RegistrationEventService {
 						"anmkod", pme.getReportCode());
 				if (ktf.size() == 1) {
 					pme.setCourseCode(ktf.get(0).getKurskod());
+					log.debug("Complementing course code from Uppdok for SP event: " + pme);
 				} else {
 					log.error("Can't find course code in Uppdok for SP event: " + pme);
 				}
