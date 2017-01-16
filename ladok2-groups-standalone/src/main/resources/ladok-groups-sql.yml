@@ -413,8 +413,8 @@ ladok.sql.termin: |
 ladok.sql.kurskodForKurstillfalle: |
     SELECT
         startter as starttermin,
-	kod as anmkod,
-	kurskod
+        kod as anmkod,
+        kurskod
     FROM
         uu.ktill2
     WHERE
