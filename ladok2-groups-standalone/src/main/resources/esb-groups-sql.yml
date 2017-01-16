@@ -37,7 +37,7 @@ esb.sql.mostRecentPotentialMembershipEventFromLadok: |
         POTENTIAL_MEMBERSHIP_EVENTS
     where
         origin <> 'SP'
-        and id = (select max(id) from POTENTIAL_MEMBERSHIP_EVENTS)
+        and id = (select max(id) from POTENTIAL_MEMBERSHIP_EVENTS where origin <> 'SP')
 
 esb.sql.mostRecentPotentialMembershipEventFromSp: |
     select
@@ -47,7 +47,7 @@ esb.sql.mostRecentPotentialMembershipEventFromSp: |
         POTENTIAL_MEMBERSHIP_EVENTS
     where
         origin = 'SP'
-        and id = (select max(id) from POTENTIAL_MEMBERSHIP_EVENTS)
+        and id = (select max(id) from POTENTIAL_MEMBERSHIP_EVENTS where origin = 'SP')
 
 esb.sql.saveNewPotentialMembershipEvent: |
     insert into
