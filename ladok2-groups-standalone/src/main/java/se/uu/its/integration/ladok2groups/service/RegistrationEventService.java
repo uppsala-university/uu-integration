@@ -184,16 +184,10 @@ public class RegistrationEventService {
 	List<PotentialMembershipEvent> getNewSpMembershipEvents(Date from, Date to) {
 		List<PotentialMembershipEvent> recentSpMes = queryByParams(esbJdbc, PotentialMembershipEvent.class,
 				esbSql.getMostRecentPotentialMembershipEventFromSpSql());
-		long id = recentSpMes.size() > 0 ? recentSpMes.get(0).getId() : 0;
-		List<PotentialMembershipEvent> pmes;
-		boolean useId = true;
-		if (useId) { 
-			pmes = queryByParams(spJdbc, PotentialMembershipEvent.class,
-					spSql.getRegEventsFromIdToDateSql(), "id", id, "to", to);
-		} else {
-			pmes = queryByParams(spJdbc, PotentialMembershipEvent.class,
-					spSql.getRegEventsInIntervalSql(), "from", from, "to", to);
-		}
+		Date spFrom = recentSpMes.size() > 0 ? recentSpMes.get(0).getDate() : from;
+		List<PotentialMembershipEvent> pmes = queryByParams(spJdbc,
+				PotentialMembershipEvent.class,
+				spSql.getRegEventsInIntervalSql(), "from", spFrom, "to", to);
 		complementCourseCodesIfNecessary(pmes);
 		return pmes;
 	}

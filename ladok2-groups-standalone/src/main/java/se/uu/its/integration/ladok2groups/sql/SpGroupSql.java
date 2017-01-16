@@ -17,8 +17,4 @@ public class SpGroupSql {
 		return sql.get("sp.sql.regEventsInInterval");
 	}
 	
-    public String getRegEventsFromIdToDateSql() {
-		return sql.get("sp.sql.regEventsFromIdToDate");
-	}
-	
 }

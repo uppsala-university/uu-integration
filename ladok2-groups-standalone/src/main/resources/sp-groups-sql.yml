@@ -8,13 +8,3 @@ sp.sql.regEventsInInterval: |
     order by 
         id asc
 
-sp.sql.regEventsFromIdToDate: |
-    select
-        id, date, pnr, meType, courseCode, reportCode, startSemester, semester, 'SP' as origin
-    from
-        SP_MEMBERSHIP_EVENTS
-    where
-        id > :id and date < :to
-    order by 
-        id asc
-
