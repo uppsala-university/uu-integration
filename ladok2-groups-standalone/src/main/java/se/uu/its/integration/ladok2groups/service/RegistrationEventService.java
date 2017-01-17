@@ -59,8 +59,8 @@ public class RegistrationEventService {
 	Ladok2GroupSql l2Sql = new Ladok2GroupSql();
 	SpGroupSql spSql = new SpGroupSql();
 	EsbGroupSql esbSql = new EsbGroupSql();
-	
-	Date registrationEventStart = parse("2016-06-01 000000"); // parse("2007-01-01 000000"); // TODO: Extract to property
+
+	Date registrationEventStart = parse("2015-02-01 000000"); // parse("2007-01-01 000000"); // TODO: Extract to property
 
 	public void updateEvents() throws Exception {
 		batchUpdatesForEachDay();

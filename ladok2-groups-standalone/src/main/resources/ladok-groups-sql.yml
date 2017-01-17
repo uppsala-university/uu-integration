@@ -418,6 +418,6 @@ ladok.sql.kurskodForKurstillfalle: |
     FROM
         uu.ktill2
     WHERE
-        starttermin = :starttermin
-        AND anmkod = :anmkod
+        startter = :starttermin
+        AND kod = :anmkod
 
