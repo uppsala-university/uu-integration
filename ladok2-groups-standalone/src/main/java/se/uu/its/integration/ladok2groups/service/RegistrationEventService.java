@@ -60,7 +60,8 @@ public class RegistrationEventService {
 	SpGroupSql spSql = new SpGroupSql();
 	EsbGroupSql esbSql = new EsbGroupSql();
 
-	Date registrationEventStart = parse("2015-02-01 000000"); // parse("2007-01-01 000000"); // TODO: Extract to property
+	// TODO: Extract to property:
+	Date registrationEventStart = parse("2015-01-31 235959"); // parse("2006-12-31 235959"); 
 
 	public void updateEvents() throws Exception {
 		batchUpdatesForEachDay();
@@ -70,21 +71,19 @@ public class RegistrationEventService {
 		// Get start date:
 		List<PotentialMembershipEvent> pmes = queryByParams(esbJdbc, PotentialMembershipEvent.class,
 				esbSql.getMostRecentPotentialMembershipEventFromLadokSql());
-		// Skip forward 1 second from most recent event to avoid duplicate events:
-		Date start = pmes.isEmpty() ? registrationEventStart : new Date(
-				pmes.get(0).getDate().getTime() + 1000);
+		Date start = pmes.isEmpty() ? registrationEventStart : pmes.get(0).getDate();
+
 		// Skip most recent events to make sure all events for this interval have arrived at Ladok:
-		Date end = new Date(new Date().getTime() - 15000);
+		Calendar end = new GregorianCalendar();
+		end.setTimeInMillis(System.currentTimeMillis() - 15000);
+		end.set(Calendar.MILLISECOND, 0); // Set end time to an exact second
+		int endYear = end.get(Calendar.YEAR);
+		int endDay = end.get(Calendar.DAY_OF_YEAR);
 		
 		// Convert events interval to calendar days:
 		Calendar from = new GregorianCalendar();
 		from.setTimeInMillis(start.getTime());
-		from.set(Calendar.MILLISECOND, 0);
 		Calendar to = new GregorianCalendar();
-		to.setTimeInMillis(end.getTime());
-		to.set(Calendar.MILLISECOND, 0);
-		int endYear = to.get(Calendar.YEAR);
-		int endDay = to.get(Calendar.DAY_OF_YEAR);
 		to.setTime(from.getTime());
 		to.set(Calendar.HOUR_OF_DAY, 23);
 		to.set(Calendar.MINUTE, 59);
@@ -100,7 +99,7 @@ public class RegistrationEventService {
 			to.add(Calendar.DAY_OF_YEAR, 1);
 		}
 		// Update events for the last day:
-		updatePotentialMembershipEvents(from.getTime(), end);
+		updatePotentialMembershipEvents(from.getTime(), end.getTime());
 		updateMembershipEvents();
 	}
 		

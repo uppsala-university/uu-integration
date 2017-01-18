@@ -40,8 +40,10 @@ public class MembershipEventUtil {
 	
 	public static List<PotentialMembershipEvent> filter(List<PotentialMembershipEvent> mes, Date from, Date to) {
 		List<PotentialMembershipEvent> fmes = new ArrayList<PotentialMembershipEvent>();
+		long from_t = from.getTime(), to_t = to.getTime();
 		for (PotentialMembershipEvent me : mes) {
-			if (!from.after(me.getDate()) && me.getDate().before(to)) { // from: incl, to: excl
+			long me_t = me.getDate().getTime();
+			if ((from_t < me_t) && (me_t <= to_t)) {
 				fmes.add(me);
 			}
 		}
