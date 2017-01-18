@@ -16,7 +16,7 @@ esb.sql.potentialMembershipEventsNewerThan: |
     from
         POTENTIAL_MEMBERSHIP_EVENTS
     where
-        id > :id
+        date > :date
     order by 
         id asc
 

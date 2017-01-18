@@ -246,7 +246,7 @@ public class RegistrationEventService {
 		} else {
 			unprocessed = queryByParams(esbJdbc, PotentialMembershipEvent.class,
 					esbSql.getPotentialMembershipEventsNewerThanSql(), 
-					"id", mes.get(0).getId());
+					"date", mes.get(0).getDate());
 			log.info("Finding unprocessed potential membership events with id newer than " + mes.get(0).getId());
 		}
 		return unprocessed;
