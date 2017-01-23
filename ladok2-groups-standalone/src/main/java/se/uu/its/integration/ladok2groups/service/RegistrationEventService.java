@@ -62,7 +62,7 @@ public class RegistrationEventService {
 
 	// TODO: Extract to property:
 	Date registrationEventStart = parse("2015-01-31 235959"); // parse("2006-12-31 235959"); 
-
+	
 	public void updateEvents() throws Exception {
 		batchUpdatesForEachDay();
 	}
@@ -88,51 +88,67 @@ public class RegistrationEventService {
 		to.set(Calendar.HOUR_OF_DAY, 23);
 		to.set(Calendar.MINUTE, 59);
 		to.set(Calendar.SECOND, 59);
-
-		// If interval is too large, batch updates to each day.
-		// Update events for all days up to the last day:
-		while (to.after(from) && (to.get(Calendar.YEAR) < endYear || to.get(Calendar.DAY_OF_YEAR) < endDay)) {
+		
+		// Update events for all days up to (but not including) the last day:
+		while (to.get(Calendar.DAY_OF_YEAR) < endDay || to.get(Calendar.YEAR) < endYear) {
 			updatePotentialMembershipEvents(from.getTime(), to.getTime());
 			updateMembershipEvents();
 			// Increment interval one day:
 			from.setTime(to.getTime());
 			to.add(Calendar.DAY_OF_YEAR, 1);
 		}
+		
 		// Update events for the last day:
 		updatePotentialMembershipEvents(from.getTime(), end.getTime());
 		updateMembershipEvents();
 	}
 		
 	int updatePotentialMembershipEvents(Date from, Date to) {
+		long start = System.currentTimeMillis();
 		List<PotentialMembershipEvent> mes = new ArrayList<>();
 		mes.addAll(getNewSpMembershipEvents(from, to));
+		long spRead = System.currentTimeMillis();
 		mes.addAll(getNewLadokMembershipEvents(from, to));
+		long l2Read = System.currentTimeMillis();
 		sort(mes);
 		update(esbJdbc, esbSql.getSaveNewPotentialMembershipEventSql(), mes);
 		log.info("Updated potential membership events in interval [" 
-				+ format(from) + ", " + format(to) + "): " + mes.size());
+				+ format(from) + ", " + format(to) + "): " + mes.size() 
+				+ " in " + (System.currentTimeMillis() - start) + " ms "
+				+ " (SP read: " + (spRead - start) + " ms, L2 read: " + (l2Read - spRead)
+				+ " ms, save: " + (System.currentTimeMillis() - l2Read + " ms)"));
 		return mes.size();
 	}
 	
 	int updateMembershipEvents() {
+		long start = System.currentTimeMillis();
 		List<PotentialMembershipEvent> potentialMembershipEvents = getUnprocessedPotentialMembershipEvents();
-		log.info("Number of unprocessed potential membership events: " + potentialMembershipEvents.size());
+		long unprocessedRead = System.currentTimeMillis();
+		log.info("Number of unprocessed potential membership events: " + potentialMembershipEvents.size()
+				+ " (" + (unprocessedRead - start) + " ms)");
 		for (PotentialMembershipEvent pme : potentialMembershipEvents) {
 			String orig = pme.getOrigin();
+			long s = System.currentTimeMillis();
 			if (pme.getMeType() == PotentialMembershipEvent.Type.ADD) {
 				if ("FFGKURS".equals(orig) || "OMKURS".equals(orig) || "UBINDRG".equals(orig)
 						|| "SP".equals(orig)) {
 					saveMembershipAddEvent(esbJdbc, esbTm, pme);
-					log.info("New membership add event: " + pme);
+					log.info("New membership add event: " + pme 
+							+ " (" + (System.currentTimeMillis() - s) + " ms)");
 				} else if ("FORTKURS".equals(orig)) {
 					List<Membership> ms = queryByObj(esbJdbc, Membership.class, 
 							esbSql.getMembershipsByReportCodeStartSemesterSql(), pme);
+					long r = System.currentTimeMillis();
 					if (!ms.isEmpty()) {
 						saveMembershipAddEvent(esbJdbc, esbTm, pme, ms.get(0));
-						log.info("Updating existing membership event with FORTKURS event: " + pme);
+						log.info("Updating existing membership event with FORTKURS event: " + pme
+								 + " (read: " + (r - s) + " ms, "
+								 + "save: " + (System.currentTimeMillis() - r) + " ms)");
 					} else {
 						saveMembershipAddEvent(esbJdbc, esbTm, pme);
-						log.info("New membership add event: " + pme);
+						log.info("New membership add event: " + pme 
+								 + " (read: " + (r - s) + " ms, "
+								 + "save: " + (System.currentTimeMillis() - r) + " ms)");
 					}
 				} else {
 					log.error("Unknown membership add event: " + pme);
@@ -141,23 +157,30 @@ public class RegistrationEventService {
 				if (orig.startsWith("INREG")) {
 					List<Membership> ms = queryByObj(esbJdbc, Membership.class, 
 							esbSql.getMembershipsByCourseCodeSql(), pme);
+					long r = System.currentTimeMillis();
 					List<MembershipEvent> mes = toMembershipEvents(pme, ms);
 					/*updateN(esbDs, log,*/
 					executeStatementsInSameTx(esbJdbc, esbTm,
 							sqlAndVals(esbSql.getSaveNewMembershipEventSql(), mes),
 							sqlAndVals(esbSql.getDeleteMembershipByCourseCodeSql(), pme));
-					log.info("New INREG* membership event: " + pme + ", generated events: " + mes);
+					log.info("New INREG* membership event: " + pme + ", generated events: " + mes
+						 + " (read: " + (r - s) + " ms, "
+						 + "save: " + (System.currentTimeMillis() - r) + " ms)");
+
 				} else if ("BORTREGK".equals(orig)) {
 					List<String> validOrig2s = Arrays.asList(new String[] {"OMKURS", "FORTKURS", "FFGKURS", "UBINDRG"});
 					if (validOrig2s.contains(pme.getOrigin2())) {
 						List<Membership> ms = queryByObj(esbJdbc, Membership.class, 
 								esbSql.getMembershipsByCourseCodeSemesterOrigin2Sql(), pme);
+						long r = System.currentTimeMillis();
 						List<MembershipEvent> mes = toMembershipEvents(pme, ms);
 						/*updateN(esbDs, log,*/ 
 						executeStatementsInSameTx(esbJdbc, esbTm,
 								sqlAndVals(esbSql.getSaveNewMembershipEventSql(), mes),
 								sqlAndVals(esbSql.getDeleteMembershipsByCourseCodeSemesterOrigin2Sql(), pme));
-						log.info("New BORTREGK membership event: " + pme + ", generated events: " + mes);
+						log.info("New BORTREGK membership event: " + pme + ", generated events: " + mes
+								 + " (read: " + (r - s) + " ms, "
+								 + "save: " + (System.currentTimeMillis() - r) + " ms)");
 					} else if (pme.getOrigin2().startsWith("INREG")) {
 						log.info("BORTREGK event with URTABELL = INREG*. Don't do anything: " + pme);
 					} else {
@@ -166,17 +189,22 @@ public class RegistrationEventService {
 				} else if ("AVLIDEN".equals(orig)) {
 					List<Membership> ms = queryByObj(esbJdbc, Membership.class, 
 							esbSql.getMembershipsSql(), pme);
+					long r = System.currentTimeMillis();
 					List<MembershipEvent> mes = toMembershipEvents(pme, ms);
 					/*updateN(esbDs, log,*/ 
 					executeStatementsInSameTx(esbJdbc, esbTm,
 							sqlAndVals(esbSql.getSaveNewMembershipEventSql(), mes),
 							sqlAndVals(esbSql.getDeleteMembershipsSql(), pme));
-					log.info("New AVLIDEN membership event: " + pme + ", generated events: " + mes);
+					log.info("New AVLIDEN membership event: " + pme + ", generated events: " + mes
+							 + " (read: " + (r - s) + " ms, "
+							 + "save: " + (System.currentTimeMillis() - r) + " ms)");
 				} else {
 					log.error("Unknown membership remove event: " + pme);
 				}
 			}
 		}
+		log.info("Membership events updated: " + potentialMembershipEvents.size()
+				+ " (" + (System.currentTimeMillis() - start) + "ms)");
 		return potentialMembershipEvents.size();
 	}
 
