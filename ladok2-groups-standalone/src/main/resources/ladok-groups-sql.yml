@@ -24,7 +24,7 @@ ladok.sql.reg: |
     WHERE
         reg.idatum >= :datum_from
         AND reg.idatum <= :datum_to
-        AND reg.itid > :tid
+        AND reg.itid >= :tid
         AND kt.kurskod = reg.kurs
         AND kt.startter = reg.termin
         AND kt.kurstakt = reg.kurstakt
@@ -60,7 +60,7 @@ ladok.sql.reg: |
     WHERE
         reg.idatum >= :datum_from
         AND reg.idatum <= :datum_to
-        AND reg.itid > :tid
+        AND reg.itid >= :tid
         AND kt.kurskod = reg.kurs
         AND kt.termin = reg.termin
         AND kt.termordn = reg.termordn
@@ -111,7 +111,7 @@ ladok.sql.reg: |
     WHERE
         reg.idatum >= :datum_from
         AND reg.idatum <= :datum_to
-        AND reg.itid > :tid
+        AND reg.itid >= :tid
         AND kt.kurskod = reg.kurs
         AND kt.startter = reg.termin
         AND ffg.pnr = reg.pnr
@@ -158,7 +158,7 @@ ladok.sql.reg: |
     WHERE
         reg.idatum >= :datum_from
         AND reg.idatum <= :datum_to
-        AND reg.itid > :tid
+        AND reg.itid >= :tid
         AND kt.kurskod = reg.kurs
         AND kt.termin = reg.termin
         AND ffg.pnr = reg.pnr
@@ -196,7 +196,7 @@ ladok.sql.reg: |
     WHERE
         reg.idatum >= :datum_from
         AND reg.idatum <= :datum_to
-        AND reg.itid > :tid
+        AND reg.itid >= :tid
         AND reg.kurs > ''
         AND kt.kurskod = reg.kurs
         AND kt.startter = reg.termin
@@ -242,7 +242,7 @@ ladok.sql.reg: |
     WHERE
         reg.idatum >= :datum_from
         AND reg.idatum <= :datum_to
-        AND reg.itid > :tid
+        AND reg.itid >= :tid
         AND reg.kurs > ''
         AND kt.kurskod = reg.kurs
         AND kt.termin = reg.termin
@@ -298,7 +298,7 @@ ladok.sql.bortreg: |
     where
         b.idatum >= :datum_from
         AND b.idatum <= :datum_to
-        and b.itid > :tid
+        and b.itid >= :tid
     order by
         datum asc, tid asc
 
@@ -320,7 +320,7 @@ ladok.sql.inreg: |
     where
         i.idatum >= :datum_from
         and i.idatum <= :datum_to
-        and i.itid > :tid
+        and i.itid >= :tid
     union
     -- 
     -- INREGFO: Avregistrering av fortsattningsregistrering
@@ -337,7 +337,7 @@ ladok.sql.inreg: |
     where
         i.idatum >= :datum_from
         and i.idatum <= :datum_to
-        and i.itid > :tid
+        and i.itid >= :tid
     union
     -- 
     -- INREGOM: Avregistrering av omregistrering
@@ -356,7 +356,7 @@ ladok.sql.inreg: |
     where
         i.idatum >= :datum_from
         and i.idatum <= :datum_to
-        and i.itid > :tid
+        and i.itid >= :tid
     order by
         datum asc, tid asc
 
