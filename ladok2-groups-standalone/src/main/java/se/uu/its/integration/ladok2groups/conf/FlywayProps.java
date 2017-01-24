@@ -1,9 +1,9 @@
 package se.uu.its.integration.ladok2groups.conf;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
+@Component
 @ConfigurationProperties(prefix="flyway")
 public class FlywayProps {
 
