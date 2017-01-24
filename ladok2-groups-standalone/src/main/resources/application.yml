@@ -19,4 +19,12 @@ datasource.esb.url: jdbc:hsqldb:file:target/hsqldb;sql.syntax_mys=true
 datasource.esb.username: sa
 datasource.esb.password: 
 
-app.AcceptedEventService.updateAcceptedMembers.delay: 30000
+## Reg events update start date
+event.reg.update.start: '2007-01-01 000000'
+
+## Reg events update with 30 seconds delay:
+events.reg.update.delay: 30000
+events.reg.update.cron: '*/30 * * * * *'
+
+## Acc events update every night at 4am:
+events.acc.update.cron: '0 0 4 * * *'
