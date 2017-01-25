@@ -67,6 +67,7 @@ public class RegistrationEventService {
 
 	@Scheduled(fixedDelayString = "${events.regUpdateDelay}")
 	public void updateEvents() throws Exception {
+		// System.out.println("UpdateEvents triggered " + format(new Date()));
 		batchUpdatesForEachDay();
 	}
 	
