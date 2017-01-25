@@ -24,9 +24,11 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
 
+import se.uu.its.integration.ladok2groups.conf.EventProps;
 import se.uu.its.integration.ladok2groups.dto.Membership;
 import se.uu.its.integration.ladok2groups.dto.MembershipEvent;
 import se.uu.its.integration.ladok2groups.dto.PotentialMembershipEvent;
@@ -56,13 +58,14 @@ public class RegistrationEventService {
 	@Autowired @Qualifier("esb")
 	PlatformTransactionManager esbTm;
 	
+	@Autowired
+	EventProps eventProps;
+	
 	Ladok2GroupSql l2Sql = new Ladok2GroupSql();
 	SpGroupSql spSql = new SpGroupSql();
 	EsbGroupSql esbSql = new EsbGroupSql();
 
-	// TODO: Extract to property:
-	Date registrationEventStart = parse("2015-01-31 235959"); // parse("2006-12-31 235959"); 
-	
+	@Scheduled(fixedDelayString = "${events.regUpdateDelay}")
 	public void updateEvents() throws Exception {
 		batchUpdatesForEachDay();
 	}
@@ -71,7 +74,13 @@ public class RegistrationEventService {
 		// Get start date:
 		List<PotentialMembershipEvent> pmes = queryByParams(esbJdbc, PotentialMembershipEvent.class,
 				esbSql.getMostRecentPotentialMembershipEventFromLadokSql());
-		Date start = pmes.isEmpty() ? registrationEventStart : pmes.get(0).getDate();
+		Date start;
+		if (pmes.isEmpty()) {
+			// Start one second before because we exclude the start time
+			start = oneSecondBefore(parse(eventProps.getRegUpdateStart()));
+		} else {
+			start = pmes.get(0).getDate();
+		}
 
 		// Skip most recent events to make sure all events for this interval have arrived at Ladok:
 		Calendar end = new GregorianCalendar();
@@ -80,7 +89,7 @@ public class RegistrationEventService {
 		int endYear = end.get(Calendar.YEAR);
 		int endDay = end.get(Calendar.DAY_OF_YEAR);
 		
-		// Convert events interval to calendar days:
+		// Convert current event interval to calendar days:
 		Calendar from = new GregorianCalendar();
 		from.setTimeInMillis(start.getTime());
 		Calendar to = new GregorianCalendar();
@@ -278,5 +287,11 @@ public class RegistrationEventService {
 		}
 		return unprocessed;
 	}
-	
+
+	Date oneSecondBefore(Date d) {
+		Calendar oneSecondBefore = new GregorianCalendar();
+		oneSecondBefore.setTime(d);
+		oneSecondBefore.add(Calendar.SECOND, -1);
+		return oneSecondBefore.getTime();
+	}
 }
