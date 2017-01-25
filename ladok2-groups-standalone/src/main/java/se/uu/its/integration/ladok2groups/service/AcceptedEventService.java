@@ -2,6 +2,7 @@ package se.uu.its.integration.ladok2groups.service;
 
 import static se.uu.its.integration.ladok2groups.util.JdbcUtil.executeStatementsInSameTx;
 import static se.uu.its.integration.ladok2groups.util.JdbcUtil.queryByParams;
+import static se.uu.its.integration.ladok2groups.util.SqlAndValueObjs.sql;
 import static se.uu.its.integration.ladok2groups.util.SqlAndValueObjs.sqlAndVals;
 
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
 
@@ -31,14 +33,6 @@ public class AcceptedEventService {
 	
 	static Log log = LogFactory.getLog(AcceptedEventService.class);
 	
-	/*
-	@Autowired @Qualifier("ladok2read")
-	DataSource ladok2ReadDs;
-
-	@Autowired @Qualifier("esb")
-	DataSource esbDs;
-	*/
-	
 	@Autowired @Qualifier("ladok2read")
 	NamedParameterJdbcTemplate l2Jdbc;
 	
@@ -51,32 +45,22 @@ public class AcceptedEventService {
 	Ladok2GroupSql l2Sql = new Ladok2GroupSql();
 	EsbGroupSql esbSql = new EsbGroupSql();
 	
-	//@Scheduled(fixedDelayString = "${app.AcceptedEventService.updateAcceptedMembers.delay}")
-	public void updateAcceptedMembers() throws Exception {
-		System.out.println("Helu schedule: " + System.currentTimeMillis());
-	}
-	
-	//@Scheduled(cron="0 0 4 * * *")
-	public void everyNightAtFour() {
-		System.out.println("It's four in the morning!");
-	}
-
-	//@Scheduled(cron="*/10 * * * * *")
-	public void everyTenSeconds() {
-		System.out.println("It's been 10 seconds!");
-	}
-	
-	public String updateAccepted() {
+	@Scheduled(cron = "${events.accUpdateCron}")
+	public void updateAccepted() {
+		// System.out.println("updateAccepted: " + format(new Date()));
 		long start = System.currentTimeMillis();
 		// TODO: Include prev and/or next semester too?:
 		String semester = queryByParams(l2Jdbc, String.class, l2Sql.getTerminSql()).get(0);
-		Date accMemberFetchTime = new Date();
-		List<Antagen> l2Ant = queryByParams(l2Jdbc, Antagen.class,
-				l2Sql.getAntagenSql(), "termin", semester);
-		List<AccMembership> l2Accs = MembershipEventUtil.toAccMemberships(
-				l2Ant, accMemberFetchTime);
 		List<AccMembership> storedAccs = queryByParams(esbJdbc, AccMembership.class,
 				esbSql.getAccMembershipsSql(), "semester", semester);
+		long storedRead = System.currentTimeMillis();
+		List<Antagen> l2Ant = queryByParams(l2Jdbc, Antagen.class,
+				l2Sql.getAntagenSql(), "termin", semester);
+		long l2Read = System.currentTimeMillis();
+		Date eventDate = new Date();
+		List<AccMembership> l2Accs = MembershipEventUtil.toAccMemberships(
+				l2Ant, eventDate);
+		long save = System.currentTimeMillis();
 		List<AccMembership> addedAccs = new ArrayList<AccMembership>(l2Accs);
 		addedAccs.removeAll(storedAccs);
 		List<MembershipEvent> membershipAddEvents = MembershipEventUtil.toMembershipAddEvents(addedAccs);
@@ -86,8 +70,14 @@ public class AcceptedEventService {
 		List<MembershipEvent> membershipRemoveEvents = MembershipEventUtil.toMembershipRemoveEvents(removedAccs);
 		*/
 		saveAccMemberEvents(l2Accs, membershipAddEvents);
-		return "Time: " + (System.currentTimeMillis() - start) + ", Size: " + l2Accs.size() + " "
-				+ (l2Accs.size() > 0 ? l2Accs.get(0) : "");
+		log.info("Accepted membership events update: " 
+				+ "Stored: " + storedAccs.size()
+				+ ", Ladok: " + l2Accs.size()
+				+ ", New: " + addedAccs.size()
+				+ " in " + (System.currentTimeMillis() - start) + " ms"
+				+ " (storedRead: " + (storedRead - start)
+				+ ", l2read: " + (l2Read - storedRead)
+				+ " , save: " + (save - l2Read) + ")");
 	}
 	
 	void saveAccMemberEvents(List<AccMembership> memberships, List<MembershipEvent> membAddEvents) {
@@ -108,10 +98,10 @@ public class AcceptedEventService {
 						startSemester, reportCode, me.getOrigin()));
 			}
 		}
-		/*updateN(esbDs, log,*/
 		executeStatementsInSameTx(esbJdbc, esbTm,
 				sqlAndVals(esbSql.getSaveNewMembershipEventSql(), groupEvents),
 				sqlAndVals(esbSql.getSaveNewMembershipEventSql(), membAddEvents),
+				sql(esbSql.getDeleteAccMembershipsSql()),
 				sqlAndVals(esbSql.getSaveNewAccMembershipSql(), memberships));
 	}
 	

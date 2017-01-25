@@ -52,12 +52,16 @@ public class JdbcUtil {
 		try {
 			for (SqlAndValueObjs st : stms) {
 				String sql = st.getSql();
-				List<BeanPropertySqlParameterSource> bpsps = new ArrayList<>();
-				for (Object v : st.getValues()) {
-					bpsps.add(new BeanPropertySqlParameterSource(v));
+				if (st.getValues() == null) {
+					jt.update(sql, new HashMap<>());
+				} else {
+					List<BeanPropertySqlParameterSource> bpsps = new ArrayList<>();
+					for (Object v : st.getValues()) {
+						bpsps.add(new BeanPropertySqlParameterSource(v));
+					}
+					jt.batchUpdate(sql,(BeanPropertySqlParameterSource[]) bpsps
+							.toArray(new BeanPropertySqlParameterSource[bpsps.size()]));
 				}
-				jt.batchUpdate(sql,(BeanPropertySqlParameterSource[]) bpsps
-						.toArray(new BeanPropertySqlParameterSource[bpsps.size()]));
 			}
 			tm.commit(txStat);
 		} catch (Exception e) {

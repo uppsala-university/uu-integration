@@ -20,6 +20,9 @@ public class SqlAndValueObjs {
 		return new SqlAndValueObjs(sql, values);
 	}
 	
+	public static SqlAndValueObjs sql(String sql) {
+		return new SqlAndValueObjs(sql, null);
+	}
 	public SqlAndValueObjs(String sql, List<? extends Object> values) {
 		this.sql = sql;
 		this.values = values;
