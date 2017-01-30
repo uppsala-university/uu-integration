@@ -36,7 +36,7 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-actuator"
     compile "org.flywaydb:flyway-core:4.0.3"
     runtime "mysql:mysql-connector-java:5.1.39"
-    // runtime "com.microsoft.sqlserver.jdbc:sqljdbc42:6.0.7728.100_enu"
+    runtime "com.microsoft.sqlserver.jdbc:sqljdbc42:6.0.7728.100_enu"
     runtime "org.hsqldb:hsqldb:2.3.2"
     testCompile "org.springframework.boot:spring-boot-starter-test"
 }
