@@ -53,7 +53,7 @@ public class JdbcUtil {
 			for (SqlAndValueObjs st : stms) {
 				String sql = st.getSql();
 				if (st.getValues() == null) {
-					jt.update(sql, new HashMap<>());
+					jt.update(sql, new HashMap<String, Object>());
 				} else {
 					List<BeanPropertySqlParameterSource> bpsps = new ArrayList<>();
 					for (Object v : st.getValues()) {
