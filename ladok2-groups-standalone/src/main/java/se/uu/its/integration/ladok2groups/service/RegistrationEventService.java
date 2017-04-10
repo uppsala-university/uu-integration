@@ -139,7 +139,8 @@ public class RegistrationEventService {
 		for (PotentialMembershipEvent pme : potentialMembershipEvents) {
 			String orig = pme.getOrigin();
 			long s = System.currentTimeMillis();
-			if (pme.getMeType() == PotentialMembershipEvent.Type.ADD) {
+			//if (pme.getMeType() == PotentialMembershipEvent.Type.ADD) {
+			if (PotentialMembershipEvent.MEMBERSHIP_ADD_TYPES.contains(pme.getMeType())) {
 				if ("FFGKURS".equals(orig) || "OMKURS".equals(orig) || "UBINDRG".equals(orig)
 						|| "SP".equals(orig)) {
 					saveMembershipAddEvent(esbJdbc, esbTm, pme);

@@ -91,7 +91,7 @@ public class MembershipEventUtil {
 	public static List<MembershipEvent> toMembershipAddEvents(List<AccMembership> ms) {
 		List<MembershipEvent> es = new ArrayList<>();
 		for (AccMembership m : ms) {
-			es.add(new MembershipEvent(m, Type.ADD));
+			es.add(new MembershipEvent(m, Type.ForvantatDeltagandeSkapadEvent)); // Type.ADD
 		}
 		return es;
 	}
@@ -99,7 +99,7 @@ public class MembershipEventUtil {
 	public static List<MembershipEvent> toMembershipRemoveEvents(List<AccMembership> ms) {
 		List<MembershipEvent> es = new ArrayList<>();
 		for (AccMembership m : ms) {
-			es.add(new MembershipEvent(m, Type.REMOVE));
+			es.add(new MembershipEvent(m, Type.AterbudEvent)); // TODO: Type.REMOVE
 		}
 		return es;
 	}

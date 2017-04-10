@@ -10,7 +10,7 @@ public class GroupEvent extends MembershipEvent {
 
 	public GroupEvent(Date date, String courseCode, 
 			String startSemester, String reportCode, String origin) {
-		setMeType(Type.ADDGROUP); // Only addgroup events so far
+		setMeType(Type.KurstillfalleTillStatusEvent); // Type.ADDGROUP
 		setDate(date);
 		setCourseCode(courseCode);
 		setStartSemester(startSemester);
@@ -19,7 +19,7 @@ public class GroupEvent extends MembershipEvent {
 	}
 	
 	public GroupEvent(PotentialMembershipEvent pme) {
-		setMeType(Type.ADDGROUP); // Only addgroup events so far
+		setMeType(Type.KurstillfalleTillStatusEvent); // Type.ADDGROUP
 		setDate(pme.getDate());
 		setCourseCode(pme.getCourseCode());
 		setReportCode(pme.getReportCode());

@@ -3,8 +3,11 @@ package se.uu.its.integration.ladok2groups.dto;
 import static se.uu.its.integration.ladok2groups.util.MembershipEventUtil.parse;
 import static se.uu.its.integration.ladok2groups.util.MembershipEventUtil.parseUrPost;
 
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import se.uu.its.integration.ladok2groups.l2dto.Avliden;
 import se.uu.its.integration.ladok2groups.l2dto.BortReg;
@@ -15,7 +18,22 @@ import se.uu.its.integration.ladok2groups.util.MembershipEventUtil;
 
 public class PotentialMembershipEvent {
 	
-	public enum Type { ADD, REMOVE, ADDGROUP };
+	public static enum Type { ADD, REMOVE, ADDGROUP,
+		KurstillfalleTillStatusEvent , 
+		ForvantatDeltagandeSkapadEvent,
+		AterbudEvent,
+		RegistreringEvent,
+		OmregistreringEvent,
+		AterkalladregistreringEvent,
+		AterkalladOmregistreringEvent
+	};
+	
+	public static Set<Type> MEMBERSHIP_ADD_TYPES = new HashSet<Type>(Arrays.asList(new Type[]{
+			Type.ADD,
+			Type.ForvantatDeltagandeSkapadEvent,
+			Type.RegistreringEvent,
+			Type.OmregistreringEvent
+	}));
 	
 	Long id;
 	Date date;
@@ -54,7 +72,8 @@ public class PotentialMembershipEvent {
 
 	public PotentialMembershipEvent(Reg r) {
 		this((PnrEvent) r);
-		setMeType(Type.ADD);
+		setMeType("OMREG".equals(r.getOrigin()) ? Type.OmregistreringEvent
+				: Type.RegistreringEvent); // Type.ADD
 		setCourseCode(r.getKurskod());
 		setReportCode(r.getAnmkod());
 		setStartSemester(r.getStartter());
@@ -68,7 +87,7 @@ public class PotentialMembershipEvent {
 
 	public PotentialMembershipEvent(BortReg r) {
 		this((PnrEvent) r);
-		setMeType(Type.REMOVE);
+		setMeType(Type.REMOVE);  // TODO: What is the Ladok event type?
 		Map<String, String> urPost = parseUrPost(r.getUrpost());
 		setSemester(urPost.get("TERMIN"));
 		setCourseCode(r.getKurskod());
@@ -78,7 +97,8 @@ public class PotentialMembershipEvent {
 	
 	public PotentialMembershipEvent(InReg r) {
 		this((PnrEvent) r);
-		setMeType(Type.REMOVE);
+		setMeType("INREGOM".equals(r.getOrigin()) ? Type.AterkalladOmregistreringEvent
+				: Type.AterkalladregistreringEvent); // Type.REMOVE
 		setOrigin(r.getOrigin());
 		setCourseCode(r.getKurskod());
 		setSemester(r.getTermin());
@@ -86,7 +106,7 @@ public class PotentialMembershipEvent {
 
 	public PotentialMembershipEvent(Avliden a) {
 		this((PnrEvent) a);
-		setMeType(Type.REMOVE);
+		setMeType(Type.REMOVE); // TODO: What is the Ladok event type?
 		setOrigin("AVLIDEN");
 	}
 
