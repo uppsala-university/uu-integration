@@ -19,7 +19,7 @@ import se.uu.its.integration.ladok2groups.util.MembershipEventUtil;
 public class PotentialMembershipEvent {
 	
 	public static enum Type { ADD, REMOVE, ADDGROUP,
-		KurstillfalleTillStatusEvent , 
+		KurstillfalleTillStatusEvent, 
 		ForvantatDeltagandeSkapadEvent,
 		AterbudEvent,
 		RegistreringEvent,
