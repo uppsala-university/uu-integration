@@ -99,7 +99,7 @@ public class MembershipEventUtil {
 	public static List<MembershipEvent> toMembershipRemoveEvents(List<AccMembership> ms) {
 		List<MembershipEvent> es = new ArrayList<>();
 		for (AccMembership m : ms) {
-			es.add(new MembershipEvent(m, Type.AterbudEvent)); // TODO: Type.REMOVE
+			es.add(new MembershipEvent(m, Type.AterbudEvent)); // Type.REMOVE
 		}
 		return es;
 	}

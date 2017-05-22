@@ -18,14 +18,16 @@ import se.uu.its.integration.ladok2groups.util.MembershipEventUtil;
 
 public class PotentialMembershipEvent {
 	
-	public static enum Type { ADD, REMOVE, ADDGROUP,
+	public static enum Type { 
+		ADD, REMOVE, ADDGROUP, // Deprecated
 		KurstillfalleTillStatusEvent, 
 		ForvantatDeltagandeSkapadEvent,
 		AterbudEvent,
 		RegistreringEvent,
 		OmregistreringEvent,
 		AterkalladregistreringEvent,
-		AterkalladOmregistreringEvent
+		AterkalladOmregistreringEvent,
+		StudentAvlidenmarkeringEvent
 	};
 	
 	public static Set<Type> MEMBERSHIP_ADD_TYPES = new HashSet<Type>(Arrays.asList(new Type[]{
@@ -106,7 +108,7 @@ public class PotentialMembershipEvent {
 
 	public PotentialMembershipEvent(Avliden a) {
 		this((PnrEvent) a);
-		setMeType(Type.REMOVE); // TODO: What is the Ladok event type?
+		setMeType(Type.StudentAvlidenmarkeringEvent); // Type.REMOVE
 		setOrigin("AVLIDEN");
 	}
 
