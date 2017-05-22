@@ -46,6 +46,10 @@ public class RegistrationEventService {
 	
 	static Log log = LogFactory.getLog(RegistrationEventService.class);
 	
+	Ladok2GroupSql l2Sql = new Ladok2GroupSql();
+	SpGroupSql spSql = new SpGroupSql();
+	EsbGroupSql esbSql = new EsbGroupSql();
+
 	@Autowired @Qualifier("ladok2read")
 	NamedParameterJdbcTemplate l2Jdbc;
 	
@@ -61,10 +65,6 @@ public class RegistrationEventService {
 	@Autowired
 	EventProps eventProps;
 	
-	Ladok2GroupSql l2Sql = new Ladok2GroupSql();
-	SpGroupSql spSql = new SpGroupSql();
-	EsbGroupSql esbSql = new EsbGroupSql();
-
 	@Scheduled(fixedDelayString = "${events.regUpdateDelay}")
 	public void updateEvents() throws Exception {
 		// System.out.println("UpdateEvents triggered " + format(new Date()));
