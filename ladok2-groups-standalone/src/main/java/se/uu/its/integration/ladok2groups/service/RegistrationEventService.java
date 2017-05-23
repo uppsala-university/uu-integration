@@ -170,7 +170,6 @@ public class RegistrationEventService {
 							esbSql.getMembershipsByCourseCodeSql(), pme);
 					long r = System.currentTimeMillis();
 					List<MembershipEvent> mes = toMembershipEvents(pme, ms);
-					/*updateN(esbDs, log,*/
 					executeStatementsInSameTx(esbJdbc, esbTm,
 							sqlAndVals(esbSql.getSaveNewMembershipEventSql(), mes),
 							sqlAndVals(esbSql.getDeleteMembershipByCourseCodeSql(), pme));
@@ -185,7 +184,6 @@ public class RegistrationEventService {
 								esbSql.getMembershipsByCourseCodeSemesterOrigin2Sql(), pme);
 						long r = System.currentTimeMillis();
 						List<MembershipEvent> mes = toMembershipEvents(pme, ms);
-						/*updateN(esbDs, log,*/ 
 						executeStatementsInSameTx(esbJdbc, esbTm,
 								sqlAndVals(esbSql.getSaveNewMembershipEventSql(), mes),
 								sqlAndVals(esbSql.getDeleteMembershipsByCourseCodeSemesterOrigin2Sql(), pme));
