@@ -1,7 +1,9 @@
-Ladok 2 Group Events
-====================
+Ladok 2 Events
+==============
 
-Standalone version of `ladok2-groups`.
-Creates and populates a group event table based on registration, deregistration,
-and acceptance events from current Ladok (Ladok 2).
+Ladok 2 adapter for creating and populating an event table for student
+group information that correlates with Ladok 3 Atom events.
+
+The group information collected is student course registration,
+deregistration, and acceptance.
 
