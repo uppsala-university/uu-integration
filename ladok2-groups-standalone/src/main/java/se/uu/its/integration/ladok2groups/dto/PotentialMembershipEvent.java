@@ -89,7 +89,9 @@ public class PotentialMembershipEvent {
 
 	public PotentialMembershipEvent(BortReg r) {
 		this((PnrEvent) r);
-		setMeType(Type.REMOVE);  // TODO: What is the Ladok event type?
+		setMeType("OMKURS".equals(r.getUrtabell()) ?
+				Type.AterkalladOmregistreringEvent 
+				: Type.AterkalladregistreringEvent); // Type.REMOVE
 		Map<String, String> urPost = parseUrPost(r.getUrpost());
 		setSemester(urPost.get("TERMIN"));
 		setCourseCode(r.getKurskod());
