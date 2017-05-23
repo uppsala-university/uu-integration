@@ -198,17 +198,22 @@ public class RegistrationEventService {
 						log.error("Unknown BORTREGK membership event: " + pme);
 					}
 				} else if ("AVLIDEN".equals(orig)) {
+					/* DEPRECATED: Generate remove events for all current memberships.
 					List<Membership> ms = queryByObj(esbJdbc, Membership.class, 
 							esbSql.getMembershipsSql(), pme);
 					long r = System.currentTimeMillis();
 					List<MembershipEvent> mes = toMembershipEvents(pme, ms);
-					/*updateN(esbDs, log,*/ 
 					executeStatementsInSameTx(esbJdbc, esbTm,
 							sqlAndVals(esbSql.getSaveNewMembershipEventSql(), mes),
 							sqlAndVals(esbSql.getDeleteMembershipsSql(), pme));
 					log.info("New AVLIDEN membership event: " + pme + ", generated events: " + mes
 							 + " (read: " + (r - s) + " ms, "
 							 + "save: " + (System.currentTimeMillis() - r) + " ms)");
+							*/
+					MembershipEvent me = new MembershipEvent(pme);
+					update(esbJdbc, esbSql.getSaveNewMembershipEventSql(), me);
+					log.info("New AVLIDEN membership event: " + pme + ", generated event: " + me
+							 + "save: " + (System.currentTimeMillis() - s) + " ms)");
 				} else {
 					log.error("Unknown membership remove event: " + pme);
 				}
