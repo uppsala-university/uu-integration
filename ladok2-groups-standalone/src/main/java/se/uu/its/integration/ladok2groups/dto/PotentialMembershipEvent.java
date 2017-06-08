@@ -25,6 +25,7 @@ public class PotentialMembershipEvent {
 		AterbudEvent,
 		RegistreringEvent,
 		OmregistreringEvent,
+		AvbrottEvent,
 		AterkalladregistreringEvent,
 		AterkalladOmregistreringEvent,
 		StudentAvlidenmarkeringEvent
@@ -101,8 +102,8 @@ public class PotentialMembershipEvent {
 	
 	public PotentialMembershipEvent(InReg r) {
 		this((PnrEvent) r);
-		setMeType("INREGOM".equals(r.getOrigin()) ? Type.AterkalladOmregistreringEvent
-				: Type.AterkalladregistreringEvent); // Type.REMOVE
+		setMeType(Type.AvbrottEvent); // Type.REMOVE
+		// setMeType("INREGOM".equals(r.getOrigin()) ? Type.AterkalladOmregistreringEvent : Type.AterkalladregistreringEvent); // Type.REMOVE
 		setOrigin(r.getOrigin());
 		setCourseCode(r.getKurskod());
 		setSemester(r.getTermin());
