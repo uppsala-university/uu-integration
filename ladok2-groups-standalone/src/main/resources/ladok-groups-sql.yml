@@ -394,7 +394,7 @@ ladok.sql.antagen: |
         uu.lantkurs lk,
         uu.ktill2 kt
     WHERE
-        lk.termin = :termin
+        (lk.termin = :termin1 OR lk.termin = :termin2)
         AND lk.svar <> 'N'
         AND lk.anmalt = kt.kod
         AND lk.termin = kt.startter

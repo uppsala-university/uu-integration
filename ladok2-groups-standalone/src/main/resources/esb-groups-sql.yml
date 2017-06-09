@@ -198,7 +198,7 @@ esb.sql.accMemberships: |
     from
         ACC_MEMBERSHIPS
     where
-        semester = :semester
+        (semester = :semester1 or semester = :semester2)
 
 esb.sql.saveNewAccMembership: |
     insert into

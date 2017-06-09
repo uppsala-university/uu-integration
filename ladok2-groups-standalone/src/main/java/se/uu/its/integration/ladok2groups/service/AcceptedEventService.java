@@ -28,6 +28,7 @@ import se.uu.its.integration.ladok2groups.l2dto.Antagen;
 import se.uu.its.integration.ladok2groups.sql.EsbGroupSql;
 import se.uu.its.integration.ladok2groups.sql.Ladok2GroupSql;
 import se.uu.its.integration.ladok2groups.util.MembershipEventUtil;
+import se.uu.its.integration.ladok2groups.util.SemesterUtil;
 
 @Service
 public class AcceptedEventService {
@@ -51,11 +52,13 @@ public class AcceptedEventService {
 		long start = System.currentTimeMillis();
 		// TODO: Include prev and/or next semester too?:
 		String semester = queryByParams(l2Jdbc, String.class, l2Sql.getTerminSql()).get(0);
-		List<AccMembership> storedAccs = queryByParams(esbJdbc, AccMembership.class,
-				esbSql.getAccMembershipsSql(), "semester", semester);
+		String nextSemester = SemesterUtil.getNextSemester(semester);
+		List<AccMembership> storedAccs = queryByParams(esbJdbc,
+				AccMembership.class, esbSql.getAccMembershipsSql(),
+				"semester1", semester, "semester2", nextSemester);
 		long storedRead = System.currentTimeMillis();
 		List<Antagen> l2Ant = queryByParams(l2Jdbc, Antagen.class,
-				l2Sql.getAntagenSql(), "termin", semester);
+				l2Sql.getAntagenSql(), "termin1", semester, "termin2", nextSemester);
 		long l2Read = System.currentTimeMillis();
 		Date eventDate = new Date();
 		List<AccMembership> l2Accs = MembershipEventUtil.toAccMemberships(
