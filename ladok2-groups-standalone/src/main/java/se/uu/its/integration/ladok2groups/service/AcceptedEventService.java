@@ -50,7 +50,6 @@ public class AcceptedEventService {
 	@Scheduled(cron = "${events.accUpdateCron}")
 	public void updateAccepted() {
 		long start = System.currentTimeMillis();
-		// TODO: Include prev and/or next semester too?:
 		String semester = queryByParams(l2Jdbc, String.class, l2Sql.getTerminSql()).get(0);
 		String nextSemester = SemesterUtil.getNextSemester(semester);
 		List<AccMembership> storedAccs = queryByParams(esbJdbc,
