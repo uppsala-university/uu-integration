@@ -9,7 +9,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import se.uu.its.integration.ladok2groups.l2dto.Avliden;
+import se.uu.its.integration.ladok2groups.l2dto.Namn;
 import se.uu.its.integration.ladok2groups.l2dto.BortReg;
 import se.uu.its.integration.ladok2groups.l2dto.InReg;
 import se.uu.its.integration.ladok2groups.l2dto.PnrEvent;
@@ -28,7 +28,8 @@ public class PotentialMembershipEvent {
 		AvbrottEvent,
 		AterkalladregistreringEvent,
 		AterkalladOmregistreringEvent,
-		StudentAvlidenmarkeringEvent
+		StudentAvlidenmarkeringEvent,
+		KontaktuppgifterEvent
 	};
 	
 	public static Set<Type> MEMBERSHIP_ADD_TYPES = new HashSet<Type>(Arrays.asList(new Type[]{
@@ -109,10 +110,14 @@ public class PotentialMembershipEvent {
 		setSemester(r.getTermin());
 	}
 
-	public PotentialMembershipEvent(Avliden a) {
-		this((PnrEvent) a);
-		setMeType(Type.StudentAvlidenmarkeringEvent); // Type.REMOVE
-		setOrigin("AVLIDEN");
+	public PotentialMembershipEvent(Namn n) {
+		this((PnrEvent) n);
+		if ("J".equals(n.getAvliden())) {
+			setMeType(Type.StudentAvlidenmarkeringEvent);
+		} else {
+			setMeType(Type.KontaktuppgifterEvent);
+		}
+		setOrigin("NAMN");
 	}
 
 	public Long getId() {

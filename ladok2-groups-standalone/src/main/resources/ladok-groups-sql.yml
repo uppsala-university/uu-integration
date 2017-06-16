@@ -361,17 +361,18 @@ ladok.sql.inreg: |
         datum asc, tid asc
 
 
-# Avlidna
-ladok.sql.avliden: |
+# Studentinfo (spec. avlidenmarkering)
+ladok.sql.namn: |
     select
         n.pnr as pnr,
-        n.inldat as datum
+        n.inldat as datum,
+        n.avliden as avliden
     from
         uu.namn n
     where
-        n.avliden = 'J'
-        and n.inldat >= :datum_from
+        n.inldat >= :datum_from
         and n.inldat <= :datum_to
+        -- and n.avliden = 'J'
     order by
         datum asc
 
@@ -402,6 +403,7 @@ ladok.sql.antagen: |
         -- AND NOT EXISTS (SELECT * FROM uu.ffgkurs ffg WHERE ffg.pnr = lk.pnr AND ffg.kurs = kt.kurskod)
 
 
+# Nuvarande termin
 ladok.sql.termin: |
     SELECT
         intermin

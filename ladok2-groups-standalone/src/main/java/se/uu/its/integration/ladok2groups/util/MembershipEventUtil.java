@@ -16,7 +16,7 @@ import se.uu.its.integration.ladok2groups.dto.MembershipEvent;
 import se.uu.its.integration.ladok2groups.dto.PotentialMembershipEvent;
 import se.uu.its.integration.ladok2groups.dto.PotentialMembershipEvent.Type;
 import se.uu.its.integration.ladok2groups.l2dto.Antagen;
-import se.uu.its.integration.ladok2groups.l2dto.Avliden;
+import se.uu.its.integration.ladok2groups.l2dto.Namn;
 import se.uu.its.integration.ladok2groups.l2dto.BortReg;
 import se.uu.its.integration.ladok2groups.l2dto.InReg;
 import se.uu.its.integration.ladok2groups.l2dto.PnrEvent;
@@ -60,8 +60,8 @@ public class MembershipEventUtil {
 				pme = new PotentialMembershipEvent((BortReg) e);
 			} else if (e instanceof InReg) {
 				pme = new PotentialMembershipEvent((InReg) e);
-			} else if (e instanceof Avliden) {
-				pme = new PotentialMembershipEvent((Avliden) e);
+			} else if (e instanceof Namn) {
+				pme = new PotentialMembershipEvent((Namn) e);
 			}
 			if (pme != null) {
 				mes.add(pme);

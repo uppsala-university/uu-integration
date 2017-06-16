@@ -32,10 +32,10 @@ import se.uu.its.integration.ladok2groups.conf.EventProps;
 import se.uu.its.integration.ladok2groups.dto.Membership;
 import se.uu.its.integration.ladok2groups.dto.MembershipEvent;
 import se.uu.its.integration.ladok2groups.dto.PotentialMembershipEvent;
-import se.uu.its.integration.ladok2groups.l2dto.Avliden;
 import se.uu.its.integration.ladok2groups.l2dto.BortReg;
 import se.uu.its.integration.ladok2groups.l2dto.InReg;
 import se.uu.its.integration.ladok2groups.l2dto.Kurstillfalle;
+import se.uu.its.integration.ladok2groups.l2dto.Namn;
 import se.uu.its.integration.ladok2groups.l2dto.Reg;
 import se.uu.its.integration.ladok2groups.sql.EsbGroupSql;
 import se.uu.its.integration.ladok2groups.sql.Ladok2GroupSql;
@@ -195,7 +195,9 @@ public class RegistrationEventService {
 					} else {
 						log.error("Unknown BORTREGK membership event: " + pme);
 					}
-				} else if ("AVLIDEN".equals(orig)) {
+				} else if ("NAMN".equals(orig)) {
+					// NAMN events can be either a StudentAvlidenmarkeringEvent
+					// or a KontaktuppgifterEvent
 					/* DEPRECATED: Generate remove events for all current memberships.
 					List<Membership> ms = queryByObj(esbJdbc, Membership.class, 
 							esbSql.getMembershipsSql(), pme);
@@ -210,7 +212,7 @@ public class RegistrationEventService {
 							*/
 					MembershipEvent me = new MembershipEvent(pme);
 					update(esbJdbc, esbSql.getSaveNewMembershipEventSql(), me);
-					log.info("New AVLIDEN membership event: " + pme + ", generated event: " + me
+					log.info("New NAMN membership event: " + pme + ", generated event: " + me
 							 + "save: " + (System.currentTimeMillis() - s) + " ms)");
 				} else {
 					log.error("Unknown membership remove event: " + pme);
@@ -265,13 +267,13 @@ public class RegistrationEventService {
 				"datum_from", date_from, "datum_to", date_to, "tid", time_from);
 		List<InReg> inreg = queryByParams(l2Jdbc, InReg.class, l2Sql.getInRegSql(), 
 				"datum_from", date_from, "datum_to", date_to, "tid", time_from);
-		List<Avliden> avliden = queryByParams(l2Jdbc, Avliden.class, l2Sql.getAvlidenSql(), 
+		List<Namn> namn = queryByParams(l2Jdbc, Namn.class, l2Sql.getNamnSql(), 
 				"datum_from", date_from, "datum_to", date_to);
 		List<PotentialMembershipEvent> mes = new ArrayList<PotentialMembershipEvent>();
         mes.addAll(toMembershipEvents(reg));
         mes.addAll(toMembershipEvents(bortreg));
         mes.addAll(toMembershipEvents(inreg));
-        mes.addAll(toMembershipEvents(avliden));
+        mes.addAll(toMembershipEvents(namn));
 		sort(mes);
 		mes = filter(mes, from, to);
 		return mes;

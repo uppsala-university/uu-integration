@@ -22,8 +22,8 @@ public class Ladok2GroupSql {
 		return sql.get("ladok.sql.inreg");
 	}
 
-	public String getAvlidenSql() {
-		return sql.get("ladok.sql.avliden");
+	public String getNamnSql() {
+		return sql.get("ladok.sql.namn");
 	}
 	
 	public String getAntagenSql() {
