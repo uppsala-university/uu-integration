@@ -1,0 +1,28 @@
+Ladok 2 Events Adapter
+======================
+
+XS=1h, S=4h, M=1d, L=3d, XL=1vecka, XXL>1vecka
+
+Codereview av L2E adapter  M
+     ev. refaktorering     L
+Övervakningsmöjligheter (loggar, db) M
+12 siffriga PNR   S
+Tester
+    SP deltagarlistor (db, REST?)  XL
+    L2E Adapter deltagarlistor (db, REST?) M
+    Visualisering (och kategorisering) av diffar XL
+    Manuell validering av SP/L2E-skillnader (ev. tillsammans med verksamhet) XXL?
+Fler features ?
+Byggjobb: Jenkins -> Artifactory L
+Flytta källkod till lämpligt ställe S
+Utred: l2klient -> l2server, ITID-generering på klient eller serversida? M-L
+Utred miljöer (runtime + jenkins deployjob): Tobias?
+
+M 2 2d
+L 3 9d
+S 2 1d
+XL 2 10d
+XXL 1 5+?
+
+27+d
+
