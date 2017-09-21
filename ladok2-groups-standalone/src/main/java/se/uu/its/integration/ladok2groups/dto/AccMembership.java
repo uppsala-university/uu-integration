@@ -3,6 +3,7 @@ package se.uu.its.integration.ladok2groups.dto;
 import java.util.Date;
 
 import se.uu.its.integration.ladok2groups.l2dto.Antagen;
+import se.uu.its.integration.ladok2groups.util.PnrUtil;
 
 public class AccMembership {
 
@@ -47,7 +48,7 @@ public class AccMembership {
 		return pnr;
 	}
 	public void setPnr(String pnr) {
-		this.pnr = pnr;
+		this.pnr = PnrUtil.normalize(pnr);
 	}
 	public String getCourseCode() {
 		return courseCode;

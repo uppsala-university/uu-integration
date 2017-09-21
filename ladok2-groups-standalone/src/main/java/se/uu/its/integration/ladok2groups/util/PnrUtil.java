@@ -16,10 +16,10 @@ public class PnrUtil {
 			int cent = cal.get(Calendar.YEAR) / 100;
 			int yr = cal.get(Calendar.YEAR) % 100;
 			int pnrYr = Integer.parseInt(nPnr.substring(0, 2));
-			// Interpret ages < 10 year old as 100 year older
-			int pnrCent = (yr-pnrYr < 10) ? cent-1 : cent;
+			// Interpret ages < 13 year old as 100 year older
+			int pnrCent = (yr-pnrYr < 13) ? cent-1 : cent;
 			nPnr = pnrCent + nPnr;
 		}
-		return "'"+nPnr+"'";
+		return nPnr;
 	}
 }

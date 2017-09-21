@@ -15,6 +15,7 @@ import se.uu.its.integration.ladok2groups.l2dto.InReg;
 import se.uu.its.integration.ladok2groups.l2dto.PnrEvent;
 import se.uu.its.integration.ladok2groups.l2dto.Reg;
 import se.uu.its.integration.ladok2groups.util.MembershipEventUtil;
+import se.uu.its.integration.ladok2groups.util.PnrUtil;
 
 public class PotentialMembershipEvent {
 	
@@ -117,6 +118,7 @@ public class PotentialMembershipEvent {
 		} else {
 			setMeType(Type.KontaktuppgifterEvent);
 		}
+		this.pnr = n.getSekel() + n.getPnr(); // Override setPnr because we have access to sekel
 		setOrigin("NAMN");
 	}
 
@@ -146,7 +148,7 @@ public class PotentialMembershipEvent {
 		return pnr;
 	}
 	public void setPnr(String pnr) {
-		this.pnr = pnr;
+		this.pnr = PnrUtil.normalize(pnr);
 	}
 	public Type getMeType() {
 		return meType;

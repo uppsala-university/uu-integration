@@ -365,6 +365,7 @@ ladok.sql.inreg: |
 ladok.sql.namn: |
     select
         n.pnr as pnr,
+        n.sekel as sekel,
         n.inldat as datum,
         n.avliden as avliden
     from
