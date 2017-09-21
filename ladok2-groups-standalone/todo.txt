@@ -3,7 +3,9 @@ Ladok 2 Events Adapter
 
 XS=1h, S=4h, M=1d, L=3d, XL=1vecka, XXL>1vecka
 
-Codereview av L2E adapter  M
+Uppstart Per S
+Codereview av L2E adapter, runda 1  M
+Codereview av L2E adapter, runda 2  M
      ev. refaktorering     L
 Övervakningsmöjligheter (loggar, db) M
 12 siffriga PNR   S
@@ -18,11 +20,11 @@ Flytta källkod till lämpligt ställe S
 Utred: l2klient -> l2server, ITID-generering på klient eller serversida? M-L
 Utred miljöer (runtime + jenkins deployjob): Tobias?
 
-M 2 2d
+M 3 3d
 L 3 9d
-S 2 1d
+S 3 1.5d
 XL 2 10d
 XXL 1 5+?
 
-27+d
+28.5+d
 
