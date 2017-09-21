@@ -4,6 +4,7 @@ Ladok 2 Events Adapter
 XS=1h, S=4h, M=1d, L=3d, XL=1vecka, XXL>1vecka
 
 Uppstart Per S
+Konfigurera Sonar ?
 Codereview av L2E adapter, runda 1  M
 Codereview av L2E adapter, runda 2  M
      ev. refaktorering     L
