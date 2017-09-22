@@ -3,6 +3,7 @@ package se.uu.its.integration.ladok2groups.dto;
 import static se.uu.its.integration.ladok2groups.util.MembershipEventUtil.parse;
 import static se.uu.its.integration.ladok2groups.util.MembershipEventUtil.parseUrPost;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
@@ -41,7 +42,7 @@ public class PotentialMembershipEvent {
 	}));
 	
 	Long id;
-	Date date;
+	LocalDateTime date;
 	String pnr;
 	Type meType;
 	String courseCode;
@@ -131,15 +132,15 @@ public class PotentialMembershipEvent {
 	public String getFormattedDate() {
 		return MembershipEventUtil.format(date);
 	}
-	public Date getDate() {
+	public LocalDateTime getDate() {
 		return date;
 	}
-	public void setDate(Date date) {
+	public void setDate(LocalDateTime date) {
 		this.date = date;
 	}
 	public void setDate(String date, String time) {
 		// Absence of time -> set as late as possible to not miss any event
-		if (time == null || time.equals("000000")) {
+		if (time == null || time.equals("000000") || time.length() !=6) {
 			time = "235959";
 		}
 		this.date = parse(date + " " + time);

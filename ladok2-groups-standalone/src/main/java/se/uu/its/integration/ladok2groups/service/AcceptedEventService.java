@@ -5,8 +5,8 @@ import static se.uu.its.integration.ladok2groups.util.JdbcUtil.queryByParams;
 import static se.uu.its.integration.ladok2groups.util.SqlAndValueObjs.sql;
 import static se.uu.its.integration.ladok2groups.util.SqlAndValueObjs.sqlAndVals;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -59,7 +59,7 @@ public class AcceptedEventService {
 		List<Antagen> l2Ant = queryByParams(l2Jdbc, Antagen.class,
 				l2Sql.getAntagenSql(), "termin1", semester, "termin2", nextSemester);
 		long l2Read = System.currentTimeMillis();
-		Date eventDate = new Date();
+		LocalDateTime eventDate = LocalDateTime.now();
 		List<AccMembership> l2Accs = MembershipEventUtil.toAccMemberships(
 				l2Ant, eventDate);
 		long save = System.currentTimeMillis();

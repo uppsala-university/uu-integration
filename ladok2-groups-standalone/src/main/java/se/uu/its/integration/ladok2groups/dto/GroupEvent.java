@@ -1,6 +1,6 @@
 package se.uu.its.integration.ladok2groups.dto;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 
 public class GroupEvent extends MembershipEvent {
@@ -8,8 +8,8 @@ public class GroupEvent extends MembershipEvent {
 	public GroupEvent() {
 	}
 
-	public GroupEvent(Date date, String courseCode, 
-			String startSemester, String reportCode, String origin) {
+	public GroupEvent(LocalDateTime date, String courseCode,
+					  String startSemester, String reportCode, String origin) {
 		setMeType(Type.KurstillfalleTillStatusEvent); // Type.ADDGROUP
 		setDate(date);
 		setCourseCode(courseCode);

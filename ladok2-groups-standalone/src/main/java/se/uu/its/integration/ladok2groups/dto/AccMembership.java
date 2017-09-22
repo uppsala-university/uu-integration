@@ -1,13 +1,13 @@
 package se.uu.its.integration.ladok2groups.dto;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import se.uu.its.integration.ladok2groups.l2dto.Antagen;
 import se.uu.its.integration.ladok2groups.util.PnrUtil;
 
 public class AccMembership {
 
-	Date date;
+	LocalDateTime date;
 	String pnr;
 	String courseCode;
 	String reportCode;
@@ -23,7 +23,7 @@ public class AccMembership {
 	public AccMembership() {
 	}
 	
-	public AccMembership(Antagen a, Date date) {
+	public AccMembership(Antagen a, LocalDateTime date) {
 		setDate(date);
 		setPnr(a.getPnr());
 		setReportCode(a.getAnmkod());
@@ -38,10 +38,10 @@ public class AccMembership {
 		setResponse(a.getSvar());
 	}
 	
-	public Date getDate() {
+	public LocalDateTime getDate() {
 		return date;
 	}
-	public void setDate(Date date) {
+	public void setDate(LocalDateTime date) {
 		this.date = date;
 	}
 	public String getPnr() {

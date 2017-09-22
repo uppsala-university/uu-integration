@@ -12,11 +12,13 @@ import static se.uu.its.integration.ladok2groups.util.MembershipEventUtil.sort;
 import static se.uu.its.integration.ladok2groups.util.MembershipEventUtil.toMembershipEvents;
 import static se.uu.its.integration.ladok2groups.util.SqlAndValueObjs.sqlAndVals;
 
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -75,45 +77,38 @@ public class RegistrationEventService {
 		// Get start date:
 		List<PotentialMembershipEvent> pmes = queryByParams(esbJdbc, PotentialMembershipEvent.class,
 				esbSql.getMostRecentPotentialMembershipEventFromLadokSql());
-		Date start;
+		LocalDateTime start;
 		if (pmes.isEmpty()) {
 			// Start one second before because we exclude the start time
-			start = oneSecondBefore(parse(eventProps.getRegUpdateStart()));
+			start = parse(eventProps.getRegUpdateStart()).minusSeconds(1);
 		} else {
 			start = pmes.get(0).getDate();
 		}
 
 		// Skip most recent events to make sure all events for this interval have arrived at Ladok:
-		Calendar end = new GregorianCalendar();
-		end.setTimeInMillis(System.currentTimeMillis() - 15000);
-		end.set(Calendar.MILLISECOND, 0); // Set end time to an exact second
-		int endYear = end.get(Calendar.YEAR);
-		int endDay = end.get(Calendar.DAY_OF_YEAR);
+		LocalDateTime end = LocalDateTime.now().minusSeconds(15).truncatedTo(ChronoUnit.SECONDS);
+		int endYear = end.getYear();
+		int endDay = end.getDayOfYear();
 		
 		// Convert current event interval to calendar days:
-		Calendar from = new GregorianCalendar();
-		from.setTimeInMillis(start.getTime());
-		Calendar to = new GregorianCalendar();
-		to.setTime(from.getTime());
-		to.set(Calendar.HOUR_OF_DAY, 23);
-		to.set(Calendar.MINUTE, 59);
-		to.set(Calendar.SECOND, 59);
+		LocalDateTime from = start;
+		LocalDateTime to = from.toLocalDate().atTime(23, 59 , 59);
 		
 		// Update events for all days up to (but not including) the last day:
-		while (to.get(Calendar.DAY_OF_YEAR) < endDay || to.get(Calendar.YEAR) < endYear) {
-			updatePotentialMembershipEvents(from.getTime(), to.getTime());
+		while (to.getDayOfYear() < endDay || to.getYear() < endYear) {
+			updatePotentialMembershipEvents(from, to);
 			updateMembershipEvents();
 			// Increment interval one day:
-			from.setTime(to.getTime());
-			to.add(Calendar.DAY_OF_YEAR, 1);
+			from = to;
+			to = from.plusDays(1);
 		}
 		
 		// Update events for the last day:
-		updatePotentialMembershipEvents(from.getTime(), end.getTime());
+		updatePotentialMembershipEvents(from, end);
 		updateMembershipEvents();
 	}
 		
-	int updatePotentialMembershipEvents(Date from, Date to) {
+	int updatePotentialMembershipEvents(LocalDateTime from, LocalDateTime to) {
 		long start = System.currentTimeMillis();
 		List<PotentialMembershipEvent> mes = new ArrayList<>();
 		mes.addAll(getNewSpMembershipEvents(from, to));
@@ -224,13 +219,13 @@ public class RegistrationEventService {
 		return potentialMembershipEvents.size();
 	}
 
-	List<PotentialMembershipEvent> getNewSpMembershipEvents(Date from, Date to) {
+	List<PotentialMembershipEvent> getNewSpMembershipEvents(LocalDateTime from, LocalDateTime to) {
 		List<PotentialMembershipEvent> recentSpMes = queryByParams(esbJdbc, PotentialMembershipEvent.class,
 				esbSql.getMostRecentPotentialMembershipEventFromSpSql());
-		Date spFrom = recentSpMes.size() > 0 ? recentSpMes.get(0).getDate() : from;
+		LocalDateTime spFrom = recentSpMes.size() > 0 ? recentSpMes.get(0).getDate() : from;
 		List<PotentialMembershipEvent> pmes = queryByParams(spJdbc,
 				PotentialMembershipEvent.class,
-				spSql.getRegEventsInIntervalSql(), "from", spFrom, "to", to);
+				spSql.getRegEventsInIntervalSql(), "from", Timestamp.valueOf(spFrom), "to", Timestamp.valueOf(to));
 		complementCourseCodesIfNecessary(pmes);
 		return pmes;
 	}
@@ -253,7 +248,7 @@ public class RegistrationEventService {
 		}
 	}
 	
-	List<PotentialMembershipEvent> getNewLadokMembershipEvents(Date from, Date to) {
+	List<PotentialMembershipEvent> getNewLadokMembershipEvents(LocalDateTime from, LocalDateTime to) {
 		String d_to = format(to);
 		String[] dt_to = d_to.split(" ");
 		String date_to = dt_to[0];
@@ -295,10 +290,4 @@ public class RegistrationEventService {
 		return unprocessed;
 	}
 
-	Date oneSecondBefore(Date d) {
-		Calendar oneSecondBefore = new GregorianCalendar();
-		oneSecondBefore.setTime(d);
-		oneSecondBefore.add(Calendar.SECOND, -1);
-		return oneSecondBefore.getTime();
-	}
 }

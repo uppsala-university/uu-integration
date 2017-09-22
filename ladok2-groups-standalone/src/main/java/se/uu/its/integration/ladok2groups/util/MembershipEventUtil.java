@@ -2,6 +2,9 @@ package se.uu.its.integration.ladok2groups.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -24,8 +27,8 @@ import se.uu.its.integration.ladok2groups.l2dto.Reg;
 
 public class MembershipEventUtil {
 	
-	public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HHmmss");
-	public static final SimpleDateFormat DATE_FORMAT_HHMM = new SimpleDateFormat("yyyy-MM-dd HHmm");
+	public static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmmss");
+	public static final DateTimeFormatter DATE_FORMAT_HHMM = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
 	
 	public static final Comparator<PotentialMembershipEvent> MEMBERSHIPEVENT_COMPARATOR = new Comparator<PotentialMembershipEvent>() {
 		@Override
@@ -38,12 +41,10 @@ public class MembershipEventUtil {
 		Collections.sort(mes, MEMBERSHIPEVENT_COMPARATOR);
 	}
 	
-	public static List<PotentialMembershipEvent> filter(List<PotentialMembershipEvent> mes, Date from, Date to) {
+	public static List<PotentialMembershipEvent> filter(List<PotentialMembershipEvent> mes, LocalDateTime from, LocalDateTime to) {
 		List<PotentialMembershipEvent> fmes = new ArrayList<PotentialMembershipEvent>();
-		long from_t = from.getTime(), to_t = to.getTime();
 		for (PotentialMembershipEvent me : mes) {
-			long me_t = me.getDate().getTime();
-			if ((from_t < me_t) && (me_t <= to_t)) {
+			if (from.isBefore(me.getDate()) && !me.getDate().isAfter(to)) {
 				fmes.add(me);
 			}
 		}
@@ -80,7 +81,7 @@ public class MembershipEventUtil {
 		return mes;
 	}
 	
-	public static List<AccMembership> toAccMemberships(List<Antagen> as, Date date) {
+	public static List<AccMembership> toAccMemberships(List<Antagen> as, LocalDateTime date) {
 		List<AccMembership> accs = new ArrayList<>();
 		for (Antagen antagen : as) {
 			accs.add(new AccMembership(antagen, date));
@@ -104,19 +105,15 @@ public class MembershipEventUtil {
 		return es;
 	}
 	
-	public static Date parse(String formattedDate) {
+	public static LocalDateTime parse(String formattedDate) {
 		try {
-			return DATE_FORMAT.parse(formattedDate);
-		} catch (ParseException e) {
-			try {
-				return DATE_FORMAT_HHMM.parse(formattedDate);
-			} catch (ParseException e1) {
-				throw new RuntimeException(e);
-			}
+			return LocalDateTime.parse(formattedDate, DATE_FORMAT);
+		} catch (DateTimeParseException e) {
+			return LocalDateTime.parse(formattedDate, DATE_FORMAT_HHMM);
 		}
 	}
 
-	public static String format(Date date) {
+	public static String format(LocalDateTime date) {
 		return DATE_FORMAT.format(date);
 	}
 	
