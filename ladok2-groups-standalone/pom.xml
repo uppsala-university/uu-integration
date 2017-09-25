@@ -6,7 +6,7 @@
     <groupId>se.uu.its.integration</groupId>
     <artifactId>ladok2groups</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-    <name>Ladok 2 Groups</name>
+    <name>Ladok 2 Groups standalone</name>
     <description>Ladok 2 student group events</description>
 
     <parent>
