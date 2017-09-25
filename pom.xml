@@ -19,7 +19,7 @@
 		<module>identity-sp-adapter</module>
 		<module>esb-rest-client</module>
 		<module>ladok2-groups</module>
-		<module>ladok2-groups-standalone</module>
+		<!--<module>ladok2-groups-standalone</module>-->
 		<module>ladok2-datasource</module>
 		<module>uu-integration-packaging-karaf</module>
 	</modules>
