@@ -5,7 +5,6 @@ import static se.uu.its.integration.ladok2groups.util.MembershipEventUtil.parseU
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -21,7 +20,7 @@ import se.uu.its.integration.ladok2groups.util.PnrUtil;
 public class PotentialMembershipEvent {
 	
 	public static enum Type { 
-		ADD, REMOVE, ADDGROUP, // Deprecated
+		ADD, // Deprecated
 		KurstillfalleTillStatusEvent, 
 		ForvantatDeltagandeSkapadEvent,
 		AterbudEvent,

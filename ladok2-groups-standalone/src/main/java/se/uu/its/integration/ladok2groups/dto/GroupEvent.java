@@ -4,9 +4,6 @@ import java.time.LocalDateTime;
 
 
 public class GroupEvent extends MembershipEvent {
-	
-	public GroupEvent() {
-	}
 
 	public GroupEvent(LocalDateTime date, String courseCode,
 					  String startSemester, String reportCode, String origin) {

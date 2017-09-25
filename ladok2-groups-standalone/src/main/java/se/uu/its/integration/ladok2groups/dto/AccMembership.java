@@ -19,10 +19,7 @@ public class AccMembership {
 	String condition2;
 	String condition3;
 	String programReportCode;
-	
-	public AccMembership() {
-	}
-	
+
 	public AccMembership(Antagen a, LocalDateTime date) {
 		setDate(date);
 		setPnr(a.getPnr());

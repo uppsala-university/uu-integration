@@ -15,10 +15,7 @@ public class Membership {
 	String programOrientation;
 	String origin;
 	String origin2;
-	
-	public Membership() {
-	}
-	
+
 	public Membership(PotentialMembershipEvent me) {
 		setDate(me.getDate());
 		setPnr(me.getPnr());

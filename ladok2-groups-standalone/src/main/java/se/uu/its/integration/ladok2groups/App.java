@@ -9,15 +9,10 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 import se.uu.its.integration.ladok2groups.conf.DbConf;
 
-@Import(value = { DbConf.class })
-@Configuration
 @EnableAutoConfiguration
 @ComponentScan
 @EnableScheduling
 public class App {
-    
-    public App() {
-    }
 
     public static void main(String[] args) throws Exception {
         SpringApplication.run(App.class, args);

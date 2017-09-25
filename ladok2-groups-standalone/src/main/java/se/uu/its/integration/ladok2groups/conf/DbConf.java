@@ -63,7 +63,7 @@ public class DbConf {
 	
 	@Bean
 	@Qualifier("esb")
-	public NamedParameterJdbcTemplate esbJdbc(@Qualifier("esb") DataSource esbDataSource, Flyway flyway) {
+	public NamedParameterJdbcTemplate esbJdbc(@Qualifier("esb") DataSource esbDataSource) {
 	    return new NamedParameterJdbcTemplate(esbDataSource);
 	}
 	

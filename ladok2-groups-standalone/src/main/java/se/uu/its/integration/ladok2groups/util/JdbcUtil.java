@@ -1,8 +1,8 @@
 package se.uu.its.integration.ladok2groups.util;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,7 +23,7 @@ public class JdbcUtil {
 			m.put(params[i].toString(), params[i+1]);
 		}
 		if (Integer.class.equals(c) || Long.class.equals(c) || String.class.equals(c)
-				|| Date.class.equals(c))  {
+				|| LocalDateTime.class.equals(c))  {
 			return t.queryForList(sql, m, c);
 		} else {
 			return t.query(sql, m, BeanPropertyRowMapper.newInstance(c));
@@ -34,7 +34,7 @@ public class JdbcUtil {
 			String sql, Object queryObj) {
 		BeanPropertySqlParameterSource bpsps = new BeanPropertySqlParameterSource(queryObj);
 		if (Integer.class.equals(c) || Long.class.equals(c) || String.class.equals(c)
-				|| Date.class.equals(c))  {
+				|| LocalDateTime.class.equals(c))  {
 			return t.queryForList(sql, bpsps, c);
 		} else {
 			return t.query(sql, bpsps, BeanPropertyRowMapper.newInstance(c));
