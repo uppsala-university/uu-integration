@@ -67,3 +67,12 @@ CREATE TABLE ACC_MEMBERSHIPS (
   condition3         VARCHAR(255),
   programReportCode  VARCHAR(255)
 );
+
+CREATE TABLE SP_MEMBERSHIPS (
+  date               DATETIME NOT NULL,
+  pnr                VARCHAR(255) NOT NULL,
+  reportCode         VARCHAR(255) NOT NULL,
+  startSemester      VARCHAR(255) NOT NULL,
+  origin             VARCHAR(255) NOT NULL
+);
+CREATE INDEX SP_MEMBERSHIPS_PNR_COURSECODE_SEMESTER_IDX ON MEMBERSHIPS (pnr, reportCode, startSemester)
