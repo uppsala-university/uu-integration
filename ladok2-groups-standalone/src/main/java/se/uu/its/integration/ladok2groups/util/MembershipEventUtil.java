@@ -2,13 +2,13 @@ package se.uu.its.integration.ladok2groups.util;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import se.uu.its.integration.ladok2groups.dto.AccMembership;
 import se.uu.its.integration.ladok2groups.dto.Membership;
@@ -16,28 +16,27 @@ import se.uu.its.integration.ladok2groups.dto.MembershipEvent;
 import se.uu.its.integration.ladok2groups.dto.PotentialMembershipEvent;
 import se.uu.its.integration.ladok2groups.dto.PotentialMembershipEvent.Type;
 import se.uu.its.integration.ladok2groups.l2dto.Antagen;
-import se.uu.its.integration.ladok2groups.l2dto.Namn;
 import se.uu.its.integration.ladok2groups.l2dto.BortReg;
 import se.uu.its.integration.ladok2groups.l2dto.InReg;
+import se.uu.its.integration.ladok2groups.l2dto.Namn;
 import se.uu.its.integration.ladok2groups.l2dto.PnrEvent;
 import se.uu.its.integration.ladok2groups.l2dto.Reg;
 
 public class MembershipEventUtil {
-	
+
 	public static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmmss");
-	public static final DateTimeFormatter DATE_FORMAT_HHMM = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
-	
+
 	public static final Comparator<PotentialMembershipEvent> MEMBERSHIPEVENT_COMPARATOR = new Comparator<PotentialMembershipEvent>() {
 		@Override
 		public int compare(PotentialMembershipEvent me1, PotentialMembershipEvent me2) {
 			return me1.getDate().compareTo(me2.getDate());
 		}
 	};
-	
+
 	public static void sort(List<? extends PotentialMembershipEvent> mes) {
 		Collections.sort(mes, MEMBERSHIPEVENT_COMPARATOR);
 	}
-	
+
 	public static List<PotentialMembershipEvent> filter(List<PotentialMembershipEvent> mes, LocalDateTime from, LocalDateTime to) {
 		List<PotentialMembershipEvent> fmes = new ArrayList<PotentialMembershipEvent>();
 		for (PotentialMembershipEvent me : mes) {
@@ -69,7 +68,7 @@ public class MembershipEventUtil {
 		}
 		return mes;
 	}
-	
+
 	public static List<MembershipEvent> toMembershipEvents(PotentialMembershipEvent pme, List<Membership> ms) {
 		List<MembershipEvent> mes = new ArrayList<MembershipEvent>(ms.size());
 		for (Membership m : ms) {
@@ -77,7 +76,7 @@ public class MembershipEventUtil {
 		}
 		return mes;
 	}
-	
+
 	public static List<AccMembership> toAccMemberships(List<Antagen> as, LocalDateTime date) {
 		List<AccMembership> accs = new ArrayList<>();
 		for (Antagen antagen : as) {
@@ -93,7 +92,7 @@ public class MembershipEventUtil {
 		}
 		return es;
 	}
-	
+
 	public static List<MembershipEvent> toMembershipRemoveEvents(List<AccMembership> ms) {
 		List<MembershipEvent> es = new ArrayList<>();
 		for (AccMembership m : ms) {
@@ -101,29 +100,33 @@ public class MembershipEventUtil {
 		}
 		return es;
 	}
-	
+
 	public static LocalDateTime parse(String formattedDate) {
-		try {
-			return LocalDateTime.parse(formattedDate, DATE_FORMAT);
-		} catch (DateTimeParseException e) {
-			return LocalDateTime.parse(formattedDate, DATE_FORMAT_HHMM);
+		return LocalDateTime.parse(formattedDate, DATE_FORMAT);
+	}
+
+	public static LocalDateTime parse(String date, String time) {
+		// Absence of time -> set as late as possible to not miss any event
+		if (!Objects.toString(time, "").matches("^([0-1]\\d|2[0-3])([0-5]\\d)([0-5]\\d)$")
+				|| "000000".equals(time)) {
+			time = "235959";
 		}
+		return parse(date + " " + time);
 	}
 
 	public static String format(LocalDateTime date) {
 		return DATE_FORMAT.format(date);
 	}
-	
+
 	public static Map<String, String> parseUrPost(String urPost) {
-		 Map<String, String> m = new HashMap<String, String>();
-		 String[] attrs = urPost.split(";");
-		 for (String attr : attrs) {
+		Map<String, String> m = new HashMap<String, String>();
+		String[] attrs = urPost.split(";");
+		for (String attr : attrs) {
 			String[] nameAndVal = attr.split("=");
 			if (nameAndVal.length == 2) {
 				m.put(nameAndVal[0].trim().toUpperCase(), nameAndVal[1].trim());
 			}
-		 }
-		 return m;
+		}
+		return m;
 	}
-
 }

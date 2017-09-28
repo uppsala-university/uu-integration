@@ -72,13 +72,13 @@ public class PotentialMembershipEvent {
 	
 	public PotentialMembershipEvent(PnrEvent pe) {
 		setPnr(pe.getPnr());
-		setDate(pe.getDatum(), pe.getTid());
+		setDate(parse(pe.getDatum(), pe.getTid()));
 	}
 
 	public PotentialMembershipEvent(Reg r) {
 		this((PnrEvent) r);
-		setMeType("OMREG".equals(r.getOrigin()) ? Type.OmregistreringEvent
-				: Type.RegistreringEvent); // Type.ADD
+		setMeType("OMREG".equals(r.getOrigin())
+				? Type.OmregistreringEvent : Type.RegistreringEvent); // Type.ADD
 		setCourseCode(r.getKurskod());
 		setReportCode(r.getAnmkod());
 		setStartSemester(r.getStartter());
@@ -138,11 +138,7 @@ public class PotentialMembershipEvent {
 		this.date = date;
 	}
 	public void setDate(String date, String time) {
-		// Absence of time -> set as late as possible to not miss any event
-		if (time == null || time.equals("000000") || time.length() !=6) {
-			time = "235959";
-		}
-		this.date = parse(date + " " + time);
+		this.date = MembershipEventUtil.parse(date, time);
 	}
 	public String getPnr() {
 		return pnr;
