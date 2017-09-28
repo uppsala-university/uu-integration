@@ -20,15 +20,6 @@ esb.sql.potentialMembershipEventsNewerThan: |
     order by 
         id asc
 
-esb.sql.mostRecentPotentialMembershipEvent: |
-    select
-       id, date, pnr, meType, courseCode, reportCode, startSemester, semester, program, programOrientation,
-           origin, origin2
-    from
-        POTENTIAL_MEMBERSHIP_EVENTS
-    where
-        id = (select max(id) from POTENTIAL_MEMBERSHIP_EVENTS)
-
 esb.sql.mostRecentPotentialMembershipEventFromLadok: |
     select
        id, date, pnr, meType, courseCode, reportCode, startSemester, semester, program, programOrientation,
@@ -89,16 +80,6 @@ esb.sql.numberOfMembersForCourseInstance: |
         reportCode        = :reportCode
         and startSemester = :startSemester
 
-esb.sql.memberships: |
-    select
-        id, date, pnr, courseCode, reportCode, startSemester, semester, program, programOrientation, origin, origin2
-    from
-        MEMBERSHIPS
-    where
-        pnr = :pnr
-    order by 
-        id asc
-
 esb.sql.membershipsByCourseCode: |
     select
         id, date, pnr, courseCode, reportCode, startSemester, semester, program, programOrientation, origin, origin2
@@ -143,23 +124,6 @@ esb.sql.saveNewMembership: |
         (:date, :pnr, :courseCode, :reportCode, :startSemester, :semester, :program, :programOrientation,
             :origin, :origin2)
 
-esb.sql.updateMembership: |
-    update
-        MEMBERSHIPS
-    set
-        date               = :date,
-        pnr                = :pnr,
-        courseCode         = :courseCode,
-        reportCode         = :reportCode,
-        startSemester      = :startSemester,
-        semester           = :semester,
-        program            = :program,
-        programOrientation = :programOrientation, 
-        origin             = :origin,
-        origin2            = :origin2
-    where
-        id                 = :id
-
 esb.sql.deleteMembershipById: |
     delete from
         MEMBERSHIPS
@@ -181,13 +145,6 @@ esb.sql.deleteMembershipsByCourseCodeSemesterOrigin2: |
         and courseCode = :courseCode
         and semester   = :semester
         and origin     = :origin2
-
-esb.sql.deleteMemberships: |
-    delete from
-        MEMBERSHIPS
-    where
-        pnr = :pnr
-
 
 ## -- AccMembership
 

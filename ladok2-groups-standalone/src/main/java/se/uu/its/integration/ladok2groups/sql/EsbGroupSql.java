@@ -21,10 +21,6 @@ public class EsbGroupSql {
 		return sql.get("esb.sql.potentialMembershipEventsNewerThan");
 	}
 
-	public String getMostRecentPotentialMembershipEventSql() {
-		return sql.get("esb.sql.mostRecentPotentialMembershipEvent");
-	}
-
 	public String getMostRecentPotentialMembershipEventFromLadokSql() {
 		return sql.get("esb.sql.mostRecentPotentialMembershipEventFromLadok");
 	}
@@ -54,11 +50,7 @@ public class EsbGroupSql {
 	public String getNumberOfMembershipsForCourseInstanceSql() {
 		return sql.get("esb.sql.numberOfMembersForCourseInstance");
 	}
-	
-	public String getMembershipsSql() {
-		return sql.get("esb.sql.memberships");
-	}
-	
+
 	public String getMembershipsByCourseCodeSql() {
 		return sql.get("esb.sql.membershipsByCourseCode");
 	}
@@ -75,11 +67,6 @@ public class EsbGroupSql {
 		return sql.get("esb.sql.saveNewMembership");
 	}
 
-	@Deprecated
-	public String getUpdateMembershipSql() {
-		return sql.get("esb.sql.updateMembership");
-	}
-
 	public String getDeleteMembershipByIdSql() {
 		return sql.get("esb.sql.deleteMembershipById");
 	}
@@ -91,12 +78,7 @@ public class EsbGroupSql {
 	public String getDeleteMembershipsByCourseCodeSemesterOrigin2Sql() {
 		return sql.get("esb.sql.deleteMembershipsByCourseCodeSemesterOrigin2");
 	}
-	
-	public String getDeleteMembershipsSql() {
-		return sql.get("esb.sql.deleteMemberships");
-	}
-	
-	
+
 	// AccMembership
 	
 	public String getAccMembershipsSql() {
