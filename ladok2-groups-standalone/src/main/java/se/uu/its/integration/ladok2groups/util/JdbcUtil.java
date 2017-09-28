@@ -18,7 +18,7 @@ public class JdbcUtil {
 	
 	public static <T> List<T> queryByParams(NamedParameterJdbcTemplate t, Class<T> c, 
 			String sql, Object... params) {
-		Map<String, Object> m = new HashMap<String, Object>();
+		Map<String, Object> m = new HashMap<>();
 		for (int i = 0; i < params.length; i+=2) {
 			m.put(params[i].toString(), params[i+1]);
 		}
@@ -53,14 +53,13 @@ public class JdbcUtil {
 			for (SqlAndValueObjs st : stms) {
 				String sql = st.getSql();
 				if (st.getValues() == null) {
-					jt.update(sql, new HashMap<String, Object>());
+					jt.update(sql, new HashMap<>());
 				} else {
 					List<BeanPropertySqlParameterSource> bpsps = new ArrayList<>();
 					for (Object v : st.getValues()) {
 						bpsps.add(new BeanPropertySqlParameterSource(v));
 					}
-					jt.batchUpdate(sql,(BeanPropertySqlParameterSource[]) bpsps
-							.toArray(new BeanPropertySqlParameterSource[bpsps.size()]));
+					jt.batchUpdate(sql, bpsps.toArray(new BeanPropertySqlParameterSource[bpsps.size()]));
 				}
 			}
 			tm.commit(txStat);
