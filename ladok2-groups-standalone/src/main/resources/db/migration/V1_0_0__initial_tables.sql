@@ -69,7 +69,6 @@ CREATE TABLE ACC_MEMBERSHIPS (
 );
 
 CREATE TABLE SP_MEMBERSHIPS (
-  date               DATETIME NOT NULL,
   pnr                VARCHAR(255) NOT NULL,
   reportCode         VARCHAR(255) NOT NULL,
   startSemester      VARCHAR(255) NOT NULL,
