@@ -1,17 +1,5 @@
 package se.uu.its.integration.ladok2groups.service;
 
-import static se.uu.its.integration.ladok2groups.util.JdbcUtil.executeStatementsInSameTx;
-import static se.uu.its.integration.ladok2groups.util.JdbcUtil.queryByObj;
-import static se.uu.its.integration.ladok2groups.util.JdbcUtil.queryByParams;
-import static se.uu.its.integration.ladok2groups.util.JdbcUtil.update;
-import static se.uu.its.integration.ladok2groups.util.MembershipEventJdbcUtil.saveMembershipAddEvent;
-import static se.uu.its.integration.ladok2groups.util.MembershipEventUtil.filter;
-import static se.uu.its.integration.ladok2groups.util.MembershipEventUtil.format;
-import static se.uu.its.integration.ladok2groups.util.MembershipEventUtil.parse;
-import static se.uu.its.integration.ladok2groups.util.MembershipEventUtil.sort;
-import static se.uu.its.integration.ladok2groups.util.MembershipEventUtil.toMembershipEvents;
-import static se.uu.its.integration.ladok2groups.util.SqlAndValueObjs.sqlAndVals;
-
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -19,15 +7,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
-
 import se.uu.its.integration.ladok2groups.conf.EventProps;
 import se.uu.its.integration.ladok2groups.dto.Membership;
 import se.uu.its.integration.ladok2groups.dto.MembershipEvent;
@@ -41,37 +28,51 @@ import se.uu.its.integration.ladok2groups.sql.EsbGroupSql;
 import se.uu.its.integration.ladok2groups.sql.Ladok2GroupSql;
 import se.uu.its.integration.ladok2groups.sql.SpGroupSql;
 
+import static se.uu.its.integration.ladok2groups.util.JdbcUtil.executeStatementsInSameTx;
+import static se.uu.its.integration.ladok2groups.util.JdbcUtil.queryByObj;
+import static se.uu.its.integration.ladok2groups.util.JdbcUtil.queryByParams;
+import static se.uu.its.integration.ladok2groups.util.JdbcUtil.update;
+import static se.uu.its.integration.ladok2groups.util.MembershipEventJdbcUtil.saveMembershipAddEvent;
+import static se.uu.its.integration.ladok2groups.util.MembershipEventUtil.filter;
+import static se.uu.its.integration.ladok2groups.util.MembershipEventUtil.format;
+import static se.uu.its.integration.ladok2groups.util.MembershipEventUtil.parse;
+import static se.uu.its.integration.ladok2groups.util.MembershipEventUtil.sort;
+import static se.uu.its.integration.ladok2groups.util.MembershipEventUtil.toMembershipEvents;
+import static se.uu.its.integration.ladok2groups.util.SqlAndValueObjs.sqlAndVals;
+
 @Service
 public class RegistrationEventService {
-	
-	static Log log = LogFactory.getLog(RegistrationEventService.class);
-	
+
+	private static final Logger logger = LoggerFactory.getLogger(RegistrationEventService.class);
+
 	Ladok2GroupSql l2Sql = new Ladok2GroupSql();
 	SpGroupSql spSql = new SpGroupSql();
 	EsbGroupSql esbSql = new EsbGroupSql();
 
 	@Autowired @Qualifier("ladok2read")
 	NamedParameterJdbcTemplate l2Jdbc;
-	
+
 	@Autowired @Qualifier("sp")
 	NamedParameterJdbcTemplate spJdbc;
-	
+
 	@Autowired @Qualifier("esb")
 	NamedParameterJdbcTemplate esbJdbc;
-	
+
 	@Autowired @Qualifier("esb")
 	PlatformTransactionManager esbTm;
-	
+
 	@Autowired
 	EventProps eventProps;
-	
+
 	@Scheduled(fixedDelayString = "${events.regUpdateDelay}")
-	public void updateEvents() throws Exception {
-		// System.out.println("UpdateEvents triggered " + format(new Date()));
+	public void updateEvents() {
+		logger.info("Update event job started");
+		long start = System.currentTimeMillis();
 		batchUpdatesForEachDay();
+		logger.info("Update event job finished, duration: {} ms", System.currentTimeMillis() - start);
 	}
-	
-	public void batchUpdatesForEachDay() throws Exception {
+
+	public void batchUpdatesForEachDay() {
 		// Get start date:
 		List<PotentialMembershipEvent> pmes = queryByParams(esbJdbc, PotentialMembershipEvent.class,
 				esbSql.getMostRecentPotentialMembershipEventFromLadokSql());
@@ -87,11 +88,11 @@ public class RegistrationEventService {
 		LocalDateTime end = LocalDateTime.now().minusSeconds(15).truncatedTo(ChronoUnit.SECONDS);
 		int endYear = end.getYear();
 		int endDay = end.getDayOfYear();
-		
+
 		// Convert current event interval to calendar days:
 		LocalDateTime from = start;
-		LocalDateTime to = from.toLocalDate().atTime(23, 59 , 59);
-		
+		LocalDateTime to = from.toLocalDate().atTime(23, 59, 59);
+
 		// Update events for all days up to (but not including) the last day:
 		while (to.getDayOfYear() < endDay || to.getYear() < endYear) {
 			updatePotentialMembershipEvents(from, to);
@@ -100,12 +101,12 @@ public class RegistrationEventService {
 			from = to;
 			to = from.plusDays(1);
 		}
-		
+
 		// Update events for the last day:
 		updatePotentialMembershipEvents(from, end);
 		updateMembershipEvents();
 	}
-		
+
 	int updatePotentialMembershipEvents(LocalDateTime from, LocalDateTime to) {
 		long start = System.currentTimeMillis();
 		List<PotentialMembershipEvent> mes = new ArrayList<>();
@@ -115,20 +116,17 @@ public class RegistrationEventService {
 		long l2Read = System.currentTimeMillis();
 		sort(mes);
 		update(esbJdbc, esbSql.getSaveNewPotentialMembershipEventSql(), mes);
-		log.info("Updated potential membership events in interval [" 
-				+ format(from) + ", " + format(to) + "): " + mes.size() 
-				+ " in " + (System.currentTimeMillis() - start) + " ms "
-				+ " (SP read: " + (spRead - start) + " ms, L2 read: " + (l2Read - spRead)
-				+ " ms, save: " + (System.currentTimeMillis() - l2Read + " ms)"));
+		logger.info("Updated potential membership events in interval [{}, {}]: in {} ms (SP read: {} ms, L2 read: {} ms, save: {} ms)",
+				format(from), format(to), mes.size(), System.currentTimeMillis() - start, spRead - start, System.currentTimeMillis() - l2Read);
+
 		return mes.size();
 	}
-	
+
 	int updateMembershipEvents() {
 		long start = System.currentTimeMillis();
 		List<PotentialMembershipEvent> potentialMembershipEvents = getUnprocessedPotentialMembershipEvents();
 		long unprocessedRead = System.currentTimeMillis();
-		log.info("Number of unprocessed potential membership events: " + potentialMembershipEvents.size()
-				+ " (" + (unprocessedRead - start) + " ms)");
+		logger.info("Number of unprocessed potential membership events: {} (read: {} ms)", potentialMembershipEvents.size(), unprocessedRead - start);
 		for (PotentialMembershipEvent pme : potentialMembershipEvents) {
 			String orig = pme.getOrigin();
 			long s = System.currentTimeMillis();
@@ -137,56 +135,47 @@ public class RegistrationEventService {
 				if ("FFGKURS".equals(orig) || "OMKURS".equals(orig) || "UBINDRG".equals(orig)
 						|| "SP".equals(orig)) {
 					saveMembershipAddEvent(esbJdbc, esbTm, pme);
-					log.info("New membership add event: " + pme 
-							+ " (" + (System.currentTimeMillis() - s) + " ms)");
+					logger.info("New membership add event: {} (save: {} ms)", pme, System.currentTimeMillis() - s);
 				} else if ("FORTKURS".equals(orig)) {
-					List<Membership> ms = queryByObj(esbJdbc, Membership.class, 
+					List<Membership> ms = queryByObj(esbJdbc, Membership.class,
 							esbSql.getMembershipsByReportCodeStartSemesterSql(), pme);
 					long r = System.currentTimeMillis();
 					if (!ms.isEmpty()) {
 						saveMembershipAddEvent(esbJdbc, esbTm, pme, ms.get(0));
-						log.info("Updating existing membership event with FORTKURS event: " + pme
-								 + " (read: " + (r - s) + " ms, "
-								 + "save: " + (System.currentTimeMillis() - r) + " ms)");
+						logger.info("Updating existing membership event with FORTKURS event: {} (read: {} ms, save: {} ms)", pme, r - s, System.currentTimeMillis() - r);
 					} else {
 						saveMembershipAddEvent(esbJdbc, esbTm, pme);
-						log.info("New membership add event: " + pme 
-								 + " (read: " + (r - s) + " ms, "
-								 + "save: " + (System.currentTimeMillis() - r) + " ms)");
+						logger.info("New membership add event: {} (read: {} ms, save: {} ms)", pme, r - s, System.currentTimeMillis() - r);
 					}
 				} else {
-					log.error("Unknown membership add event: " + pme);
+					logger.error("Unknown membership add event: " + pme);
 				}
 			} else {
 				if (orig.startsWith("INREG")) {
-					List<Membership> ms = queryByObj(esbJdbc, Membership.class, 
+					List<Membership> ms = queryByObj(esbJdbc, Membership.class,
 							esbSql.getMembershipsByCourseCodeSql(), pme);
 					long r = System.currentTimeMillis();
 					List<MembershipEvent> mes = toMembershipEvents(pme, ms);
 					executeStatementsInSameTx(esbJdbc, esbTm,
 							sqlAndVals(esbSql.getSaveNewMembershipEventSql(), mes),
 							sqlAndVals(esbSql.getDeleteMembershipByCourseCodeSql(), pme));
-					log.info("New INREG* membership event: " + pme + ", generated events: " + mes
-						 + " (read: " + (r - s) + " ms, "
-						 + "save: " + (System.currentTimeMillis() - r) + " ms)");
+					logger.info("New INREG* membership event: {}, generated events: {} (read: {} ms, save: {} ms)", pme, mes, r - s, System.currentTimeMillis() - r);
 
 				} else if ("BORTREGK".equals(orig)) {
-					List<String> validOrig2s = Arrays.asList(new String[] {"OMKURS", "FORTKURS", "FFGKURS", "UBINDRG"});
+					List<String> validOrig2s = Arrays.asList(new String[]{"OMKURS", "FORTKURS", "FFGKURS", "UBINDRG"});
 					if (validOrig2s.contains(pme.getOrigin2())) {
-						List<Membership> ms = queryByObj(esbJdbc, Membership.class, 
+						List<Membership> ms = queryByObj(esbJdbc, Membership.class,
 								esbSql.getMembershipsByCourseCodeSemesterOrigin2Sql(), pme);
 						long r = System.currentTimeMillis();
 						List<MembershipEvent> mes = toMembershipEvents(pme, ms);
 						executeStatementsInSameTx(esbJdbc, esbTm,
 								sqlAndVals(esbSql.getSaveNewMembershipEventSql(), mes),
 								sqlAndVals(esbSql.getDeleteMembershipsByCourseCodeSemesterOrigin2Sql(), pme));
-						log.info("New BORTREGK membership event: " + pme + ", generated events: " + mes
-								 + " (read: " + (r - s) + " ms, "
-								 + "save: " + (System.currentTimeMillis() - r) + " ms)");
+						logger.info("New BORTREGK membership event: {}, generated events: {} (read: {} ms, save: {} ms)", pme, mes, r - s, System.currentTimeMillis() - r);
 					} else if (pme.getOrigin2().startsWith("INREG")) {
-						log.info("BORTREGK event with URTABELL = INREG*. Don't do anything: " + pme);
+						logger.info("BORTREGK event with URTABELL = INREG*. Don't do anything: " + pme);
 					} else {
-						log.error("Unknown BORTREGK membership event: " + pme);
+						logger.error("Unknown BORTREGK membership event: " + pme);
 					}
 				} else if ("NAMN".equals(orig)) {
 					// NAMN events can be either a StudentAvlidenmarkeringEvent
@@ -205,15 +194,13 @@ public class RegistrationEventService {
 							*/
 					MembershipEvent me = new MembershipEvent(pme);
 					update(esbJdbc, esbSql.getSaveNewMembershipEventSql(), me);
-					log.info("New NAMN membership event: " + pme + ", generated event: " + me
-							 + "save: " + (System.currentTimeMillis() - s) + " ms)");
+					logger.info("New NAMN membership event: {}, generated event: {} save: {} ms)", pme, me, System.currentTimeMillis() - s);
 				} else {
-					log.error("Unknown membership remove event: " + pme);
+					logger.error("Unknown membership remove event: " + pme);
 				}
 			}
 		}
-		log.info("Membership events updated: " + potentialMembershipEvents.size()
-				+ " (" + (System.currentTimeMillis() - start) + "ms)");
+		logger.info("Membership events updated: {} (duration: {} ms)", potentialMembershipEvents.size(), System.currentTimeMillis() - start);
 		return potentialMembershipEvents.size();
 	}
 
@@ -227,25 +214,25 @@ public class RegistrationEventService {
 		complementCourseCodesIfNecessary(pmes);
 		return pmes;
 	}
-	
+
 	void complementCourseCodesIfNecessary(List<PotentialMembershipEvent> pmes) {
 		// TODO: Batch all lookups
 		for (PotentialMembershipEvent pme : pmes) {
 			if (pme.getCourseCode() == null || "".equals(pme.getCourseCode())) {
 				List<Kurstillfalle> ktf = queryByParams(l2Jdbc, Kurstillfalle.class,
-						l2Sql.getKurskodForKurstillfalleSql(), 
-						"starttermin", pme.getStartSemester(), 
+						l2Sql.getKurskodForKurstillfalleSql(),
+						"starttermin", pme.getStartSemester(),
 						"anmkod", pme.getReportCode());
 				if (ktf.size() == 1) {
 					pme.setCourseCode(ktf.get(0).getKurskod());
-					log.debug("Complementing course code from Uppdok for SP event: " + pme);
+					logger.debug("Complementing course code from Uppdok for SP event: " + pme);
 				} else {
-					log.error("Can't find course code in Uppdok for SP event: " + pme);
+					logger.error("Can't find course code in Uppdok for SP event: " + pme);
 				}
 			}
 		}
 	}
-	
+
 	List<PotentialMembershipEvent> getNewLadokMembershipEvents(LocalDateTime from, LocalDateTime to) {
 		String d_to = format(to);
 		String[] dt_to = d_to.split(" ");
@@ -254,36 +241,36 @@ public class RegistrationEventService {
 		String[] dt_from = d_from.split(" ");
 		String date_from = dt_from[0];
 		String time_from = date_from.equals(date_to) ? dt_from[1] : "000000";
-		List<Reg> reg = queryByParams(l2Jdbc, Reg.class, l2Sql.getRegSql(), 
+		List<Reg> reg = queryByParams(l2Jdbc, Reg.class, l2Sql.getRegSql(),
 				"datum_from", date_from, "datum_to", date_to, "tid", time_from);
-		List<BortReg> bortreg = queryByParams(l2Jdbc, BortReg.class, l2Sql.getBortRegSql(), 
+		List<BortReg> bortreg = queryByParams(l2Jdbc, BortReg.class, l2Sql.getBortRegSql(),
 				"datum_from", date_from, "datum_to", date_to, "tid", time_from);
-		List<InReg> inreg = queryByParams(l2Jdbc, InReg.class, l2Sql.getInRegSql(), 
+		List<InReg> inreg = queryByParams(l2Jdbc, InReg.class, l2Sql.getInRegSql(),
 				"datum_from", date_from, "datum_to", date_to, "tid", time_from);
-		List<Namn> namn = queryByParams(l2Jdbc, Namn.class, l2Sql.getNamnSql(), 
+		List<Namn> namn = queryByParams(l2Jdbc, Namn.class, l2Sql.getNamnSql(),
 				"datum_from", date_from, "datum_to", date_to);
 		List<PotentialMembershipEvent> mes = new ArrayList<PotentialMembershipEvent>();
-        mes.addAll(toMembershipEvents(reg));
-        mes.addAll(toMembershipEvents(bortreg));
-        mes.addAll(toMembershipEvents(inreg));
-        mes.addAll(toMembershipEvents(namn));
+		mes.addAll(toMembershipEvents(reg));
+		mes.addAll(toMembershipEvents(bortreg));
+		mes.addAll(toMembershipEvents(inreg));
+		mes.addAll(toMembershipEvents(namn));
 		sort(mes);
 		mes = filter(mes, from, to);
 		return mes;
 	}
-	
+
 	List<PotentialMembershipEvent> getUnprocessedPotentialMembershipEvents() {
 		List<PotentialMembershipEvent> unprocessed;
 		List<PotentialMembershipEvent> mes = queryByParams(esbJdbc, PotentialMembershipEvent.class,
 				esbSql.getMostRecentMembershipEventSql());
 		if (mes.isEmpty()) {
-			unprocessed = queryByParams(esbJdbc, PotentialMembershipEvent.class, 
+			unprocessed = queryByParams(esbJdbc, PotentialMembershipEvent.class,
 					esbSql.getAllPotentialMembershipEventsSql());
 		} else {
 			unprocessed = queryByParams(esbJdbc, PotentialMembershipEvent.class,
-					esbSql.getPotentialMembershipEventsNewerThanSql(), 
+					esbSql.getPotentialMembershipEventsNewerThanSql(),
 					"date", mes.get(0).getDate());
-			log.info("Finding unprocessed potential membership events with id newer than " + mes.get(0).getId());
+			logger.info("Finding unprocessed potential membership events with id newer than " + mes.get(0).getId());
 		}
 		return unprocessed;
 	}
