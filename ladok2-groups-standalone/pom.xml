@@ -34,6 +34,31 @@
         <sonar.host.url>http://sonarqube.its.uu.se:9000</sonar.host.url>
     </properties>
 
+    <!--
+    prepeare for release plugin
+    <scm>
+    <connection>scm:svn:https://subversion.its.uu.se/repos/selma/uu-selma-parent/tags/uu-selma-parent-2</connection>
+    <developerConnection>scm:svn:https://subversion.its.uu.se/repos/selma/uu-selma-parent/tags/uu-selma-parent-2</developerConnection>
+    <url>scm:svn:https://subversion.its.uu.se/repos/selma/uu-selma-parent/tags/uu-selma-parent-2</url>
+  </scm>
+
+  <ciManagement>
+    <system>Jenkins</system>
+    <url>https://primary.ci.its.uu.se/jenkins/view/Selma/job/selma-parent/</url>
+  </ciManagement>
+
+	<distributionManagement>
+		<repository>
+			<id>uurelease</id>
+			<url>https://artifactory.its.uu.se/artifactory/libs-release-local</url>
+		</repository>
+		<snapshotRepository>
+			<id>uusnapshot</id>
+			<url>https://artifactory.its.uu.se/artifactory/libs-snapshot-local</url>
+		</snapshotRepository>
+	</distributionManagement>
+	-->
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -133,6 +158,26 @@
                 <artifactId>sonar-maven-plugin</artifactId>
                 <version>3.1.1</version>
             </plugin>
+            <!--
+            prepeare for release plugin
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.5.1</version>
+                <configuration>
+                    <providerImplementations>
+                        <svn>javasvn</svn>
+                    </providerImplementations>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.google.code.maven-scm-provider-svnjava</groupId>
+                        <artifactId>maven-scm-provider-svnjava</artifactId>
+                        <version>2.1.1</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            -->
         </plugins>
     </build>
 
