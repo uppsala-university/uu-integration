@@ -157,7 +157,7 @@ public class RegistrationEventService {
 						logger.info("New membership add event: {} (read: {} ms, save: {} ms)", pme, r - s, System.currentTimeMillis() - r);
 					}
 				} else {
-					logger.error("Unknown membership add event: " + pme);
+					logger.error("Unknown membership add event: {}", pme);
 				}
 			} else {
 				if (orig.startsWith("INREG")) {
@@ -182,9 +182,9 @@ public class RegistrationEventService {
 								sqlAndVals(esbSql.getDeleteMembershipsByCourseCodeSemesterOrigin2Sql(), pme));
 						logger.info("New BORTREGK membership event: {}, generated events: {} (read: {} ms, save: {} ms)", pme, mes, r - s, System.currentTimeMillis() - r);
 					} else if (pme.getOrigin2().startsWith("INREG")) {
-						logger.info("BORTREGK event with URTABELL = INREG*. Don't do anything: " + pme);
+						logger.info("BORTREGK event with URTABELL = INREG*. Don't do anything: {}", pme);
 					} else {
-						logger.error("Unknown BORTREGK membership event: " + pme);
+						logger.error("Unknown BORTREGK membership event: {}", pme);
 					}
 				} else if ("NAMN".equals(orig)) {
 					// NAMN events can be either a StudentAvlidenmarkeringEvent
@@ -205,7 +205,7 @@ public class RegistrationEventService {
 					update(esbJdbc, esbSql.getSaveNewMembershipEventSql(), me);
 					logger.info("New NAMN membership event: {}, generated event: {} save: {} ms)", pme, me, System.currentTimeMillis() - s);
 				} else {
-					logger.error("Unknown membership remove event: " + pme);
+					logger.error("Unknown membership remove event: {}", pme);
 				}
 			}
 		}
@@ -234,9 +234,9 @@ public class RegistrationEventService {
 						"anmkod", pme.getReportCode());
 				if (ktf.size() == 1) {
 					pme.setCourseCode(ktf.get(0).getKurskod());
-					logger.debug("Complementing course code from Uppdok for SP event: " + pme);
+					logger.debug("Complementing course code from Uppdok for SP event: {}", pme);
 				} else {
-					logger.error("Can't find course code in Uppdok for SP event: " + pme);
+					logger.error("Can't find course code in Uppdok for SP event: {}", pme);
 				}
 			}
 		}
@@ -279,7 +279,7 @@ public class RegistrationEventService {
 			unprocessed = queryByParams(esbJdbc, PotentialMembershipEvent.class,
 					esbSql.getPotentialMembershipEventsNewerThanSql(),
 					"date", mes.get(0).getDate());
-			logger.info("Finding unprocessed potential membership events with id newer than " + mes.get(0).getId());
+			logger.info("Finding unprocessed potential membership events with id newer than {}", mes.get(0).getId());
 		}
 		return unprocessed;
 	}

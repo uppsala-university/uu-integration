@@ -5,6 +5,7 @@ import static se.uu.its.integration.ladok2groups.util.MembershipEventUtil.parseU
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -19,7 +20,7 @@ import se.uu.its.integration.ladok2groups.util.PnrUtil;
 
 public class PotentialMembershipEvent {
 	
-	public static enum Type { 
+	public enum Type {
 		ADD, // Deprecated
 		KurstillfalleTillStatusEvent, 
 		ForvantatDeltagandeSkapadEvent,
@@ -33,12 +34,12 @@ public class PotentialMembershipEvent {
 		KontaktuppgifterEvent
 	};
 	
-	public static Set<Type> MEMBERSHIP_ADD_TYPES = new HashSet<Type>(Arrays.asList(new Type[]{
+	public static final Set<Type> MEMBERSHIP_ADD_TYPES = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(new Type[]{
 			Type.ADD,
 			Type.ForvantatDeltagandeSkapadEvent,
 			Type.RegistreringEvent,
 			Type.OmregistreringEvent
-	}));
+	})));
 	
 	Long id;
 	LocalDateTime date;
