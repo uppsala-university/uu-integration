@@ -45,31 +45,40 @@ public class RegistrationEventService {
 
 	private static final Logger logger = LoggerFactory.getLogger(RegistrationEventService.class);
 
-	Ladok2GroupSql l2Sql = new Ladok2GroupSql();
-	SpGroupSql spSql = new SpGroupSql();
-	EsbGroupSql esbSql = new EsbGroupSql();
-
-	@Autowired @Qualifier("ladok2read")
-	NamedParameterJdbcTemplate l2Jdbc;
-
-	@Autowired @Qualifier("sp")
-	NamedParameterJdbcTemplate spJdbc;
-
-	@Autowired @Qualifier("esb")
-	NamedParameterJdbcTemplate esbJdbc;
-
-	@Autowired @Qualifier("esb")
-	PlatformTransactionManager esbTm;
+	private Ladok2GroupSql l2Sql = new Ladok2GroupSql();
+	private SpGroupSql spSql = new SpGroupSql();
+	private EsbGroupSql esbSql = new EsbGroupSql();
 
 	@Autowired
-	EventProps eventProps;
+	@Qualifier("ladok2read")
+	private NamedParameterJdbcTemplate l2Jdbc;
+
+	@Autowired
+	@Qualifier("sp")
+	private NamedParameterJdbcTemplate spJdbc;
+
+	@Autowired
+	@Qualifier("esb")
+	private NamedParameterJdbcTemplate esbJdbc;
+
+	@Autowired
+	@Qualifier("esb")
+	private PlatformTransactionManager esbTm;
+
+	@Autowired
+	private EventProps eventProps;
+
+	@Autowired
+	private ScheduledJobSynchronizer scheduledJobSynchronizer;
 
 	@Scheduled(fixedDelayString = "${events.regUpdateDelay}")
 	public void updateEvents() {
-		logger.info("Update event job started");
-		long start = System.currentTimeMillis();
-		batchUpdatesForEachDay();
-		logger.info("Update event job finished, duration: {} ms", System.currentTimeMillis() - start);
+		scheduledJobSynchronizer.executeExclusively(() -> {
+			logger.info("Update event job started");
+			long start = System.currentTimeMillis();
+			batchUpdatesForEachDay();
+			logger.info("Update event job finished, duration: {} ms", System.currentTimeMillis() - start);
+		});
 	}
 
 	public void batchUpdatesForEachDay() {

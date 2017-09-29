@@ -36,28 +36,33 @@ public class AcceptedEventService {
 
 	@Autowired
 	@Qualifier("ladok2read")
-	NamedParameterJdbcTemplate l2Jdbc;
+	private NamedParameterJdbcTemplate l2Jdbc;
 
 	@Autowired
 	@Qualifier("esb")
-	NamedParameterJdbcTemplate esbJdbc;
+	private NamedParameterJdbcTemplate esbJdbc;
 
 	@Autowired
 	@Qualifier("esb")
-	PlatformTransactionManager esbTm;
+	private PlatformTransactionManager esbTm;
 
-	Ladok2GroupSql l2Sql = new Ladok2GroupSql();
-	EsbGroupSql esbSql = new EsbGroupSql();
+	private Ladok2GroupSql l2Sql = new Ladok2GroupSql();
+	private EsbGroupSql esbSql = new EsbGroupSql();
+
+	@Autowired
+	private ScheduledJobSynchronizer scheduledJobSynchronizer;
 
 	@Scheduled(cron = "${events.accUpdateCron}")
 	public void updateAccepted() {
+		scheduledJobSynchronizer.executeExclusively(() -> saveAccMembershipAndMembershipEvents());
+	}
+
+	private void saveAccMembershipAndMembershipEvents() {
 		logger.info("Update accepted job started");
 		long start = System.currentTimeMillis();
 		String semester = queryByParams(l2Jdbc, String.class, l2Sql.getTerminSql()).get(0);
 		String nextSemester = SemesterUtil.getNextSemester(semester);
-		List<AccMembership> storedAccs = queryByParams(esbJdbc,
-				AccMembership.class, esbSql.getAccMembershipsSql(),
-				"semester1", semester, "semester2", nextSemester);
+		List<AccMembership> storedAccs = queryByParams(esbJdbc, AccMembership.class, esbSql.getAccMembershipsSql(),"semester1", semester, "semester2", nextSemester);
 		long storedRead = System.currentTimeMillis();
 		List<Antagen> l2Ant = queryByParams(l2Jdbc, Antagen.class,
 				l2Sql.getAntagenSql(), "termin1", semester, "termin2", nextSemester);
@@ -67,15 +72,15 @@ public class AcceptedEventService {
 				l2Ant, eventDate);
 		long save = System.currentTimeMillis();
 		// Add membership events:
-		List<AccMembership> addedAccs = new ArrayList<AccMembership>(l2Accs);
+		List<AccMembership> addedAccs = new ArrayList<>(l2Accs);
 		addedAccs.removeAll(storedAccs);
 		List<MembershipEvent> membershipAddEvents = MembershipEventUtil.toMembershipAddEvents(addedAccs);
 		// Remove membership events:
-		List<AccMembership> removedAccs = new ArrayList<AccMembership>(storedAccs);
+		List<AccMembership> removedAccs = new ArrayList<>(storedAccs);
 		removedAccs.removeAll(l2Accs);
 		List<MembershipEvent> membershipRemoveEvents = MembershipEventUtil.toMembershipRemoveEvents(removedAccs);
 		// All membership events:
-		List<MembershipEvent> allMembershipEvents = new ArrayList<MembershipEvent>(membershipAddEvents);
+		List<MembershipEvent> allMembershipEvents = new ArrayList<>(membershipAddEvents);
 		allMembershipEvents.addAll(membershipRemoveEvents);
 		// saveAccMemberEvents(l2Accs, membershipAddEvents);
 		saveAccMemberEvents(l2Accs, allMembershipEvents);
