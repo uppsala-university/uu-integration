@@ -50,12 +50,6 @@ public class ModelEventsTest {
 	protected Log log = LogFactory.getLog(this.getClass());
 	
 	@Test 
-	public void testTrue() {
-		assertTrue(true);
-	}
-	
-	/*
-	@Test 
 	public void testToString() {
 
 		Person person = new Person("198001010000", "Test", "Testsson");
@@ -257,7 +251,7 @@ public class ModelEventsTest {
 				SYSTEM_MESSAGE_PRODUCER_IDENTITY, 
 				"Ev108",
 				new Role(
-						"Betygsättande lärare",
+						"BetygsÃ¤ttande lÃ¤rare",
 						new Employee("emplempl"),
 						new Organization("X11")
 						));
@@ -279,7 +273,7 @@ public class ModelEventsTest {
 				SYSTEM_MESSAGE_PRODUCER_IDENTITY, 
 				"Ev305",
 				new Role(
-						"Betygsättande lärare",
+						"BetygsÃ¤ttande lÃ¤rare",
 						new Student("emplempl"),
 						new Organization("X11")
 						));
@@ -432,6 +426,5 @@ public class ModelEventsTest {
 		
 		assertTrue("Unmarchalled value of producer is not the same as marchalled object property value.", objectFromXml.getProducer().equalsIgnoreCase(SYSTEM_MESSAGE_PRODUCER_GROUP));
 	}	
-	*/
 	
 }

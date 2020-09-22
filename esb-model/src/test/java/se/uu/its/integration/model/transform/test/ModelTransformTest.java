@@ -42,11 +42,6 @@ public class ModelTransformTest {
 	static final String LADOK_MESSAGE_ID = "9bf85736-975b-11e5-b128-543fc12c43e6";
 	static final String GROUPER_GROUP_IDENTIFIER = "hkslab:g1"; 
 	
-	@Test 
-	public void testTrue() {
-		assertTrue(true);
-	}
-	/*
 	@Test
 	public void testForvantatDeltagandeSkapadHandelseToGroupMembershipCreateRequest() throws Exception {
 
@@ -299,5 +294,4 @@ public class ModelTransformTest {
 		assertTrue("Unmarchalled object does not av a proper identifier.", (objectFromXml.getIdentifier() != null));
 	}
 
-*/
 }
