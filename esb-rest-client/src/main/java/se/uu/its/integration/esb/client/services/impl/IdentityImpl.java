@@ -1,5 +1,6 @@
 package se.uu.its.integration.esb.client.services.impl;
 
+import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
 
@@ -42,10 +43,28 @@ public class IdentityImpl extends ServiceBase implements Identity {
 		String targetUrl = restBase + URL_IDENTITY;
 		log.info("Using target URL: " + targetUrl);
 		
-		if (cb != null)
-			webtarget = cb.build().target(targetUrl);
-		else
+		if (cb != null) {
+			Client client = cb.build();
+			
+			// Assign timeouts
+			String readTimeOutName = properties.getProperty("readTimeOutName","jersey.config.client.readTimeout");
+			String readTimeOutValue = properties.getProperty("readTimeOutValue","20000");
+			String connectTimeOutName = properties.getProperty("connectTimeOutName","jersey.config.client.connectTimeout");
+			String connectTimeOutValue = properties.getProperty("connectTimeOutValue","20000");			
+					
+			client.property(connectTimeOutName, connectTimeOutValue);
+		    client.property(readTimeOutName, readTimeOutValue);
+		    
+		    log.info("Using timeout read props: " + readTimeOutName + ", value:" + readTimeOutValue);
+			log.info("Using timeout connect props: " + connectTimeOutName + ", value:" + connectTimeOutValue);
+		    
+			webtarget = client.target(targetUrl);
+		
+		
+					
+		} else {
 			throw new Exception("Could not initialize service.");
+		}
 	}
 
 	
@@ -66,7 +85,7 @@ public class IdentityImpl extends ServiceBase implements Identity {
 		
 		UUEvent eventResponse = response.readEntity(PersonEvent.class);
 		
-		return response.getStatus() == 202 ? eventResponse.getIdentifier() : null;    }
+		return isOK(response.getStatus()) ? eventResponse.getIdentifier() : null;    }
 
 
 	@Override
@@ -86,7 +105,7 @@ public class IdentityImpl extends ServiceBase implements Identity {
 		
 		UUEvent eventResponse = response.readEntity(PersonEvent.class);
 		
-		return response.getStatus() == 202 ? eventResponse.getIdentifier() : null;	}
+		return isOK(response.getStatus()) ? eventResponse.getIdentifier() : null;	}
 
 
 	@Override
@@ -106,7 +125,7 @@ public class IdentityImpl extends ServiceBase implements Identity {
 		
 		UUEvent eventResponse = response.readEntity(PersonEvent.class);
 		
-		return response.getStatus() == 202 ? eventResponse.getIdentifier() : null;
+		return isOK(response.getStatus()) ? eventResponse.getIdentifier() : null;
 	}
 
 
@@ -133,7 +152,7 @@ public class IdentityImpl extends ServiceBase implements Identity {
 		
 		UUEvent eventResponse = response.readEntity(PersonEvent.class);
 		
-		return response.getStatus() == 202 ? eventResponse.getIdentifier() : null;
+		return isOK(response.getStatus()) ? eventResponse.getIdentifier() : null;
 	}
 
 
@@ -157,7 +176,7 @@ public class IdentityImpl extends ServiceBase implements Identity {
 		
 		RoleEvent eventResponse = response.readEntity(RoleEvent.class);
 		
-		return response.getStatus() == 202 ? eventResponse.getIdentifier() : null;	
+		return isOK(response.getStatus()) ? eventResponse.getIdentifier() : null;	
 	}
 
 
@@ -181,7 +200,7 @@ public class IdentityImpl extends ServiceBase implements Identity {
 		
 		RoleEvent eventResponse = response.readEntity(RoleEvent.class);
 		
-		return response.getStatus() == 202 ? eventResponse.getIdentifier() : null;
+		return isOK(response.getStatus()) ? eventResponse.getIdentifier() : null;
 	}
 
 
@@ -201,7 +220,7 @@ public class IdentityImpl extends ServiceBase implements Identity {
 		
 		OrganizationDepartmentMappingEvent eventResponse = response.readEntity(OrganizationDepartmentMappingEvent.class);
 
-		return response.getStatus() == 202 ? eventResponse.getIdentifier() : null;
+		return isOK(response.getStatus()) ? eventResponse.getIdentifier() : null;
 	}
 
 
@@ -221,7 +240,16 @@ public class IdentityImpl extends ServiceBase implements Identity {
 		
 		OrganizationDepartmentMappingEvent eventResponse = response.readEntity(OrganizationDepartmentMappingEvent.class);
 		
-		return response.getStatus() == 202 ? eventResponse.getIdentifier() : null;
+		return isOK(response.getStatus()) ? eventResponse.getIdentifier() : null;
+	}
+	
+	/**
+	 * Ok Http status
+	 * @param status
+	 * @return
+	 */
+	private boolean isOK(int status) {
+		return (status >= 200) && (status < 300);
 	}
 
 }
