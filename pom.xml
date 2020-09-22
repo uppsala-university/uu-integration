@@ -8,20 +8,27 @@
 	<version>1.0.0-SNAPSHOT</version>
 	<name>UU Integration Components</name>
 
+	<scm> 
+    		<connection>scm:git:ssh://github.com/uppsala-university/common-integration</connection>
+    		<developerConnection>scm:git:ssh://github.com/uppsala-university/common-integration</developerConnection>
+    		<url>https://github.com/uppsala-university/common-integration</url>
+    		<tag>HEAD</tag>
+  	</scm>
+
 	<modules>
-		<module>esb-ladok-distribution</module>
+		<!--<module>esb-ladok-distribution</module>-->
 		<module>esb-model</module>
-		<module>esb-service-identity-rest</module>
-		<module>esb-service-group-rest</module>
-		<module>esb-identity-distribution</module>
-		<module>esb-group-distribution</module>
-		<module>group-grouper-adapter</module>
-		<module>identity-sp-adapter</module>
+		<!--<module>esb-service-identity-rest</module>-->
+		<!--<module>esb-service-group-rest</module>-->
+		<!--<module>esb-identity-distribution</module>-->
+		<!--<module>esb-group-distribution</module>-->
+		<!--<module>group-grouper-adapter</module>-->
+		<!--<module>identity-sp-adapter</module>-->
 		<module>esb-rest-client</module>
-		<module>ladok2-groups</module>
+		<!-- <module>ladok2-groups</module>-->
 		<!--<module>ladok2-groups-standalone</module>-->
-		<module>ladok2-datasource</module>
-		<module>uu-integration-packaging-karaf</module>
+		<!--<module>ladok2-datasource</module>-->
+		<!--<module>uu-integration-packaging-karaf</module>-->
 	</modules>
 
 	<properties>
@@ -44,8 +51,8 @@
 					<artifactId>maven-compiler-plugin</artifactId>
 					<configuration>
 						<encoding>UTF-8</encoding>
-						<source>1.7</source>
-						<target>1.7</target>
+						<source>1.8</source>
+						<target>1.8</target>
 					</configuration>
 				</plugin>
 			</plugins>
