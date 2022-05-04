@@ -28,7 +28,7 @@ import se.uu.its.integration.model.identity.Role;
 public class IdentityImpl extends ServiceBase implements Identity {
 
 	private static final String URL_IDENTITY = "/identity";
-	private static final String PATH_PERSON_EVENT = "/event/person/";
+	private static final String PATH_PERSON_EVENT = "/IdentityService.svc";
 	private static final String PATH_ROLE_EVENT = "/event/role/";
 	private static final String PATH_ORGDEPMAP_EVENT = "/event/orgdepmap/";
 
