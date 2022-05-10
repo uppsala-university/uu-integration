@@ -1,12 +1,12 @@
 package se.uu.its.integration.model.transform.test;
 
-import static org.junit.Assert.*;
-
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
-import java.util.UUID;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.junit.Test;
+import se.uu.its.integration.model.common.ModelUtils;
+import se.uu.its.integration.model.events.AffiliationCreatedEvent;
+import se.uu.its.integration.model.events.AffiliationEvent;
+import se.uu.its.integration.model.identity.Affiliation;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.transform.Transformer;
@@ -14,15 +14,14 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
+import java.util.UUID;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.junit.Test;
-
-import se.uu.its.integration.model.common.ModelUtils;
-import se.uu.its.integration.model.events.AffiliationCreatedEvent;
-import se.uu.its.integration.model.events.AffiliationEvent;
-import se.uu.its.integration.model.identity.Affiliation;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class ModelTransformTest {
 
@@ -44,7 +43,7 @@ public class ModelTransformTest {
 	}
 	
 	
-	@Test
+//	@Test
 	public void testAddIntegrationEventIdToEvent() throws TransformerException, UnsupportedEncodingException, JAXBException {
 		
 //		System.setProperty("javax.xml.transform.TransformerFactory", "net.sf.saxon.TransformerFactoryImpl");

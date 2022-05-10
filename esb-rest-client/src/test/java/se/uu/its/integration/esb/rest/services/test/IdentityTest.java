@@ -1,19 +1,17 @@
 package se.uu.its.integration.esb.rest.services.test;
 
-import static org.junit.Assert.assertNotNull;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.junit.Test;
-
 import se.uu.its.integration.esb.client.services.Identity;
 import se.uu.its.integration.esb.client.services.impl.IdentityImpl;
+
+import static org.junit.Assert.assertNotNull;
 
 public class IdentityTest {
 
 	private Log log = LogFactory.getLog(this.getClass());
 	
-	@Test
+//	@Test
 	public void testRegisterAkkaAccountChange() throws Exception {
 		
 		Identity identity = new IdentityImpl();
@@ -24,7 +22,7 @@ public class IdentityTest {
 		assertNotNull(id);
 	}
 	
-	@Test
+	//@Test
 	public void testRegisterNewAkkaAccount() throws Exception {
 		
 		Identity identity = new IdentityImpl();
@@ -36,7 +34,7 @@ public class IdentityTest {
 		
 	}
 	
-	@Test 
+//	@Test
 	public void testRegisterDeletedAkkaAccount() throws Exception {
 		
 		Identity identity = new IdentityImpl();
@@ -48,7 +46,7 @@ public class IdentityTest {
 		
 	}
 	
-	@Test
+//	@Test
 	public void testRegisterAkkaChangedPersonNumber() throws Exception {
 
 		Identity identity = new IdentityImpl();
@@ -60,7 +58,7 @@ public class IdentityTest {
 		
 	}
 	
-	@Test
+//	@Test
 	public void testRegisterAkkaAccountRoleDeleted() throws Exception {
 		
 		Identity identity = new IdentityImpl();
@@ -72,7 +70,7 @@ public class IdentityTest {
 		
 	}
 	
-	@Test
+//	@Test
 	public void testRegisterAkkaAccountRoleCreated() throws Exception {
 		
 		Identity identity = new IdentityImpl();
@@ -84,7 +82,7 @@ public class IdentityTest {
 		
 	}
 	
-	@Test
+//	@Test
 	public void testRegisterOrganizationDepartmentMappingCreated() throws Exception {
 		
 		Identity identity = new IdentityImpl();
@@ -96,7 +94,7 @@ public class IdentityTest {
 		
 	}
 
-	@Test
+//	@Test
 	public void testRegisterOrganizationDepartmentMappingDeleted() throws Exception {
 		
 		Identity identity = new IdentityImpl();
