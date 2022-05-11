@@ -11,6 +11,18 @@
 	<packaging>jar</packaging>
 	<name>ESB REST Client</name>
 	<description>ESB REST client project.</description>
+
+	<distributionManagement>
+		<repository>
+			<id>uurelease</id>
+			<url>https://artifactory.its.uu.se/artifactory/libs-release-local</url>
+		</repository>
+		<snapshotRepository>
+			<id>uusnapshot</id>
+			<url>https://artifactory.its.uu.se/artifactory/libs-snapshot-local</url>
+		</snapshotRepository>
+	</distributionManagement>
+
 	<dependencies>
 		<dependency>
 			<groupId>se.uu.its.integration</groupId>
