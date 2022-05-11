@@ -1,102 +1,84 @@
 package se.uu.its.integration.model.events;
 
-import java.io.Serializable;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
+import se.uu.its.integration.model.common.ModelUtils;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
-import javax.persistence.Transient;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlSeeAlso;
+import java.io.Serializable;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
-import se.uu.its.integration.model.common.ModelUtils;
-
-@Entity
-@Table(name="uuevents")
-@NamedQuery(name = "selectUUEventById", query = "select e from UUEvent e where e.id = :id")
-@XmlSeeAlso({AffiliationEvent.class, PersonEvent.class, RoleEvent.class, OrganizationDepartmentMappingEvent.class})
 @XmlRootElement(name = "UUEvent", namespace = "http://www.uu.se/schemas/integration/2015/Events")
-public  class UUEvent implements Serializable {
-	
-	private static final long serialVersionUID = 6670201491567203786L;
-	
-	@Id
-	@Column(name = "identifier")
-	@XmlAttribute(name = "identifier")
-	String _identifier;
+public class UUEvent implements Serializable {
 
-	@Column(name = "event_type")
-	@XmlAttribute(name = "type")
-	String _type;	
-	
-	@Transient
-	@XmlElement(name = "ProcessedTime")
-	Calendar _processedTime;		
-	
-	@Column(name = "issuedTime")
-	@XmlElement(name = "IssuedTime")
-	Calendar _issuedTime;	
-	
-	@Column(name = "producer")
-	@XmlElement(name = "Producer")
-	String _producer;
-	
-	@Column(name = "producerReferenceId")
-	@XmlElement(name = "ProducerReferenceId")
-	String _producerReferenceId;
-	
-	public UUEvent() {
-	}
-	
-	public String toString() {
+    private static final long serialVersionUID = 6670201491567203786L;
 
-		String result = ModelUtils.TO_STRING_ERROR_MSG;
-		
-		try {
-			result = ModelUtils.getMarchalledObjectXml(this.getClass(), this);
-		} catch (JAXBException e) {
-			e.printStackTrace();
-		}
+    @XmlAttribute(name = "identifier")
+    String identifier;
 
-		return result;
-		
-	}
-	
-	public UUEvent exportUUEvent() {
-		UUEvent uuEvent = new UUEvent();
-		uuEvent._identifier = this._identifier;
-		uuEvent._issuedTime = this._issuedTime;
-		uuEvent._processedTime = this._processedTime;
-		uuEvent._producer = this._producer;
-		uuEvent._producerReferenceId = this._producerReferenceId;
-		uuEvent._type = this._type;
-		return uuEvent;
-	}
-	
-	protected UUEvent(String producer, String producerReferenceId) {
-		this._issuedTime = GregorianCalendar.getInstance();
-		this._type = this.getClass().getSimpleName();
-		this._producer = producer;
-		this._producerReferenceId = producerReferenceId;
-	}
-	
-	public String getProducer() {
-		return _producer;
-	}
+    @XmlAttribute(name = "type")
+    String type;
 
-	public String getIdentifier() {
-		return _identifier;
-	}
+    @XmlElement(name = "ProcessedTime")
+    Calendar processedTime;
 
-	public String getProducerReferenceId() {
-		return _producerReferenceId;
-	}
-	
+    @XmlElement(name = "IssuedTime")
+    Calendar issuedTime;
+
+    @XmlElement(name = "Producer")
+    String producer;
+
+
+    @XmlElement(name = "ProducerReferenceId")
+    String producerReferenceId;
+
+    public UUEvent() {
+    }
+
+    public String toString() {
+
+        String result = ModelUtils.TO_STRING_ERROR_MSG;
+
+        try {
+            result = ModelUtils.getMarchalledObjectXml(this.getClass(), this);
+        } catch (JAXBException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+
+    }
+
+    public UUEvent exportUUEvent() {
+        UUEvent uuEvent = new UUEvent();
+        uuEvent.identifier = this.identifier;
+        uuEvent.issuedTime = this.issuedTime;
+        uuEvent.processedTime = this.processedTime;
+        uuEvent.producer = this.producer;
+        uuEvent.producerReferenceId = this.producerReferenceId;
+        uuEvent.type = this.type;
+        return uuEvent;
+    }
+
+    protected UUEvent(String producer, String producerReferenceId) {
+        this.issuedTime = GregorianCalendar.getInstance();
+        this.type = this.getClass().getSimpleName();
+        this.producer = producer;
+        this.producerReferenceId = producerReferenceId;
+    }
+
+    public String getProducer() {
+        return producer;
+    }
+
+    public String getIdentifier() {
+        return identifier;
+    }
+
+    public String getProducerReferenceId() {
+        return producerReferenceId;
+    }
+
 }
