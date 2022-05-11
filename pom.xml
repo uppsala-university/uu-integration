@@ -1,54 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0                              http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0                              http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<groupId>se.uu.its.integration</groupId>
-	<artifactId>uu-integration</artifactId>
-	<packaging>pom</packaging>
-	<version>2.0.0-SNAPSHOT</version>
-	<name>UU Integration Components</name>
+    <groupId>se.uu.its.integration</groupId>
+    <artifactId>uu-integration</artifactId>
+    <packaging>pom</packaging>
+    <version>2.0.0-SNAPSHOT</version>
+    <name>UU Integration Components</name>
 
-	<modules>
-		<module>esb-model</module>
-		<module>esb-rest-client</module>
-	</modules>
+    <scm>
+        <connection>scm:git:https://github.com/uppsala-university/uu-integration</connection>
+        <developerConnection>scm:git:https://github.com/uppsala-university/uu-integration</developerConnection>
+        <url>https://github.com/uppsala-university/uu-integration</url>
+        <tag>HEAD</tag>
+    </scm>
 
-	<distributionManagement>
-		<repository>
-			<id>uurelease</id>
-			<url>https://artifactory.its.uu.se/artifactory/libs-release-local</url>
-		</repository>
-		<snapshotRepository>
-			<id>uusnapshot</id>
-			<url>https://artifactory.its.uu.se/artifactory/libs-snapshot-local</url>
-		</snapshotRepository>
-	</distributionManagement>
+    <distributionManagement>
+        <repository>
+            <id>uurelease</id>
+            <url>https://artifactory.its.uu.se/artifactory/libs-release-local</url>
+        </repository>
+        <snapshotRepository>
+            <id>uusnapshot</id>
+            <url>https://artifactory.its.uu.se/artifactory/libs-snapshot-local</url>
+        </snapshotRepository>
+    </distributionManagement>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 
-	<repositories>
-		<repository>
-			<id>uu</id>
-			<name>UU-repo</name>
-			<url>https://artifactory.its.uu.se/artifactory/uu</url>
-		</repository>
-	</repositories>
+    <repositories>
+        <repository>
+            <id>uu</id>
+            <name>UU-repo</name>
+            <url>https://artifactory.its.uu.se/artifactory/uu</url>
+        </repository>
+    </repositories>
 
-	<build>
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-compiler-plugin</artifactId>
-					<configuration>
-						<encoding>UTF-8</encoding>
-						<source>11</source>
-						<target>11</target>
-					</configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
-	</build>
+    <modules>
+        <module>esb-model</module>
+        <module>esb-rest-client</module>
+    </modules>
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <configuration>
+                        <encoding>UTF-8</encoding>
+                        <source>11</source>
+                        <target>11</target>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 </project>
