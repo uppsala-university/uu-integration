@@ -18,7 +18,7 @@
 
     <properties>
       <camel.version>2.16.0</camel.version>
-      <openjpa.version>2.2.0</openjpa.version>
+      <openjpa.version>2.2.2</openjpa.version>
     </properties>
 
     <dependencies>
